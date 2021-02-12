@@ -23,7 +23,7 @@
 		<GenerateAssemblyTitleAttribute>False</GenerateAssemblyTitleAttribute>
 		<GenerateAssemblyVersionAttribute>False</GenerateAssemblyVersionAttribute>
 		
-		<RepositoryUrl>https://github.com/MaceWindu/sourcemap-toolkit</RepositoryUrl>
+		<RepositoryUrl>https://github.com/MaceWindu/sourcemap-tools</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 
 		<AnalysisLevel>preview</AnalysisLevel>

@@ -10,7 +10,7 @@
 		<authors>Microsoft, MaceWindu@github.com</authors>
 		<owners>MaceWindu@github.com</owners>
 		<license type="file">MIT-LICENSE.txt</license>
-		<projectUrl>https://github.com/MaceWindu/sourcemap-toolkit</projectUrl>
+		<projectUrl>https://github.com/MaceWindu/sourcemap-tools</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		
 		<dependencies>

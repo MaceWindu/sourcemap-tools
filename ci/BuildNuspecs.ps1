@@ -38,7 +38,7 @@ if ($version) {
 		$xml.package.metadata.AppendChild($child)
 
 		$child = $xml.CreateElement('releaseNotes', $nsUri)
-		$child.InnerText = 'https://github.com/MaceWindu/sourcemap-toolkit/releases/tag/v' + $version
+		$child.InnerText = 'https://github.com/MaceWindu/sourcemap-tools/releases/tag/v' + $version
 		$xml.package.metadata.AppendChild($child)
 
 		$child = $xml.CreateElement('repository', $nsUri)
@@ -46,7 +46,7 @@ if ($version) {
 		$attr.Value = 'git'
 		$child.Attributes.Append($attr)
 		$attr = $xml.CreateAttribute('url')
-		$attr.Value = 'https://github.com/linq2db/linq2db.git'
+		$attr.Value = 'https://github.com/MaceWindu/sourcemap-tools.git'
 		$child.Attributes.Append($attr)
 		$attr = $xml.CreateAttribute('branch')
 		$attr.Value = $branch
