@@ -9,7 +9,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	internal class FunctionMapEntry
 	{
 		public FunctionMapEntry(
-			List<BindingInformation> bindings,
+			IReadOnlyList<BindingInformation> bindings,
 			SourcePosition startSourcePosition,
 			SourcePosition endSourcePosition)
 		{
@@ -29,7 +29,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// If this entry represents a function whose name was minified, this value 
 		/// may contain an associated deminfied name corresponding to the function.
 		/// </summary>
-		public string? DeminfifiedMethodName { get; internal set; }
+		public string? DeminfifiedMethodName { get; set; }
 
 		/// <summary>
 		/// Denotes the location of the beginning of this function

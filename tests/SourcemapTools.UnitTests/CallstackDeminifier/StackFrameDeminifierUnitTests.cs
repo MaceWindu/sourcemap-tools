@@ -52,7 +52,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		public void DeminifyStackFrame_StackFrameNullProperties_DoesNotThrowException()
 		{
 			// Arrange
-			var stackFrame = new StackFrame();
+			var stackFrame = new StackFrame(null);
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies();
 
 			// Act
@@ -69,7 +69,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var filePath = "foo";
-			var stackFrame = new StackFrame {FilePath = filePath };
+			var stackFrame = new StackFrame(null) {FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns<FunctionMapEntry>(null);
@@ -91,7 +91,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var filePath = "foo";
-			var stackFrame = new StackFrame { FilePath = filePath };
+			var stackFrame = new StackFrame(null) { FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns(new List<FunctionMapEntry>());
@@ -117,7 +117,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			// Arrange
 			var filePath = "foo";
 			var wrapingFunctionMapEntry = new FunctionMapEntry(null!, null!, null!) {DeminfifiedMethodName = "DeminifiedFoo"};
-			var stackFrame = new StackFrame { FilePath = filePath };
+			var stackFrame = new StackFrame(null) { FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns(new List<FunctionMapEntry>());
@@ -144,7 +144,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			// Arrange
 			var filePath = "foo";
 			var wrapingFunctionMapEntry = new FunctionMapEntry(null!, null!, null!) { DeminfifiedMethodName = "DeminifiedFoo" };
-			var stackFrame = new StackFrame { FilePath = filePath };
+			var stackFrame = new StackFrame(null) { FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns(new List<FunctionMapEntry>());
@@ -170,7 +170,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			// Arrange
 			var filePath = "foo";
 			var wrapingFunctionMapEntry = new FunctionMapEntry(null!, null!, null!) { DeminfifiedMethodName = "DeminifiedFoo" };
-			var stackFrame = new StackFrame { FilePath = filePath };
+			var stackFrame = new StackFrame(null) { FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns(new List<FunctionMapEntry>());
@@ -186,7 +186,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
 
 			// Assert
-			Assert.Equal(DeminificationError.SourceMapFailedToParse, stackFrameDeminification.DeminificationError);
+			Assert.Equal(DeminificationError.NoMatchingMapingInSourceMap, stackFrameDeminification.DeminificationError);
 			Assert.Equal(wrapingFunctionMapEntry.DeminfifiedMethodName, stackFrameDeminification.DeminifiedStackFrame.MethodName);
 			Assert.Null(stackFrameDeminification.DeminifiedStackFrame.SourcePosition);
 			Assert.Null(stackFrameDeminification.DeminifiedStackFrame.FilePath);
@@ -198,12 +198,12 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			// Arrange
 			var filePath = "foo";
 			var wrapingFunctionMapEntry = new FunctionMapEntry(null!, null!, null!) { DeminfifiedMethodName = "DeminifiedFoo" };
-			var stackFrame = new StackFrame { FilePath = filePath };
+			var stackFrame = new StackFrame(null) { FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns(new List<FunctionMapEntry>());
 			var sourceMapStore = new Mock<ISourceMapStore>();
-			var sourceMap = new SourceMap() {ParsedMappings = new List<MappingEntry>()};
+			var sourceMap = new SourceMap();
 
 			sourceMapStore.Setup(c => c.GetSourceMapForUrl(It.IsAny<string>())).Returns(sourceMap);
 			var functionMapConsumer = new Mock<IFunctionMapConsumer>();

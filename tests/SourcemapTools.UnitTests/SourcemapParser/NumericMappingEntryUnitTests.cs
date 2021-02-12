@@ -21,8 +21,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
 			// Assert
-			Assert.Equal(12, mappingEntry.GeneratedSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(13, mappingEntry.GeneratedSourcePosition.ZeroBasedLineNumber);
+			Assert.Equal(12, mappingEntry.GeneratedSourcePosition.Column);
+			Assert.Equal(13, mappingEntry.GeneratedSourcePosition.Line);
 			Assert.Null(mappingEntry.OriginalSourcePosition);
 			Assert.Null(mappingEntry.OriginalFileName);
 			Assert.Null(mappingEntry.OriginalName);
@@ -46,10 +46,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
 			// Assert
-			Assert.Equal(2, mappingEntry.GeneratedSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(3, mappingEntry.GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(16, mappingEntry.OriginalSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(23, mappingEntry.OriginalSourcePosition.ZeroBasedLineNumber);
+			Assert.Equal(2, mappingEntry.GeneratedSourcePosition.Column);
+			Assert.Equal(3, mappingEntry.GeneratedSourcePosition.Line);
+			Assert.Equal(16, mappingEntry.OriginalSourcePosition!.Column);
+			Assert.Equal(23, mappingEntry.OriginalSourcePosition.Line);
 			Assert.Null(mappingEntry.OriginalFileName);
 			Assert.Null(mappingEntry.OriginalName);
 		}
@@ -72,8 +72,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
 			// Assert
-			Assert.Equal(8, mappingEntry.GeneratedSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(48, mappingEntry.GeneratedSourcePosition.ZeroBasedLineNumber);
+			Assert.Equal(8, mappingEntry.GeneratedSourcePosition.Column);
+			Assert.Equal(48, mappingEntry.GeneratedSourcePosition.Line);
 			Assert.Null(mappingEntry.OriginalSourcePosition);
 			Assert.Equal("three", mappingEntry.OriginalFileName);
 			Assert.Equal("bar", mappingEntry.OriginalName);

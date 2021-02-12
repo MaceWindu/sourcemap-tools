@@ -11,11 +11,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		public void GetWrappingFunctionForSourceLocation_EmptyFunctionMap_ReturnNull()
 		{
 			// Arrange
-			var sourcePosition = new SourcePosition
-			{
-				ZeroBasedLineNumber = 2,
-				ZeroBasedColumnNumber = 3
-			};
+			var sourcePosition = new SourcePosition(2, 3);
 			var functionMap = new List<FunctionMapEntry>();
 			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
@@ -30,17 +26,13 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		public void GetWrappingFunctionForSourceLocation_SingleIrrelevantFunctionMapEntry_ReturnNull()
 		{
 			// Arrange
-			var sourcePosition = new SourcePosition
-			{
-				ZeroBasedLineNumber = 2,
-				ZeroBasedColumnNumber = 3
-			};
+			var sourcePosition = new SourcePosition(2, 3);
 			var functionMap = new List<FunctionMapEntry>
 			{
 				new FunctionMapEntry(
 					null!,
-					new SourcePosition {ZeroBasedLineNumber = 40, ZeroBasedColumnNumber = 10},
-					new SourcePosition {ZeroBasedLineNumber = 50, ZeroBasedColumnNumber = 10})
+					new SourcePosition(40, 10),
+					new SourcePosition(50, 10))
 			};
 			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
@@ -55,15 +47,11 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		public void GetWrappingFunctionForSourceLocation_SingleRelevantFunctionMapEntry_ReturnWrappingFunction()
 		{
 			// Arrange
-			var sourcePosition = new SourcePosition
-			{
-				ZeroBasedLineNumber = 41,
-				ZeroBasedColumnNumber = 2
-			};
+			var sourcePosition = new SourcePosition(41, 2);
 			var functionMapEntry = new FunctionMapEntry(
 				null!,
-				new SourcePosition { ZeroBasedLineNumber = 40, ZeroBasedColumnNumber = 10 },
-				new SourcePosition { ZeroBasedLineNumber = 50, ZeroBasedColumnNumber = 10 });
+				new SourcePosition(40, 10),
+				new SourcePosition(50, 10));
 
 			var functionMap = new List<FunctionMapEntry>
 			{
@@ -82,20 +70,16 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesSingleRelevantFunctionMapEntry_ReturnWrappingFunction()
 		{
 			// Arrange
-			var sourcePosition = new SourcePosition
-			{
-				ZeroBasedLineNumber = 31,
-				ZeroBasedColumnNumber = 0
-			};
+			var sourcePosition = new SourcePosition(31, 0);
 			var functionMapEntry = new FunctionMapEntry(
 				null!,
-				new SourcePosition { ZeroBasedLineNumber = 10, ZeroBasedColumnNumber = 10 },
-				new SourcePosition { ZeroBasedLineNumber = 20, ZeroBasedColumnNumber = 30 });
+				new SourcePosition(10, 10),
+				new SourcePosition(20, 30));
 
 			var functionMapEntry2 = new FunctionMapEntry(
 				null!,
-				new SourcePosition { ZeroBasedLineNumber = 30, ZeroBasedColumnNumber = 0 },
-				new SourcePosition { ZeroBasedLineNumber = 40, ZeroBasedColumnNumber = 2 });
+				new SourcePosition(30, 0),
+				new SourcePosition(40, 2));
 
 			var functionMap = new List<FunctionMapEntry>
 			{
@@ -115,20 +99,16 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesMultipleRelevantFunctionMapEntry_ReturnClosestWrappingFunction()
 		{
 			// Arrange
-			var sourcePosition = new SourcePosition
-			{
-				ZeroBasedLineNumber = 10,
-				ZeroBasedColumnNumber = 25
-			};
+			var sourcePosition = new SourcePosition(10, 25);
 			var functionMapEntry = new FunctionMapEntry(
 				null!,
-				new SourcePosition { ZeroBasedLineNumber = 5, ZeroBasedColumnNumber = 10 },
-				new SourcePosition { ZeroBasedLineNumber = 20, ZeroBasedColumnNumber = 30 });
+				new SourcePosition(5, 10),
+				new SourcePosition(20, 30));
 
 			var functionMapEntry2 = new FunctionMapEntry(
 				null!,
-				new SourcePosition { ZeroBasedLineNumber = 9, ZeroBasedColumnNumber = 0 },
-				new SourcePosition { ZeroBasedLineNumber = 15, ZeroBasedColumnNumber = 2 });
+				new SourcePosition(9, 0),
+				new SourcePosition(15, 2));
 
 			var functionMap = new List<FunctionMapEntry>
 			{

@@ -135,8 +135,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 			// Assert
 			Assert.Equal(2, mappingsList.Count);
-			Assert.Equal(0, mappingsList[0].GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, mappingsList[1].GeneratedSourcePosition.ZeroBasedLineNumber);
+			Assert.Equal(0, mappingsList[0].GeneratedSourcePosition.Line);
+			Assert.Equal(0, mappingsList[1].GeneratedSourcePosition.Line);
 		}
 
 		[Fact]
@@ -152,8 +152,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 			// Assert
 			Assert.Equal(2, mappingsList.Count);
-			Assert.Equal(0, mappingsList[0].GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(1, mappingsList[1].GeneratedSourcePosition.ZeroBasedLineNumber);
+			Assert.Equal(0, mappingsList[0].GeneratedSourcePosition.Line);
+			Assert.Equal(1, mappingsList[1].GeneratedSourcePosition.Line);
 		}
 
 		[Fact]
@@ -169,8 +169,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 			// Assert
 			Assert.Equal(2, mappingsList.Count);
-			Assert.Equal(0, mappingsList[0].GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(2, mappingsList[1].GeneratedSourcePosition.ZeroBasedLineNumber);
+			Assert.Equal(0, mappingsList[0].GeneratedSourcePosition.Line);
+			Assert.Equal(2, mappingsList[1].GeneratedSourcePosition.Line);
 		}
 	}
 }

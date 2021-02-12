@@ -32,7 +32,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var stackTraceParser = new Mock<IStackTraceParser>();
-			var minifiedStackFrames = new List<StackFrame> { new StackFrame() };
+			var minifiedStackFrames = new List<StackFrame> { new StackFrame(null) };
 			var stackTraceString = "foobar";
 			var message = "Error example";
 			stackTraceParser.Setup(x => x.ParseStackTrace(stackTraceString, out message)).Returns(minifiedStackFrames);

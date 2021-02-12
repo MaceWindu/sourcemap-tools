@@ -11,7 +11,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	internal class StackFrameDeminifier : IStackFrameDeminifier
 	{
 		private readonly ISourceMapStore _sourceMapStore;
-		private readonly MethodNameStackFrameDeminifier? _methodNameDeminifier;
+		private readonly IStackFrameDeminifier? _methodNameDeminifier;
 
 		public StackFrameDeminifier(ISourceMapStore sourceMapStore)
 		{
@@ -27,7 +27,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// This method will deminify a single stack from from a minified stack trace.
 		/// </summary>
 		/// <returns>Returns a StackFrameDeminificationResult that contains a stack trace that has been translated to the original source code. The DeminificationError Property indicates if the StackFrame could not be deminified. DeminifiedStackFrame will not be null, but any properties of DeminifiedStackFrame could be null if the value could not be extracted. </returns>
-		public StackFrameDeminificationResult DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName)
+		StackFrameDeminificationResult IStackFrameDeminifier.DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName)
 		{
 			if (stackFrame == null)
 			{
@@ -47,23 +47,19 @@ namespace SourcemapToolkit.CallstackDeminifier
 			{
 				result = new StackFrameDeminificationResult(
 					DeminificationError.None,
-					new StackFrame { MethodName = callerSymbolName });
+					new StackFrame(callerSymbolName));
 			}
 
 			if (result.DeminificationError == DeminificationError.None)
 			{
 				var generatedSourcePositionMappingEntry =
-					sourceMap?.GetMappingEntryForGeneratedSourcePosition(generatedSourcePosition!);
+					sourceMap?.GetMappingEntryForGeneratedSourcePosition(generatedSourcePosition);
 
 				if (generatedSourcePositionMappingEntry == null)
 				{
 					if (sourceMap == null)
 					{
 						result.DeminificationError = DeminificationError.NoSourceMap;
-					}
-					else if (sourceMap.ParsedMappings == null)
-					{
-						result.DeminificationError = DeminificationError.SourceMapFailedToParse;
 					}
 					else
 					{

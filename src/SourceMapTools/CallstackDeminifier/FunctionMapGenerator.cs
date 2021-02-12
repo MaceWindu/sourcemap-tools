@@ -12,14 +12,14 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// Returns a FunctionMap describing the locations of every funciton in the source code.
 		/// The functions are to be sorted descending by start position.
 		/// </summary>
-		List<FunctionMapEntry>? IFunctionMapGenerator.GenerateFunctionMap(Stream? sourceCodeStream, SourceMap? sourceMap)
+		IReadOnlyList<FunctionMapEntry>? IFunctionMapGenerator.GenerateFunctionMap(Stream? sourceCodeStream, SourceMap? sourceMap)
 		{
 			if (sourceCodeStream == null || sourceMap == null)
 			{
 				return null;
 			}
 
-			List<FunctionMapEntry>? result;
+			IReadOnlyList<FunctionMapEntry>? result;
 			try
 			{
 				result = ParseSourceCode(sourceCodeStream);
@@ -42,7 +42,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// Iterates over all the code in the JavaScript file to get a list of all the functions declared in that file.
 		/// </summary>
-		internal static List<FunctionMapEntry> ParseSourceCode(Stream sourceCodeStream)
+		internal static IReadOnlyList<FunctionMapEntry> ParseSourceCode(Stream sourceCodeStream)
 		{
 			string sourceCode;
 			using (sourceCodeStream)

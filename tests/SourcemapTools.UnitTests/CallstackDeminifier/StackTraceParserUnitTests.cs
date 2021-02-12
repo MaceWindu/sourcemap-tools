@@ -107,8 +107,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Null(result.MethodName);
-			Assert.Equal(0, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(33, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(0, result.SourcePosition!.Line);
+			Assert.Equal(33, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -124,8 +124,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("webpack-internal:///./Static/jsx/InitialStep/InitialStepForm.js", result.FilePath);
 			Assert.Equal("eval", result.MethodName);
-			Assert.Equal(167 - 1, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(14 - 1, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(167 - 1, result.SourcePosition!.Line);
+			Assert.Equal(14 - 1, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -141,8 +141,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Equal("c", result.MethodName);
-			Assert.Equal(7, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(2, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(7, result.SourcePosition!.Line);
+			Assert.Equal(2, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -158,8 +158,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Equal("c", result.MethodName);
-			Assert.Equal(7, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(2, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(7, result.SourcePosition!.Line);
+			Assert.Equal(2, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -175,8 +175,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Null(result.MethodName);
-			Assert.Equal(9, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(12, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(9, result.SourcePosition!.Line);
+			Assert.Equal(12, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -192,8 +192,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/o/app_scripts/crashcauser.min.js", result.FilePath);
 			Assert.Equal("c", result.MethodName);
-			Assert.Equal(8, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(4, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(8, result.SourcePosition!.Line);
+			Assert.Equal(4, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -209,8 +209,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Equal("c", result.MethodName);
-			Assert.Equal(3, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(51, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(3, result.SourcePosition!.Line);
+			Assert.Equal(51, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -226,8 +226,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Equal("c", result.MethodName);
-			Assert.Equal(2, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(16, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(2, result.SourcePosition!.Line);
+			Assert.Equal(16, result.SourcePosition.Column);
 		}
 
 		[Fact]
@@ -243,8 +243,8 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 			// Assert
 			Assert.Equal("http://localhost:19220/crashcauser.min.js", result.FilePath);
 			Assert.Equal("Anonymous function", result.MethodName);
-			Assert.Equal(4, result.SourcePosition!.ZeroBasedLineNumber);
-			Assert.Equal(24, result.SourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(4, result.SourcePosition!.Line);
+			Assert.Equal(24, result.SourcePosition.Column);
 		}
 	}
 }

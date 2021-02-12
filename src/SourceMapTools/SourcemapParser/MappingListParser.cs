@@ -4,121 +4,6 @@ using System.Collections.Generic;
 namespace SourcemapToolkit.SourcemapParser
 {
 	/// <summary>
-	/// Corresponds to a single parsed entry in the source map mapping string that is used internally by the parser.
-	/// The public API exposes the MappingEntry object, which is more useful to consumers of the library.
-	/// </summary>
-	internal class NumericMappingEntry
-	{
-		/// <summary>
-		/// The zero-based line number in the generated code that corresponds to this mapping segment.
-		/// </summary>
-		public int GeneratedLineNumber;
-
-		/// <summary>
-		/// The zero-based column number in the generated code that corresponds to this mapping segment.
-		/// </summary>
-		public int GeneratedColumnNumber;
-
-		/// <summary>
-		/// The zero-based index into the sources array that corresponds to this mapping segment.
-		/// </summary>
-		public int? OriginalSourceFileIndex;
-
-		/// <summary>
-		/// The zero-based line number in the source code that corresponds to this mapping segment.
-		/// </summary>
-		public int? OriginalLineNumber;
-
-		/// <summary>
-		/// The zero-based line number in the source code that corresponds to this mapping segment.
-		/// </summary>
-		public int? OriginalColumnNumber;
-
-		/// <summary>
-		/// The zero-based index into the names array that can be used to identify names associated with this object.
-		/// </summary>
-		public int? OriginalNameIndex;
-
-		public MappingEntry ToMappingEntry(List<string> names, List<string> sources)
-		{
-			var result = new MappingEntry
-			{
-				GeneratedSourcePosition = new SourcePosition
-				{
-					ZeroBasedColumnNumber = GeneratedColumnNumber,
-					ZeroBasedLineNumber = GeneratedLineNumber
-				}
-			};
-
-			if (OriginalColumnNumber.HasValue && OriginalLineNumber.HasValue)
-			{
-				result.OriginalSourcePosition = new SourcePosition
-				{
-					ZeroBasedColumnNumber = OriginalColumnNumber.Value,
-					ZeroBasedLineNumber = OriginalLineNumber.Value
-				};
-			}
-
-			if (OriginalNameIndex.HasValue)
-			{
-				try
-				{
-					result.OriginalName = names[OriginalNameIndex.Value];
-				}
-				catch (IndexOutOfRangeException e)
-				{
-					throw new IndexOutOfRangeException("Source map contains original name index that is outside the range of the provided names array", e);
-				}
-
-			}
-
-			if (OriginalSourceFileIndex.HasValue)
-			{
-				try
-				{
-					result.OriginalFileName = sources[OriginalSourceFileIndex.Value];
-				}
-				catch (IndexOutOfRangeException e)
-				{
-					throw new IndexOutOfRangeException("Source map contains original source index that is outside the range of the provided sources array", e);
-				}
-			}
-
-			return result;
-		}
-	}
-
-	/// <summary>
-	/// The various fields within a segment of the Mapping parser are relative to the previous value we parsed.
-	/// This class tracks this state throughout the parsing process. 
-	/// </summary>
-	internal struct MappingsParserState
-	{
-		public readonly int CurrentGeneratedLineNumber;
-		public readonly int CurrentGeneratedColumnBase;
-		public readonly int SourcesListIndexBase;
-		public readonly int OriginalSourceStartingLineBase;
-		public readonly int OriginalSourceStartingColumnBase;
-		public readonly int NamesListIndexBase;
-
-		public MappingsParserState(MappingsParserState previousMappingsParserState = new MappingsParserState(),
-			int? newGeneratedLineNumber = null,
-			int? newGeneratedColumnBase = null,
-			int? newSourcesListIndexBase = null,
-			int? newOriginalSourceStartingLineBase = null,
-			int? newOriginalSourceStartingColumnBase = null,
-			int? newNamesListIndexBase = null)
-		{
-			CurrentGeneratedLineNumber = newGeneratedLineNumber ?? previousMappingsParserState.CurrentGeneratedLineNumber;
-			CurrentGeneratedColumnBase = newGeneratedColumnBase ?? previousMappingsParserState.CurrentGeneratedColumnBase;
-			SourcesListIndexBase = newSourcesListIndexBase ?? previousMappingsParserState.SourcesListIndexBase;
-			OriginalSourceStartingLineBase = newOriginalSourceStartingLineBase ?? previousMappingsParserState.OriginalSourceStartingLineBase;
-			OriginalSourceStartingColumnBase = newOriginalSourceStartingColumnBase ?? previousMappingsParserState.OriginalSourceStartingColumnBase;
-			NamesListIndexBase = newNamesListIndexBase ?? previousMappingsParserState.NamesListIndexBase;
-		}
-	}
-
-	/// <summary>
 	/// One of the entries of the V3 source map is a base64 VLQ encoded string providing metadata about a particular line of generated code.
 	/// This class is responsible for converting this string into a more friendly format.
 	/// </summary>
@@ -132,7 +17,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <param name="segmentFields">The integer values for the segment fields</param>
 		/// <param name="mappingsParserState">The current state of the state variables for the parser</param>
 		/// <returns></returns>
-		internal static NumericMappingEntry ParseSingleMappingSegment(List<int> segmentFields, MappingsParserState mappingsParserState)
+		internal static NumericMappingEntry ParseSingleMappingSegment(IReadOnlyList<int> segmentFields, MappingsParserState mappingsParserState)
 		{
 			if (segmentFields.Count is 0 or 2 or 3)
 			{
@@ -187,7 +72,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// Top level API that should be called for decoding the MappingsString element. It will convert the string containing Base64 
 		/// VLQ encoded segments into a list of MappingEntries.
 		/// </summary>
-		internal static List<MappingEntry> ParseMappings(string mappingString, List<string> names, List<string> sources)
+		internal static List<MappingEntry> ParseMappings(string mappingString, IReadOnlyList<string> names, IReadOnlyList<string> sources)
 		{
 			var mappingEntries = new List<MappingEntry>();
 			var currentMappingsParserState = new MappingsParserState();

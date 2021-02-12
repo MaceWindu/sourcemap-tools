@@ -13,7 +13,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// </summary>
 	public class StackTraceParser : IStackTraceParser
 	{
-		private readonly Regex _lineNumberRegex = new Regex(@"([^@(\s]*\.js)[^/]*:([0-9]+):([0-9]+)[^/]*$", RegexOptions.Compiled);
+		private static readonly Regex _lineNumberRegex = new Regex(@"([^@(\s]*\.js)[^/]*:([0-9]+):([0-9]+)[^/]*$", RegexOptions.Compiled);
 
 		/// <summary>
 		/// Generates a list of StackFrame objects based on the input stack trace.
@@ -29,7 +29,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <remarks>
 		/// This override drops the Message out param for backward compatibility
 		/// </remarks>
-		public List<StackFrame> ParseStackTrace(string stackTraceString)
+		IReadOnlyList<StackFrame> IStackTraceParser.ParseStackTrace(string stackTraceString)
 		{
 			return ParseStackTrace(stackTraceString, out var _);
 		}
@@ -45,7 +45,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// Any parts of the stack trace that could not be parsed are excluded from
 		/// the result. Does not ever return null.
 		/// </returns>
-		public virtual List<StackFrame> ParseStackTrace(string stackTraceString, out string? message)
+		public virtual IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message)
 		{
 			if (stackTraceString == null)
 			{
@@ -145,19 +145,17 @@ namespace SourcemapToolkit.CallstackDeminifier
 				return null;
 			}
 
-			var result = new StackFrame {MethodName = TryExtractMethodNameFromFrame(frame)};
+			var result = new StackFrame(TryExtractMethodNameFromFrame(frame));
 
 			if (lineNumberMatch.Success)
 			{
 				result.FilePath = lineNumberMatch.Groups[1].Value;
-				result.SourcePosition = new SourcePosition
-				{
+				result.SourcePosition = new SourcePosition(
 					// The browser provides one-based line and column numbers, but the
 					// rest of this library uses zero-based values. Normalize to make
 					// the stack frames zero based.
-					ZeroBasedLineNumber = int.Parse(lineNumberMatch.Groups[2].Value, CultureInfo.InvariantCulture) - 1,
-					ZeroBasedColumnNumber = int.Parse(lineNumberMatch.Groups[3].Value, CultureInfo.InvariantCulture) - 1
-				};
+					int.Parse(lineNumberMatch.Groups[2].Value, CultureInfo.InvariantCulture) - 1,
+					int.Parse(lineNumberMatch.Groups[3].Value, CultureInfo.InvariantCulture) - 1);
 			}
 
 			return result;

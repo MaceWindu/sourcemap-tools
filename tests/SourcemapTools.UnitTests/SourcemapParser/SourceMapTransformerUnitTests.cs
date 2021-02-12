@@ -34,10 +34,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.Single(linesOnlyMap.Sources);
 			Assert.Single(linesOnlyMap.SourcesContent);
 			Assert.Single(linesOnlyMap.ParsedMappings);
-			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
+			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
+			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
+			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
 		}
 
 		[Fact]
@@ -56,9 +56,14 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			{
 				File = "generated.js",
 				Sources = new List<string> { "sourceOne.js" },
-				ParsedMappings = new List<MappingEntry> { mappingEntry, mappingEntry2 },
 				SourcesContent = new List<string>{"var a = b"}
 			};
+			map.ParsedMappings.AddRange(new MappingEntry[]
+			{
+				mappingEntry,
+				mappingEntry2
+			});
+
 
 			// Act
 			var linesOnlyMap = SourceMapTransformer.Flatten(map);
@@ -68,10 +73,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.Single(linesOnlyMap.Sources);
 			Assert.Single(linesOnlyMap.SourcesContent);
 			Assert.Single(linesOnlyMap.ParsedMappings);
-			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
+			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
+			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
+			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
 		}
 
 		[Fact]
@@ -90,9 +95,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			{
 				File = "generated.js",
 				Sources = new List<string> { "sourceOne.js" },
-				ParsedMappings = new List<MappingEntry> { mappingEntry, mappingEntry2 },
 				SourcesContent = new List<string>{"var a = b"}
 			};
+			map.ParsedMappings.AddRange(new[] { mappingEntry, mappingEntry2 });
+
 
 			// Act
 			var linesOnlyMap = SourceMapTransformer.Flatten(map);
@@ -102,10 +108,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.Single(linesOnlyMap.Sources);
 			Assert.Single(linesOnlyMap.SourcesContent);
 			Assert.Single(linesOnlyMap.ParsedMappings);
-			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.ZeroBasedColumnNumber);
-			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.ZeroBasedLineNumber);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.ZeroBasedColumnNumber);
+			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
+			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
+			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
+			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// This method will deminify the method name of a single stack from from a minified stack trace.
 		/// </summary>
-		public virtual StackFrameDeminificationResult DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName)
+		StackFrameDeminificationResult IStackFrameDeminifier.DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName)
 		{
 			if (stackFrame == null)
 			{
@@ -50,7 +50,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 			return new StackFrameDeminificationResult(
 				deminificationError,
-				new StackFrame { MethodName = wrappingFunction?.DeminfifiedMethodName });
+				new StackFrame(wrappingFunction?.DeminfifiedMethodName));
 		}
 	}
 }

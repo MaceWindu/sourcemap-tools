@@ -19,22 +19,21 @@ namespace SourcemapToolkit.SourcemapParser
 				Mappings = sourceMap.Mappings,
 				Sources = sourceMap.Sources == null ? null : new List<string>(sourceMap.Sources),
 				SourcesContent = sourceMap.SourcesContent == null ? null : new List<string>(sourceMap.SourcesContent),
-				Names = sourceMap.Names == null ? null : new List<string>(sourceMap.Names),
-				ParsedMappings = new List<MappingEntry>()
+				Names = sourceMap.Names == null ? null : new List<string>(sourceMap.Names)
 			};
 
 			var visitedLines = new HashSet<int>();
 
 			foreach (var mapping in sourceMap.ParsedMappings)
 			{
-				var generatedLine = mapping.GeneratedSourcePosition.ZeroBasedLineNumber;
+				var generatedLine = mapping.GeneratedSourcePosition.Line;
 
 				if (!visitedLines.Contains(generatedLine))
 				{
 					visitedLines.Add(generatedLine);
 					var newMapping = mapping.Clone();
-					newMapping.GeneratedSourcePosition.ZeroBasedColumnNumber = 0;
-					newMapping.OriginalSourcePosition.ZeroBasedColumnNumber = 0;
+					newMapping.GeneratedSourcePosition.Column = 0;
+					newMapping.OriginalSourcePosition!.Column = 0;
 					newMap.ParsedMappings.Add(newMapping);
 				}
 			}

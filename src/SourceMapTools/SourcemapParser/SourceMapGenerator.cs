@@ -7,55 +7,6 @@ using System.Text.Json.Serialization;
 
 namespace SourcemapToolkit.SourcemapParser
 {
-
-	/// <summary>
-	/// Class to track the internal state during source map serialize
-	/// </summary>
-	internal class MappingGenerateState
-	{
-		/// <summary>
-		/// Last location of the code in the transformed code
-		/// </summary>
-		public readonly SourcePosition LastGeneratedPosition = new SourcePosition();
-
-		/// <summary>
-		/// Last location of the code in the source code
-		/// </summary>
-		public readonly SourcePosition LastOriginalPosition = new SourcePosition();
-
-		/// <summary>
-		/// List that contains the symbol names
-		/// </summary>
-		public readonly IList<string> Names;
-
-		/// <summary>
-		/// List that contains the file sources
-		/// </summary>
-		public readonly IList<string> Sources;
-
-		/// <summary>
-		/// Index of last file source
-		/// </summary>
-		public int LastSourceIndex { get; set; }
-
-		/// <summary>
-		/// Index of last symbol name
-		/// </summary>
-		public int LastNameIndex { get; set; }
-
-		/// <summary>
-		/// Whether this is the first segment in current line
-		/// </summary>
-		public bool IsFirstSegment { get; set; }
-
-		public MappingGenerateState(IList<string> names, IList<string> sources)
-		{
-			Names = names;
-			Sources = sources;
-			IsFirstSegment = true;
-		}
-	}
-
 	public static class SourceMapGenerator
 	{
 		/// <summary>
@@ -69,7 +20,6 @@ namespace SourcemapToolkit.SourcemapParser
 
 			return @"//# sourceMappingURL=data:application/json;base64," + encoded;
 		}
-
 
 		/// <summary>
 		/// Serialize SourceMap object to json string with given serialize settings
@@ -92,7 +42,7 @@ namespace SourcemapToolkit.SourcemapParser
 
 			if (sourceMap.ParsedMappings.Count > 0)
 			{
-				var state = new MappingGenerateState(sourceMap.Names!, sourceMap.Sources!);
+				var state = new MappingGenerateState(sourceMap.Names ?? new List<string>(), sourceMap.Sources ?? new List<string>());
 				var output = new StringBuilder();
 
 				foreach (var entry in sourceMap.ParsedMappings)
@@ -118,16 +68,16 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		internal static void SerializeMappingEntry(MappingEntry entry, MappingGenerateState state, StringBuilder output)
 		{
-			if (state.LastGeneratedPosition.ZeroBasedLineNumber > entry.GeneratedSourcePosition.ZeroBasedLineNumber)
+			if (state.LastGeneratedPosition.Line > entry.GeneratedSourcePosition.Line)
 			{
-				throw new InvalidOperationException($"Invalid sourmap detected. Please check the line {entry.GeneratedSourcePosition.ZeroBasedLineNumber}");
+				throw new InvalidOperationException($"Invalid sourmap detected. Please check the line {entry.GeneratedSourcePosition.Line}");
 			}
 
 			// Each line of generated code is separated using semicolons
-			while (entry.GeneratedSourcePosition.ZeroBasedLineNumber != state.LastGeneratedPosition.ZeroBasedLineNumber)
+			while (entry.GeneratedSourcePosition.Line != state.LastGeneratedPosition.Line)
 			{
-				state.LastGeneratedPosition.ZeroBasedColumnNumber = 0;
-				state.LastGeneratedPosition.ZeroBasedLineNumber++;
+				state.LastGeneratedPosition.Line++;
+				state.LastGeneratedPosition.Column = 0;
 				state.IsFirstSegment = true;
 				output.Append(';');
 			}
@@ -164,8 +114,8 @@ namespace SourcemapToolkit.SourcemapParser
 			 *     is represented.
 			 */
 
-			Base64VlqEncoder.Encode(output, entry.GeneratedSourcePosition.ZeroBasedColumnNumber - state.LastGeneratedPosition.ZeroBasedColumnNumber);
-			state.LastGeneratedPosition.ZeroBasedColumnNumber = entry.GeneratedSourcePosition.ZeroBasedColumnNumber;
+			Base64VlqEncoder.Encode(output, entry.GeneratedSourcePosition.Column - state.LastGeneratedPosition.Column);
+			state.LastGeneratedPosition.Column = entry.GeneratedSourcePosition.Column;
 
 			if (entry.OriginalFileName != null)
 			{
@@ -178,11 +128,11 @@ namespace SourcemapToolkit.SourcemapParser
 				Base64VlqEncoder.Encode(output, sourceIndex - state.LastSourceIndex);
 				state.LastSourceIndex = sourceIndex;
 
-				Base64VlqEncoder.Encode(output, entry.OriginalSourcePosition.ZeroBasedLineNumber - state.LastOriginalPosition.ZeroBasedLineNumber);
-				state.LastOriginalPosition.ZeroBasedLineNumber = entry.OriginalSourcePosition.ZeroBasedLineNumber;
+				Base64VlqEncoder.Encode(output, entry.OriginalSourcePosition!.Line - state.LastOriginalPosition.Line);
+				state.LastOriginalPosition.Line = entry.OriginalSourcePosition.Line;
 
-				Base64VlqEncoder.Encode(output, entry.OriginalSourcePosition.ZeroBasedColumnNumber - state.LastOriginalPosition.ZeroBasedColumnNumber);
-				state.LastOriginalPosition.ZeroBasedColumnNumber = entry.OriginalSourcePosition.ZeroBasedColumnNumber;
+				Base64VlqEncoder.Encode(output, entry.OriginalSourcePosition.Column - state.LastOriginalPosition.Column);
+				state.LastOriginalPosition.Column = entry.OriginalSourcePosition.Column;
 
 				if (entry.OriginalName != null)
 				{

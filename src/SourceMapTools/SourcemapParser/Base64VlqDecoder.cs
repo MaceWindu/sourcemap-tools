@@ -42,7 +42,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <summary>
 		/// Returns a list of integers corresponding to an input string that is Base64 VLQ encoded
 		/// </summary>
-		internal static List<int> Decode(string input)
+		internal static IReadOnlyList<int> Decode(string input)
 		{
 			var result = new List<int>();
 			var charProvider = new Base64CharProvider(input);

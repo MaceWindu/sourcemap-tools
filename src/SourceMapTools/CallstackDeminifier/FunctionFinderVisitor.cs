@@ -13,7 +13,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// </summary>
 	internal class FunctionFinderVisitor : AllAstVisitor
 	{
-		internal readonly List<FunctionMapEntry> FunctionMap = new List<FunctionMapEntry>();
+		internal List<FunctionMapEntry> FunctionMap { get; } = new List<FunctionMapEntry>();
 
 		protected override void VisitArrowFunctionExpression(ArrowFunctionExpression arrowFunctionExpression)
 		{
@@ -51,13 +51,9 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 		private static SourcePosition GetSourcePosition(Position position)
 		{
-			return new SourcePosition()
-			{
-				// esprima use 1-based line counter
-				// https://github.com/estree/estree/blob/master/es5.md#node-objects
-				ZeroBasedLineNumber = position.Line - 1,
-				ZeroBasedColumnNumber = position.Column
-			};
+			// esprima use 1-based line counter
+			// https://github.com/estree/estree/blob/master/es5.md#node-objects
+			return new SourcePosition(position.Line - 1, position.Column);
 		}
 
 		/// <summary>

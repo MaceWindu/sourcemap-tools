@@ -26,12 +26,12 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			Assert.Equal(6, results.DeminifiedStackFrameResults.Count);
 			Assert.Equal(DeminificationError.None, results.DeminifiedStackFrameResults[0].DeminificationError);
-			Assert.Equal(16, results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.SourcePosition!.ZeroBasedLineNumber);
+			Assert.Equal(16, results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.SourcePosition!.Line);
 			Assert.Equal("level3", results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName);
 			Assert.Equal("level2", results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName);
 			Assert.Equal("level1", results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName);
 			Assert.Equal("causeCrash", results.DeminifiedStackFrameResults[4].DeminifiedStackFrame.MethodName);
-			Assert.Equal(32, results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.SourcePosition!.ZeroBasedLineNumber);
+			Assert.Equal(32, results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.SourcePosition!.Line);
 		}
 
 		[Fact]

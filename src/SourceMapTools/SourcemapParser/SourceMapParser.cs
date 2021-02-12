@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 
 namespace SourcemapToolkit.SourcemapParser
@@ -21,7 +22,7 @@ namespace SourcemapToolkit.SourcemapParser
 				var result = JsonSerializer.DeserializeAsync<SourceMap>(sourceMapStream).AsTask().GetAwaiter().GetResult();
 				if (result != null)
 				{
-					result.ParsedMappings = MappingsListParser.ParseMappings(result.Mappings, result.Names!, result.Sources!);
+					result.ParsedMappings = MappingsListParser.ParseMappings(result.Mappings ?? string.Empty, result.Names ?? new List<string>(), result.Sources ?? new List<string>());
 				}
 
 				return result;

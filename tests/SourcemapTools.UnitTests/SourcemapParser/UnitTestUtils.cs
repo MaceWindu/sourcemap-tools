@@ -13,21 +13,16 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 		public static MappingEntry GetSimpleEntry(SourcePosition generatedSourcePosition, SourcePosition originalSourcePosition, string originalFileName)
 		{
-			return new MappingEntry
-			{
-				GeneratedSourcePosition = generatedSourcePosition,
-				OriginalSourcePosition = originalSourcePosition,
-				OriginalFileName = originalFileName
-			};
+			return new MappingEntry(
+				generatedSourcePosition,
+				originalSourcePosition,
+				null,
+				originalFileName);
 		}
 
 		public static SourcePosition GenerateSourcePosition(int lineNumber, int colNumber = 0)
 		{
-			return new SourcePosition
-			{
-				ZeroBasedLineNumber = lineNumber,
-				ZeroBasedColumnNumber = colNumber
-			};
+			return new SourcePosition(lineNumber, colNumber);
 		}
 	}
 }

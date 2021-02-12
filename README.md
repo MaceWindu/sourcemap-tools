@@ -9,28 +9,6 @@ This is a fork of [microsoft/sourcemap-toolkit](https://github.com/microsoft/sou
 - lack of support for modern frameworks (.net core): [#57](https://github.com/microsoft/sourcemap-toolkit/issues/57)
 - lack of support for ES6+: [#66](https://github.com/microsoft/sourcemap-toolkit/issues/66)
 
-### Fork changes
-
-Solution structure:
-- codebase migrated C# 9 + nullable reference types and projects migrated to CSP from legacy projects
-- merged `SourcemapToolkit.SourcemapParser` and `SourcemapToolkit.CallstackDeminifier` projects into single `SourcemapTools` project as they are not distributed separately anyways. Same done for test projects
-- `SourcemapToolkit.CallstackTestApp` test app project was removed as it wasn't used directly in testing process
-- enabled checked build
-- fork is rebranded to `SourceMapTools` (namespaces in code left intact)
-- strong name sign key changed
-
-Dependencies and targets:
-- `Newtonsoft.Json` dependency replaced with `System.Text.Json`
-- `AjaxMin` ES5 JavaScript parser dependency replaced with `esprima.net` parser with modern JavaScript support
-- `RhinoMocks` test dependency replaced with `Moq`
-- target framework changed from `net45` to `netstandard2.0`
-- SourceLink support added
-
-API changes:
-- modified sourcemap/script source provider interfaces to require `Stream` instead of `StreamReader`
-- modified some DTOs used in code to have more strict instantiation through constructor to simplify nullable reference types analysis
-- some classes/methods now are static as they don't have state (e.g. `SourceMapGenerator`, `SourceMapParser` classes)
-
 ## Source Map Parsing
 The `SourcemapTools.dll` provides an API for parsing a souce map into an object that is easy to work with and an API for serializing source map object back to json string. 
 The source map class has a method `GetMappingEntryForGeneratedSourcePosition`, which can be used to find a source map mapping entry that likely corresponds to a piece of generated code. 

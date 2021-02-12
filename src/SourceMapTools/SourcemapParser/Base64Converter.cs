@@ -9,14 +9,17 @@ namespace SourcemapToolkit.SourcemapParser
 	internal static class Base64Converter
 	{
 		private const string Base64Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		private static readonly Dictionary<char, int> _base64DecodeMap = new Dictionary<char, int>();
+		private static readonly IReadOnlyDictionary<char, int> _base64DecodeMap;
 
 		static Base64Converter()
 		{
+			var base64DecodeMap = new Dictionary<char, int>();
 			for (var i = 0; i < Base64Alphabet.Length; i += 1)
 			{
-				_base64DecodeMap[Base64Alphabet[i]] = i;
+				base64DecodeMap[Base64Alphabet[i]] = i;
 			}
+
+			_base64DecodeMap = base64DecodeMap;
 		}
 
 		/// <summary>

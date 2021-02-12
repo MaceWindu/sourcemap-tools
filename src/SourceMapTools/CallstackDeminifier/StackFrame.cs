@@ -7,20 +7,32 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// </summary>
 	public class StackFrame
 	{
+		public StackFrame(string? methodName)
+			: this(methodName, null, null)
+		{
+		}
+
+		public StackFrame(string? methodName, string? filePath, SourcePosition? sourcePosition)
+		{
+			MethodName = methodName;
+			FilePath = filePath;
+			SourcePosition = sourcePosition;
+		}
+
 		/// <summary>
 		/// The name of the method
 		/// </summary>
-		public string? MethodName { get; set; }
+		public string? MethodName { get; }
 
 		/// <summary>
 		/// The path of the file where this code is defined
 		/// </summary>
-		public string? FilePath { get; set; }
+		public string? FilePath { get; internal set; }
 
 		/// <summary>
 		/// The zero-based position of this stack entry.
 		/// </summary>
-		public SourcePosition? SourcePosition { get; set; }
+		public SourcePosition? SourcePosition { get; internal set; }
 
 		public override string ToString()
 		{
@@ -30,7 +42,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 				output += $" in {FilePath}";
 				if (SourcePosition != null)
 				{
-					output += $":{SourcePosition.ZeroBasedLineNumber + 1}:{SourcePosition.ZeroBasedColumnNumber + 1}";
+					output += $":{SourcePosition.Line + 1}:{SourcePosition.Column + 1}";
 				}
 			}
 			return output;

@@ -6,8 +6,8 @@ namespace SourcemapToolkit.CallstackDeminifier
 	public class DeminifyStackTraceResult
 	{
 		internal DeminifyStackTraceResult(
-			List<StackFrame> minifiedStackFrames,
-			List<StackFrameDeminificationResult> deminifiedStackFrameResults,
+			IReadOnlyList<StackFrame> minifiedStackFrames,
+			IReadOnlyList<StackFrameDeminificationResult> deminifiedStackFrameResults,
 			string? message)
 		{
 			MinifiedStackFrames = minifiedStackFrames;
@@ -29,12 +29,10 @@ namespace SourcemapToolkit.CallstackDeminifier
 				var deminFrame = DeminifiedStackFrameResults[i].DeminifiedStackFrame;
 
 				// Use deminified info wherever possible, merging if necessary so we always print a full frame
-				var frame = new StackFrame()
-				{
-					MethodName = deminFrame.MethodName ?? MinifiedStackFrames[i].MethodName,
-					SourcePosition = deminFrame.SourcePosition ?? MinifiedStackFrames[i].SourcePosition,
-					FilePath = deminFrame.SourcePosition != null ? deminFrame.FilePath : MinifiedStackFrames[i].FilePath
-				};
+				var frame = new StackFrame(
+					deminFrame.MethodName ?? MinifiedStackFrames[i].MethodName,
+					deminFrame.SourcePosition != null ? deminFrame.FilePath : MinifiedStackFrames[i].FilePath,
+					deminFrame.SourcePosition ?? MinifiedStackFrames[i].SourcePosition);
 
 				output += $"{Environment.NewLine}  {frame}";
 			}

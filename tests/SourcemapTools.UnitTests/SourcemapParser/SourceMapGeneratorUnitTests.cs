@@ -13,15 +13,13 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		{
 			// Arrange
 			var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
-			state.LastGeneratedPosition.ZeroBasedColumnNumber = 1;
+			state.LastGeneratedPosition.Column = 1;
 
-			var entry = new MappingEntry()
-			{
-				GeneratedSourcePosition = new SourcePosition() { ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 0 },
-				OriginalFileName = state.Sources[0],
-				OriginalName = state.Names[0],
-				OriginalSourcePosition = new SourcePosition() { ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 0 },
-			};
+			var entry = new MappingEntry(
+				new SourcePosition(1, 0),
+				new SourcePosition(1, 0),
+				state.Names[0],
+				state.Sources[0]);
 
 			// Act
 			var result = new StringBuilder();
@@ -37,11 +35,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			// Arrange
 			var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
 
-			var entry = new MappingEntry()
-			{
-				GeneratedSourcePosition = new SourcePosition() { ZeroBasedLineNumber = 0, ZeroBasedColumnNumber = 10 },
-				OriginalSourcePosition = new SourcePosition() { ZeroBasedLineNumber = 0, ZeroBasedColumnNumber = 1 },
-			};
+			var entry = new MappingEntry(
+				new SourcePosition(0, 10),
+				new SourcePosition(0, 1),
+				null, null);
 
 			// Act
 			var result = new StringBuilder();
@@ -60,12 +57,11 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 				IsFirstSegment = false
 			};
 
-			var entry = new MappingEntry()
-			{
-				GeneratedSourcePosition = new SourcePosition() { ZeroBasedColumnNumber = 10 },
-				OriginalFileName = state.Sources[0],
-				OriginalSourcePosition = new SourcePosition() { ZeroBasedColumnNumber = 5 },
-			};
+			var entry = new MappingEntry(
+				new SourcePosition(0, 10),
+				new SourcePosition(0, 5),
+				null,
+				state.Sources[0]);
 
 			// Act
 			var result = new StringBuilder();
@@ -80,15 +76,13 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		{
 			// Arrange
 			var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
-			state.LastGeneratedPosition.ZeroBasedLineNumber = 1;
+			state.LastGeneratedPosition.Line = 1;
 
-			var entry = new MappingEntry()
-			{
-				GeneratedSourcePosition = new SourcePosition() { ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 5 },
-				OriginalSourcePosition = new SourcePosition() { ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 6 },
-				OriginalFileName = state.Sources[0],
-				OriginalName = state.Names[0],
-			};
+			var entry = new MappingEntry(
+				new SourcePosition(1, 5),
+				new SourcePosition(1, 6),
+				state.Names[0],
+				state.Sources[0]);
 
 			// Act
 			var result = new StringBuilder();
@@ -153,28 +147,24 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 				Sources = new List<string>() { "input/CommonIntl.js" },
 				Version = 3,
 			};
-			input.ParsedMappings = new List<MappingEntry>()
+			input.ParsedMappings.AddRange(new MappingEntry[]
 			{
-				new MappingEntry
-				{
-					GeneratedSourcePosition = new SourcePosition() {ZeroBasedLineNumber = 0, ZeroBasedColumnNumber = 0 },
-					OriginalFileName = input.Sources[0],
-					OriginalName = input.Names[0],
-					OriginalSourcePosition = new SourcePosition() {ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 0 },
-				},
-				new MappingEntry
-				{
-					GeneratedSourcePosition = new SourcePosition() {ZeroBasedLineNumber = 0, ZeroBasedColumnNumber = 13 },
-					OriginalFileName = input.Sources[0],
-					OriginalSourcePosition = new SourcePosition() {ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 0 },
-				},
-				new MappingEntry
-				{
-					GeneratedSourcePosition = new SourcePosition() {ZeroBasedLineNumber = 0, ZeroBasedColumnNumber = 14 },
-					OriginalFileName = input.Sources[0],
-					OriginalSourcePosition = new SourcePosition() {ZeroBasedLineNumber = 1, ZeroBasedColumnNumber = 14 },
-				},
-			};
+				new MappingEntry(
+					new SourcePosition(0, 0),
+					new SourcePosition(1, 0),
+					input.Names[0],
+					input.Sources[0]),
+				new MappingEntry(
+					new SourcePosition(0, 13),
+					new SourcePosition(1, 0),
+					null,
+					input.Sources[0]),
+				new MappingEntry(
+					new SourcePosition(0, 14),
+					new SourcePosition(1, 14),
+					null,
+					input.Sources[0])
+			});
 
 			return input;
 		}
