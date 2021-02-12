@@ -26,7 +26,7 @@ stages:
   - job: main_job
     pool:
       vmImage: 'windows-2019'
-    displayName: 'Build/Test/Deploy'
+    displayName: 'SourceMap Tools'
 
     steps:
 
@@ -34,6 +34,7 @@ stages:
 # BUILD #
 #########
     - task: NuGetToolInstaller@1
+      displayName: Install latest nuget tools
 
     - task: PowerShell@2
       inputs:
@@ -47,7 +48,7 @@ stages:
         solution: '$(solution)'
         configuration: '$(build_configuration)'
         msbuildArguments: '/t:Restore;Rebuild -m /p:ContinuousIntegrationBuild=true'
-      displayName: Build Solution
+      displayName: Build solution
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -57,7 +58,7 @@ stages:
         zipAfterPublish: false
         arguments: -f netcoreapp2.1 -c $(build_configuration)
         nobuild: true
-      displayName: Publish Test Project for netcore 2.1
+      displayName: Publish test project for netcoreapp2.1
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -67,7 +68,7 @@ stages:
         zipAfterPublish: false
         arguments: -f netcoreapp3.1 -c $(build_configuration)
         nobuild: true
-      displayName: Publish Test Project for netcore 3.1
+      displayName: Publish test project for netcoreapp3.1
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -77,7 +78,7 @@ stages:
         zipAfterPublish: false
         arguments: -f net5.0 -c $(build_configuration)
         nobuild: true
-      displayName: Publish Test Project for net 5.0
+      displayName: Publish test project for net 5
 ########
 # TEST #
 ########
@@ -87,16 +88,16 @@ stages:
         packageType: sdk
         version: 5.x
 
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Debug\net48\SourcemapTools.UnitTests.dll /Framework:net48 /logger:trx
+    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\net48\SourcemapTools.UnitTests.dll /Framework:net48 /logger:trx
       displayName: 'Tests: .NET FX 4.8'
 
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Debug\netcoreapp2.1\SourcemapTools.UnitTests.dll /Framework:netcoreapp2.1 /logger:trx
+    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\netcoreapp2.1\SourcemapTools.UnitTests.dll /Framework:netcoreapp2.1 /logger:trx
       displayName: 'Tests: .NET Core 2.1'
 
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Debug\netcoreapp3.1\SourcemapTools.UnitTests.dll /Framework:netcoreapp3.1 /logger:trx
+    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\netcoreapp3.1\SourcemapTools.UnitTests.dll /Framework:netcoreapp3.1 /logger:trx
       displayName: 'Tests: .NET Core 3.1'
 
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Debug\net5.0\SourcemapTools.UnitTests.dll /Framework:net5.0 /logger:trx
+    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\net5.0\SourcemapTools.UnitTests.dll /Framework:net5.0 /logger:trx
       displayName: 'Tests: .NET 5'
 
     - task: PublishTestResults@2
@@ -104,6 +105,7 @@ stages:
         testRunner: VsTest
         testResultsFiles: '**/*.trx'
         testRunTitle: 'Puiblish test results'
+      displayName: 'Publish Test Results'
 
 #################
 # PUBLISH NUGET #
