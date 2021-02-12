@@ -146,7 +146,7 @@ stages:
         command: 'push'
         packagesToPush: '$(Build.SourcesDirectory)/ci/SourceMapTools.nupkg'
         nuGetFeedType: 'internal'
-        publishVstsFeed: 'TODO'
+        publishVstsFeed: 'sourcemaptools/sourcemap-tools'
       displayName: Publish to Azure Artifacts feed
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
 
@@ -155,7 +155,7 @@ stages:
         command: 'push'
         packagesToPush: '$(Build.SourcesDirectory)/ci/SourceMapTools.nupkg'
         nuGetFeedType: 'external'
-        publishFeedCredentials: 'nuget.org feed'
+        publishFeedCredentials: 'sourcemap-tools at nuget.org'
       displayName: Publish to Nuget.org
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'release'))
 
