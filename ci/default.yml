@@ -175,7 +175,7 @@ stages:
 # PUBLISH NUGET #
 #################
     - powershell: echo "##vso[task.setvariable variable=packageVersion]$(nugetDevVersion)-rc.$(Build.BuildId)"
-      condition: eq(variables['Build.SourceBranchName'], 'master')
+      condition: or (eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'release'))
       displayName: Update nuget version
 
     - task: PowerShell@2
@@ -184,7 +184,7 @@ stages:
         workingDirectory: '$(Build.SourcesDirectory)'
         arguments: -path $(Build.SourcesDirectory)/ci/SourceMapTools.nuspec -version $(packageVersion) -branch $(Build.SourceBranchName)
       displayName: Update nuspecs
-      condition: or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'relase'))
+      condition: or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'release'))
 
     - task: CmdLine@2
       inputs:
