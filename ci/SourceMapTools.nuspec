@@ -6,10 +6,10 @@
 		<description>A C# library that allows for the consumption of source maps and the deminification of JavaScript stack traces.</description>
 		<summary />
 		<tags>sourcemap callstack stackframe deminify</tags>
-		<copyright>Copyright © 2016, 2021</copyright>
-		<authors>Microsoft, MaceWindu@github.com</authors>
+		<copyright>Copyright © 2021</copyright>
+		<authors>MaceWindu@github.com</authors>
 		<owners>MaceWindu@github.com</owners>
-		<license type="file">MIT-LICENSE.txt</license>
+		<license type="file">LICENSE.txt</license>
 		<projectUrl>https://github.com/MaceWindu/sourcemap-tools</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		
