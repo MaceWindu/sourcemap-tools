@@ -7,6 +7,9 @@ using System.Text.Json.Serialization;
 
 namespace SourcemapToolkit.SourcemapParser
 {
+	/// <summary>
+	/// Provides utility methods for source map serialization.
+	/// </summary>
 	public static class SourceMapGenerator
 	{
 		/// <summary>

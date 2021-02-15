@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace SourcemapToolkit.SourcemapParser
 {
+	/// <summary>
+	/// Source map object.
+	/// </summary>
 	public class SourceMap
 	{
 		/// <summary>
@@ -62,6 +65,10 @@ namespace SourcemapToolkit.SourcemapParser
 		{
 		}
 
+		/// <summary>
+		/// Creates new instance of source map object.
+		/// See <a href="https://sourcemaps.info/spec.html"></a> for more details.
+		/// </summary>
 		public SourceMap(
 			int version,
 			string? file,
@@ -80,6 +87,10 @@ namespace SourcemapToolkit.SourcemapParser
 			SourcesContent = sourcesContent;
 		}
 
+		/// <summary>
+		/// Creates copy fo source map.
+		/// </summary>
+		/// <returns>Returns copy of current source map object.</returns>
 		public SourceMap Clone()
 		{
 			return new SourceMap(

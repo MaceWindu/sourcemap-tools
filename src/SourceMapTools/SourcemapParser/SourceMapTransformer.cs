@@ -2,6 +2,9 @@
 
 namespace SourcemapToolkit.SourcemapParser
 {
+	/// <summary>
+	/// Helper to compress source map by removing entries, mapped to same line.
+	/// </summary>
 	public static class SourceMapTransformer
 	{
 		/// <summary>

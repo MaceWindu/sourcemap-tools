@@ -4,6 +4,9 @@ using System.Text.Json;
 
 namespace SourcemapToolkit.SourcemapParser
 {
+	/// <summary>
+	/// Source map parser.
+	/// </summary>
 	public static class SourceMapParser
 	{
 		/// <summary>

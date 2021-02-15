@@ -1,12 +1,26 @@
 ﻿namespace SourcemapToolkit.SourcemapParser
 {
+	/// <summary>
+	/// Source map entry.
+	/// </summary>
 	public struct MappingEntry
 	{
+		/// <summary>
+		/// Creates source map entry instance.
+		/// </summary>
+		/// <param name="generatedSourcePosition">Entry position in minified script.</param>
 		public MappingEntry(SourcePosition generatedSourcePosition)
 			: this(generatedSourcePosition, null, null, null)
 		{
 		}
 
+		/// <summary>
+		/// Creates source map entry instance.
+		/// </summary>
+		/// <param name="generatedSourcePosition">Entry position in minified script.</param>
+		/// <param name="originalSourcePosition">Entry position in original script.</param>
+		/// <param name="originalName">Original name of source map entry.</param>
+		/// <param name="originalFileName">File name of original source file with entry code.</param>
 		public MappingEntry(
 			SourcePosition generatedSourcePosition,
 			SourcePosition? originalSourcePosition,
@@ -39,6 +53,10 @@
 		/// </summary>
 		public readonly string? OriginalFileName { get; }
 
+		/// <summary>
+		/// Returns copy of entry with source positions having zero as column number.
+		/// </summary>
+		/// <returns>Returns copy of current entry.</returns>
 		public MappingEntry CloneWithResetColumnNumber()
 		{
 			return new MappingEntry(
@@ -48,6 +66,16 @@
 				OriginalFileName);
 		}
 
+		/// <summary>
+		/// Compares current mapping entry whith another one.
+		/// </summary>
+		/// <param name="anEntry">Mapping entry to compare with.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><c>true</c>: both entries are the same.</item>
+		/// <item><c>false</c>: entries differ from each other.</item>
+		/// </list>
+		/// </returns>
 		public bool IsValueEqual(MappingEntry anEntry)
 		{
 			return
@@ -57,6 +85,16 @@
 				OriginalSourcePosition.Equals(anEntry.OriginalSourcePosition);
 		}
 
+		/// <summary>
+		/// Compares current mapping entry whith another one.
+		/// </summary>
+		/// <param name="obj">Mapping entry to compare with.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><c>true</c>: both entries are the same.</item>
+		/// <item><c>false</c>: entries differ from each other oth <paramref name="obj"/> is not an instance of <see cref="MappingEntry"/>.</item>
+		/// </list>
+		/// </returns>
 		public override bool Equals(object? obj)
 		{
 			return obj is MappingEntry mappingEntry && IsValueEqual(mappingEntry);

@@ -30,7 +30,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		private static StackTraceDeminifier GetStackTraceDeminifierWithDependencies()
 		{
 			var provider = new WebpackTestProvider();
-			return StackTraceDeminfierFactory.GetStackTraceDeminfier(provider, provider);
+			return StackTraceDeminifierFactory.GetStackTraceDeminfier(provider, provider);
 		}
 
 		[Fact]

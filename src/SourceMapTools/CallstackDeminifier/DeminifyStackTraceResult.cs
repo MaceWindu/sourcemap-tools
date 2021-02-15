@@ -4,6 +4,9 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
+	/// <summary>
+	/// Contains stack trace details (both minified and diminified).
+	/// </summary>
 	public class DeminifyStackTraceResult
 	{
 		internal DeminifyStackTraceResult(
@@ -16,12 +19,24 @@ namespace SourcemapToolkit.CallstackDeminifier
 			Message = message;
 		}
 
+		/// <summary>
+		/// Gets error message, associated with stack trace.
+		/// </summary>
 		public string? Message { get; }
 
+		/// <summary>
+		/// Gets list of stack frames for minified stack.
+		/// </summary>
 		public IReadOnlyList<StackFrame> MinifiedStackFrames { get; }
 
+		/// <summary>
+		/// Gets list of stack frames for de-minified stack.
+		/// </summary>
 		public IReadOnlyList<StackFrameDeminificationResult> DeminifiedStackFrameResults { get; }
 
+		/// <summary>
+		/// Returns string that represents stack trace
+		/// </summary>
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
@@ -30,7 +45,6 @@ namespace SourcemapToolkit.CallstackDeminifier
 			{
 				sb.Append(Message);
 			}
-
 
 			for (var i = 0; i < DeminifiedStackFrameResults.Count; i++)
 			{
