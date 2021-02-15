@@ -68,9 +68,9 @@ namespace SourcemapToolkit.CallstackDeminifier
 				}
 				else
 				{
-					result.DeminifiedStackFrame.FilePath = generatedSourcePositionMappingEntry.OriginalFileName;
-					result.DeminifiedStackFrame.SourcePosition = generatedSourcePositionMappingEntry.OriginalSourcePosition;
-					result.DeminifiedSymbolName = generatedSourcePositionMappingEntry.OriginalName;
+					result.DeminifiedStackFrame.FilePath = generatedSourcePositionMappingEntry.Value.OriginalFileName;
+					result.DeminifiedStackFrame.SourcePosition = generatedSourcePositionMappingEntry.Value.OriginalSourcePosition;
+					result.DeminifiedSymbolName = generatedSourcePositionMappingEntry.Value.OriginalName;
 				}
 			}
 

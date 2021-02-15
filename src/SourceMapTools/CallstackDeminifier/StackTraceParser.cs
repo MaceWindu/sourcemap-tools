@@ -31,7 +31,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// </remarks>
 		IReadOnlyList<StackFrame> IStackTraceParser.ParseStackTrace(string stackTraceString)
 		{
-			return ParseStackTrace(stackTraceString, out var _);
+			return ParseStackTrace(stackTraceString, out _);
 		}
 
 		/// <summary>
@@ -53,19 +53,23 @@ namespace SourcemapToolkit.CallstackDeminifier
 			}
 
 			message = null;
-			var stackTrace = new List<StackFrame>();
-			var stackFrameStrings = stackTraceString.Split('\n').ToList();
+
+			var stackFrameStrings = stackTraceString.SplitFast('\n');
+
+			var startingIndex = 0;
 
 			var firstFrame = stackFrameStrings.First();
 			if (!firstFrame.StartsWith(" ", StringComparison.Ordinal) && TryExtractMethodNameFromFrame(firstFrame) == null)
 			{
 				message = firstFrame.Trim();
-				stackFrameStrings.RemoveAt(0);
+				startingIndex = 1;
 			}
 
-			foreach (var frame in stackFrameStrings)
+			var stackTrace = new List<StackFrame>(stackFrameStrings.Length - startingIndex);
+
+			for (var i = startingIndex; i < stackFrameStrings.Length; i++)
 			{
-				var parsedStackFrame = TryParseSingleStackFrame(frame);
+				var parsedStackFrame = TryParseSingleStackFrame(stackFrameStrings[i]);
 
 				if (parsedStackFrame != null)
 				{

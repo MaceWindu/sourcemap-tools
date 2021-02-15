@@ -12,33 +12,31 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		public static SourceMap Flatten(SourceMap sourceMap)
 		{
-			var newMap = new SourceMap
-			{
-				File = sourceMap.File,
-				Version = sourceMap.Version,
-				Mappings = sourceMap.Mappings,
-				Sources = sourceMap.Sources == null ? null : new List<string>(sourceMap.Sources),
-				SourcesContent = sourceMap.SourcesContent == null ? null : new List<string>(sourceMap.SourcesContent),
-				Names = sourceMap.Names == null ? null : new List<string>(sourceMap.Names)
-			};
-
 			var visitedLines = new HashSet<int>();
+			var parsedMappings = new List<MappingEntry>(sourceMap.ParsedMappings.Count); // assume each line will not have been visited before
 
 			foreach (var mapping in sourceMap.ParsedMappings)
 			{
 				var generatedLine = mapping.GeneratedSourcePosition.Line;
 
-				if (!visitedLines.Contains(generatedLine))
+				if (visitedLines.Add(generatedLine))
 				{
-					visitedLines.Add(generatedLine);
-					var newMapping = mapping.Clone();
-					newMapping.GeneratedSourcePosition.Column = 0;
-					newMapping.OriginalSourcePosition!.Column = 0;
-					newMap.ParsedMappings.Add(newMapping);
+					var newMapping = mapping.CloneWithResetColumnNumber();
+					parsedMappings.Add(newMapping);
 				}
 			}
 
-			return newMap;
+			// Free-up any unneeded space.  This no-ops if we're already the right size.
+			parsedMappings.Capacity = parsedMappings.Count;
+
+			return new SourceMap(
+				sourceMap.Version,
+				sourceMap.File,
+				sourceMap.Mappings,
+				sourceMap.Sources,
+				sourceMap.Names,
+				parsedMappings,
+				sourceMap.SourcesContent);
 		}
 	}
 }

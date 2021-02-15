@@ -9,6 +9,8 @@ namespace SourcemapToolkit.SourcemapParser
 	/// </summary>
 	internal class MappingsListParser
 	{
+		private static readonly char[] LineDelimiter = new[] { ',' };
+
 		/// <summary>
 		/// Parses a single "segment" of the mapping field for a source map. A segment describes one piece of code in the generated source.
 		/// In the mapping string "AAaAA,CAACC;", AAaAA and CAACC are both segments. This method assumes the segments have already been decoded 
@@ -24,7 +26,7 @@ namespace SourcemapToolkit.SourcemapParser
 				throw new ArgumentOutOfRangeException(nameof(segmentFields));
 			}
 
-			var numericMappingEntry = new NumericMappingEntry
+			var numericMappingEntry = new NumericMappingEntry()
 			{
 				GeneratedLineNumber = mappingsParserState.CurrentGeneratedLineNumber,
 				GeneratedColumnNumber = mappingsParserState.CurrentGeneratedColumnBase + segmentFields[0]
@@ -79,16 +81,21 @@ namespace SourcemapToolkit.SourcemapParser
 
 			// The V3 source map format calls for all Base64 VLQ segments to be seperated by commas.
 			// Each line of generated code is separated using semicolons. The count of semicolons encountered gives the current line number.
-			var lines = mappingString.Split(';');
+			var lines = mappingString.SplitFast(';');
 
-			for (var lineNumber = 0; lineNumber < lines.Length; lineNumber += 1)
+			for (var lineNumber = 0; lineNumber < lines.Length; lineNumber++)
 			{
 				// The only value that resets when encountering a semicolon is the starting column.
-				currentMappingsParserState = new MappingsParserState(currentMappingsParserState, newGeneratedLineNumber: lineNumber, newGeneratedColumnBase: 0);
-				var segmentsForLine = lines[lineNumber].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				currentMappingsParserState = new MappingsParserState(
+					currentMappingsParserState,
+					newGeneratedLineNumber: lineNumber,
+					newGeneratedColumnBase: 0);
+
+				var segmentsForLine = lines[lineNumber].Split(LineDelimiter, StringSplitOptions.RemoveEmptyEntries);
 
 				foreach (var segment in segmentsForLine)
 				{
+					// Reuse the numericMappingEntry to ease GC allocations.
 					var numericMappingEntry = ParseSingleMappingSegment(Base64VlqDecoder.Decode(segment), currentMappingsParserState);
 					mappingEntries.Add(numericMappingEntry.ToMappingEntry(names, sources));
 

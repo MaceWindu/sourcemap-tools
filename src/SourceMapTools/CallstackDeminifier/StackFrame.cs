@@ -8,11 +8,11 @@ namespace SourcemapToolkit.CallstackDeminifier
 	public class StackFrame
 	{
 		public StackFrame(string? methodName)
-			: this(methodName, null, null)
+			: this(methodName, null, SourcePosition.NotFound)
 		{
 		}
 
-		public StackFrame(string? methodName, string? filePath, SourcePosition? sourcePosition)
+		public StackFrame(string? methodName, string? filePath, SourcePosition sourcePosition)
 		{
 			MethodName = methodName;
 			FilePath = filePath;
@@ -32,7 +32,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// The zero-based position of this stack entry.
 		/// </summary>
-		public SourcePosition? SourcePosition { get; internal set; }
+		public SourcePosition SourcePosition { get; internal set; } = SourcePosition.NotFound;
 
 		public override string ToString()
 		{
@@ -40,7 +40,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 			if (!string.IsNullOrWhiteSpace(FilePath))
 			{
 				output += $" in {FilePath}";
-				if (SourcePosition != null)
+				if (SourcePosition != SourcePosition.NotFound)
 				{
 					output += $":{SourcePosition.Line + 1}:{SourcePosition.Column + 1}";
 				}

@@ -31,6 +31,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			{
 				new FunctionMapEntry(
 					null!,
+					null,
 					new SourcePosition(40, 10),
 					new SourcePosition(50, 10))
 			};
@@ -50,6 +51,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var sourcePosition = new SourcePosition(41, 2);
 			var functionMapEntry = new FunctionMapEntry(
 				null!,
+				null,
 				new SourcePosition(40, 10),
 				new SourcePosition(50, 10));
 
@@ -73,11 +75,13 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var sourcePosition = new SourcePosition(31, 0);
 			var functionMapEntry = new FunctionMapEntry(
 				null!,
+				null,
 				new SourcePosition(10, 10),
 				new SourcePosition(20, 30));
 
 			var functionMapEntry2 = new FunctionMapEntry(
 				null!,
+				null,
 				new SourcePosition(30, 0),
 				new SourcePosition(40, 2));
 
@@ -102,11 +106,13 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var sourcePosition = new SourcePosition(10, 25);
 			var functionMapEntry = new FunctionMapEntry(
 				null!,
+				null,
 				new SourcePosition(5, 10),
 				new SourcePosition(20, 30));
 
 			var functionMapEntry2 = new FunctionMapEntry(
 				null!,
+				null,
 				new SourcePosition(9, 0),
 				new SourcePosition(15, 2));
 

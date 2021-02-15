@@ -13,7 +13,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		{
 			// Arrange
 			var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
-			state.LastGeneratedPosition.Column = 1;
+			state.UpdateLastGeneratedPositionColumn(1);
 
 			var entry = new MappingEntry(
 				new SourcePosition(1, 0),
@@ -76,7 +76,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		{
 			// Arrange
 			var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
-			state.LastGeneratedPosition.Line = 1;
+			state.AdvanceLastGeneratedPositionLine();
 
 			var entry = new MappingEntry(
 				new SourcePosition(1, 5),
@@ -140,33 +140,36 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 		private static SourceMap GetSimpleSourceMap()
 		{
-			var input = new SourceMap()
-			{
-				File = "CommonIntl",
-				Names = new List<string>() { "CommonStrings", "afrikaans" },
-				Sources = new List<string>() { "input/CommonIntl.js" },
-				Version = 3,
-			};
-			input.ParsedMappings.AddRange(new MappingEntry[]
-			{
-				new MappingEntry(
-					new SourcePosition(0, 0),
-					new SourcePosition(1, 0),
-					input.Names[0],
-					input.Sources[0]),
-				new MappingEntry(
-					new SourcePosition(0, 13),
-					new SourcePosition(1, 0),
-					null,
-					input.Sources[0]),
-				new MappingEntry(
-					new SourcePosition(0, 14),
-					new SourcePosition(1, 14),
-					null,
-					input.Sources[0])
-			});
+			var sources = new List<string>() { "input/CommonIntl.js" };
+			var names = new List<string>() { "CommonStrings", "afrikaans" };
 
-			return input;
+			var parsedMappings = new List<MappingEntry>()
+				{
+					new MappingEntry(
+						generatedSourcePosition: new SourcePosition(0, 0),
+						originalSourcePosition: new SourcePosition(1, 0),
+						originalName: names[0],
+						originalFileName: sources[0]),
+					new MappingEntry(
+						generatedSourcePosition: new SourcePosition(0, 13),
+						originalSourcePosition: new SourcePosition(1, 0),
+						null,
+						originalFileName: sources[0]),
+					new MappingEntry(
+						generatedSourcePosition: new SourcePosition(0, 14),
+						originalSourcePosition: new SourcePosition(1, 14),
+						null,
+						originalFileName: sources[0]),
+				};
+
+			return new SourceMap(
+				version: 3,
+				file: "CommonIntl",
+				mappings: default,
+				sources: sources,
+				names: names,
+				parsedMappings: parsedMappings,
+				sourcesContent: default);
 		}
 	}
 }

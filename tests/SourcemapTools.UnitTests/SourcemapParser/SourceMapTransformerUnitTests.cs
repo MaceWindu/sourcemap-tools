@@ -52,18 +52,14 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
 			var mappingEntry2 = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var map = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" },
-				SourcesContent = new List<string>{"var a = b"}
-			};
-			map.ParsedMappings.AddRange(new MappingEntry[]
-			{
-				mappingEntry,
-				mappingEntry2
-			});
-
+			var map = new SourceMap(
+				version: default,
+				file: "generated.js",
+				mappings: default,
+				sources: new List<string>() { "sourceOne.js" },
+				names: default,
+				parsedMappings: new List<MappingEntry> { mappingEntry, mappingEntry2 },
+				sourcesContent: new List<string> { "var a = b" });
 
 			// Act
 			var linesOnlyMap = SourceMapTransformer.Flatten(map);
@@ -91,13 +87,14 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
 			var mappingEntry2 = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var map = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" },
-				SourcesContent = new List<string>{"var a = b"}
-			};
-			map.ParsedMappings.AddRange(new[] { mappingEntry, mappingEntry2 });
+			var map = new SourceMap(
+				version: default,
+				file: "generated.js",
+				mappings: default,
+				sources: new List<string>() { "sourceOne.js" },
+				names: default,
+				parsedMappings: new List<MappingEntry> { mappingEntry, mappingEntry2 },
+				sourcesContent: new List<string> { "var a = b" });
 
 
 			// Act

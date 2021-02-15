@@ -3,24 +3,14 @@
 namespace SourcemapToolkit.SourcemapParser
 {
 	/// <summary>
-	/// Identifies the location of a piece of code in a JavaScript file.
+	/// Identifies the location of a piece of code in a JavaScript file
 	/// </summary>
-	public class SourcePosition : IComparable<SourcePosition>
+	public struct SourcePosition : IComparable<SourcePosition>, IEquatable<SourcePosition>
 	{
-		/// <summary>
-		/// Gets zero-based position line number.
-		/// </summary>
-		public int Line { get; internal set; }
+		public static readonly SourcePosition NotFound = new SourcePosition(-1, -1);
 
-		/// <summary>
-		/// Gets zero-based position column number.
-		/// </summary>
-		public int Column { get; internal set; }
-
-		internal SourcePosition()
-			: this(0, 0)
-		{
-		}
+		public readonly int Line;
+		public readonly int Column;
 
 		public SourcePosition(int line, int column)
 		{
@@ -38,9 +28,41 @@ namespace SourcemapToolkit.SourcemapParser
 			return Line.CompareTo(other.Line);
 		}
 
-		public static bool operator <(SourcePosition x, SourcePosition y) => x.CompareTo(y) < 0;
+		public static bool operator <(SourcePosition x, SourcePosition y)
+		{
+			return x.CompareTo(y) < 0;
+		}
 
-		public static bool operator >(SourcePosition x, SourcePosition y) => x.CompareTo(y) > 0;
+		public static bool operator >(SourcePosition x, SourcePosition y)
+		{
+			return x.CompareTo(y) > 0;
+		}
+
+		public static bool operator ==(SourcePosition x, SourcePosition y)
+		{
+			return x.Equals(y);
+		}
+
+		public static bool operator !=(SourcePosition x, SourcePosition y)
+		{
+			return !x.Equals(y);
+		}
+
+		public bool Equals(SourcePosition other)
+		{
+			return Line == other.Line
+				&& Column == other.Column;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return (obj is SourcePosition otherSourcePosition) && Equals(otherSourcePosition);
+		}
+
+		public override int GetHashCode()
+		{
+			return Column.GetHashCode() ^ Column.GetHashCode();
+		}
 
 		/// <summary>
 		/// Returns true if we think that the two source positions are close enough together that they may in fact be the referring to the same piece of code.
@@ -68,7 +90,5 @@ namespace SourcemapToolkit.SourcemapParser
 
 			return false;
 		}
-
-		public SourcePosition Clone() => new SourcePosition(Line, Column);
 	}
 }

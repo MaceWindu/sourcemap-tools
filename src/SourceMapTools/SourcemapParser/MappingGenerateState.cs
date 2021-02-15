@@ -10,22 +10,22 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <summary>
 		/// Last location of the code in the transformed code
 		/// </summary>
-		public SourcePosition LastGeneratedPosition { get; private set; } = new SourcePosition();
+		public SourcePosition LastGeneratedPosition { get; private set; }
 
 		/// <summary>
 		/// Last location of the code in the source code
 		/// </summary>
-		public SourcePosition LastOriginalPosition { get; } = new SourcePosition();
+		public SourcePosition LastOriginalPosition { get; internal set; }
 
 		/// <summary>
 		/// List that contains the symbol names
 		/// </summary>
-		public IList<string> Names { get; }
+		public IReadOnlyList<string> Names { get; }
 
 		/// <summary>
 		/// List that contains the file sources
 		/// </summary>
-		public IList<string> Sources { get; }
+		public IReadOnlyList<string> Sources { get; }
 
 		/// <summary>
 		/// Index of last file source
@@ -42,11 +42,21 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		public bool IsFirstSegment { get; set; }
 
-		public MappingGenerateState(IList<string> names, IList<string> sources)
+		public MappingGenerateState(IReadOnlyList<string> names, IReadOnlyList<string> sources)
 		{
 			Names = names;
 			Sources = sources;
 			IsFirstSegment = true;
+		}
+
+		public void AdvanceLastGeneratedPositionLine()
+		{
+			LastGeneratedPosition = new SourcePosition(LastGeneratedPosition.Line + 1, 0);
+		}
+
+		public void UpdateLastGeneratedPositionColumn(int zeroBasedColumnNumber)
+		{
+			LastGeneratedPosition = new SourcePosition(LastGeneratedPosition.Line, zeroBasedColumnNumber);
 		}
 	}
 }

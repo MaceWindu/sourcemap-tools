@@ -7,7 +7,7 @@ namespace SourcemapToolkit.SourcemapParser
 	/// Corresponds to a single parsed entry in the source map mapping string that is used internally by the parser.
 	/// The public API exposes the MappingEntry object, which is more useful to consumers of the library.
 	/// </summary>
-	internal class NumericMappingEntry
+	internal struct NumericMappingEntry
 	{
 		/// <summary>
 		/// The zero-based line number in the generated code that corresponds to this mapping segment.
@@ -41,18 +41,23 @@ namespace SourcemapToolkit.SourcemapParser
 
 		public MappingEntry ToMappingEntry(IReadOnlyList<string> names, IReadOnlyList<string> sources)
 		{
-			var result = new MappingEntry(new SourcePosition(GeneratedLineNumber, GeneratedColumnNumber));
+			SourcePosition originalSourcePosition;
 
 			if (OriginalColumnNumber.HasValue && OriginalLineNumber.HasValue)
 			{
-				result.OriginalSourcePosition = new SourcePosition(OriginalLineNumber.Value, OriginalColumnNumber.Value);
+				originalSourcePosition = new SourcePosition(OriginalLineNumber.Value, OriginalColumnNumber.Value);
+			}
+			else
+			{
+				originalSourcePosition = SourcePosition.NotFound;
 			}
 
+			string? originalName = null;
 			if (OriginalNameIndex.HasValue)
 			{
 				try
 				{
-					result.OriginalName = names[OriginalNameIndex.Value];
+					originalName = names[OriginalNameIndex.Value];
 				}
 				catch (IndexOutOfRangeException e)
 				{
@@ -61,11 +66,12 @@ namespace SourcemapToolkit.SourcemapParser
 
 			}
 
+			string? originalFileName = null;
 			if (OriginalSourceFileIndex.HasValue)
 			{
 				try
 				{
-					result.OriginalFileName = sources[OriginalSourceFileIndex.Value];
+					originalFileName = sources[OriginalSourceFileIndex.Value];
 				}
 				catch (IndexOutOfRangeException e)
 				{
@@ -73,7 +79,11 @@ namespace SourcemapToolkit.SourcemapParser
 				}
 			}
 
-			return result;
+			return new MappingEntry(
+				new SourcePosition(GeneratedLineNumber, GeneratedColumnNumber),
+				originalSourcePosition,
+				originalName,
+				originalFileName);
 		}
 	}
 }

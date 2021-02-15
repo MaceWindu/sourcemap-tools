@@ -24,7 +24,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		public DeminifyStackTraceResult DeminifyStackTrace(string stackTraceString)
 		{
 			var minifiedFrames = _stackTraceParser.ParseStackTrace(stackTraceString, out var message);
-			var deminifiedFrames = new List<StackFrameDeminificationResult>();
+			var deminifiedFrames = new List<StackFrameDeminificationResult>(minifiedFrames.Count);
 
 			// Deminify frames in reverse order so we can pass the symbol name from caller
 			// (i.e. the function name) into the next level's deminification.
@@ -33,10 +33,12 @@ namespace SourcemapToolkit.CallstackDeminifier
 			{
 				var frame = _stackFrameDeminifier.DeminifyStackFrame(minifiedFrames[i], callerSymbolName);
 				callerSymbolName = frame.DeminifiedSymbolName;
-				deminifiedFrames.Insert(0, frame);
+				deminifiedFrames.Add(frame);
 			}
 
-			return new DeminifyStackTraceResult(minifiedFrames, deminifiedFrames, message);
+			deminifiedFrames.Reverse();
+
+			return new DeminifyStackTraceResult(message, minifiedFrames, deminifiedFrames);
 		}
 	}
 }

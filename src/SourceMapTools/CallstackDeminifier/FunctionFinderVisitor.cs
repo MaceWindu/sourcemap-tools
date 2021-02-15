@@ -13,7 +13,14 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// </summary>
 	internal class FunctionFinderVisitor : AllAstVisitor
 	{
+		private readonly SourceMap _sourceMap;
+
 		internal List<FunctionMapEntry> FunctionMap { get; } = new List<FunctionMapEntry>();
+
+		public FunctionFinderVisitor(SourceMap sourceMap)
+		{
+			_sourceMap = sourceMap;
+		}
 
 		protected override void VisitArrowFunctionExpression(ArrowFunctionExpression arrowFunctionExpression)
 		{
@@ -42,6 +49,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 			{
 				var functionMapEntry = new FunctionMapEntry(
 					bindings,
+					_sourceMap.GetDeminifiedMethodName(bindings),
 					GetSourcePosition(function.Body.Location.Start),
 					GetSourcePosition(function.Body.Location.End));
 
