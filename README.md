@@ -1,4 +1,4 @@
-# Source Map Tools [![Build Status](https://dev.azure.com/sourcemaptools/sourcemaptools/_apis/build/status/build?branchName=master)](https://dev.azure.com/sourcemaptools/sourcemaptools/_build/latest?definitionId=1&branchName=master) [![NuGet](https://img.shields.io/nuget/v/SourceMapTools.svg)](https://www.nuget.org/packages/SourceMapTools/)
+# Source Map Tools [![Build Status](https://img.shields.io/azure-devops/build/sourcemaptools/sourcemaptools/1/master?label=build%20(master))](https://dev.azure.com/sourcemaptools/sourcemaptools/_build/latest?definitionId=1&branchName=master) [![NuGet](https://img.shields.io/nuget/v/SourceMapTools.svg)](https://www.nuget.org/packages/SourceMapTools/) [![License](https://img.shields.io/github/license/MaceWindu/sourcemap-tools)](LICENSE.txt)
 
 This is a C# library for working with JavaScript source maps and deminifying JavaScript callstacks.
 
