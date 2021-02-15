@@ -19,7 +19,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var sourceCodeProvider = new Mock<ISourceCodeProvider>();
 			sourceCodeProvider.Setup(x => x.GetSourceCode("http://localhost:11323/crashcauser.min.js")).Returns(UnitTestUtils.StreamFromString(GeneratedCodeString));
 
-			return StackTraceDeminfierFactory.GetMapOnlyStackTraceDeminfier(sourceMapProvider.Object);
+			return StackTraceDeminifierFactory.GetMapOnlyStackTraceDeminfier(sourceMapProvider.Object);
 		}
 
 		private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results)

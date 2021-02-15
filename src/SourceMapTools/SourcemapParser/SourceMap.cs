@@ -5,8 +5,18 @@ using System.Text.Json.Serialization;
 
 namespace SourcemapToolkit.SourcemapParser
 {
+	/// <summary>
+	/// Source map object.
+	/// </summary>
 	public class SourceMap
 	{
+		/// <summary>
+		///  Cache the comparer to save the allocation.
+		/// </summary>
+		[JsonIgnore]
+		private static readonly Comparer<MappingEntry> _comparer = Comparer<MappingEntry>.Create((a, b) => a.GeneratedSourcePosition.CompareTo(b.GeneratedSourcePosition));
+
+
 		/// <summary>
 		/// The version of the source map specification being used
 		/// </summary>
@@ -29,40 +39,68 @@ namespace SourcemapToolkit.SourcemapParser
 		/// The list of source files that were the inputs used to generate this output file
 		/// </summary>
 		[JsonPropertyName("sources")]
-		public List<string>? Sources { get; set; }
+		public IReadOnlyList<string>? Sources { get; set; }
 
 		/// <summary>
 		/// A list of known original names for entries in this file
 		/// </summary>
 		[JsonPropertyName("names")]
-		public List<string>? Names { get; set; }
+		public IReadOnlyList<string>? Names { get; set; }
 
 		/// <summary>
 		/// Parsed version of the mappings string that is used for getting original names and source positions
 		/// </summary>
 		[JsonIgnore]
-		public List<MappingEntry> ParsedMappings { get; internal set; } = new List<MappingEntry>();
+		public IReadOnlyList<MappingEntry> ParsedMappings { get; internal set; } = null!;
 
 		/// <summary>
 		/// A list of content source files
 		/// </summary>
-		public List<string>? SourcesContent { get; set; }
+		public IReadOnlyList<string>? SourcesContent { get; set; }
 
+		/// <summary>
+		/// Json deserialization constructor.
+		/// </summary>
+		public SourceMap()
+		{
+		}
+
+		/// <summary>
+		/// Creates new instance of source map object.
+		/// See <a href="https://sourcemaps.info/spec.html"></a> for more details.
+		/// </summary>
+		public SourceMap(
+			int version,
+			string? file,
+			string? mappings,
+			IReadOnlyList<string>? sources,
+			IReadOnlyList<string>? names,
+			IReadOnlyList<MappingEntry> parsedMappings,
+			IReadOnlyList<string>? sourcesContent)
+		{
+			Version = version;
+			File = file;
+			Mappings = mappings;
+			Sources = sources;
+			Names = names;
+			ParsedMappings = parsedMappings;
+			SourcesContent = sourcesContent;
+		}
+
+		/// <summary>
+		/// Creates copy fo source map.
+		/// </summary>
+		/// <returns>Returns copy of current source map object.</returns>
 		public SourceMap Clone()
 		{
-			var sourceMap = new SourceMap()
-			{
-				Version = Version,
-				File = File,
-				Mappings = Mappings,
-				Sources = new List<string>(Sources),
-				Names = new List<string>(Names),
-				SourcesContent = new List<string>(SourcesContent)
-			};
-
-			sourceMap.ParsedMappings.AddRange(ParsedMappings.Select(m => m.Clone()));
-
-			return sourceMap;
+			return new SourceMap(
+				Version,
+				File,
+				Mappings,
+				Sources,
+				Names,
+				ParsedMappings,
+				SourcesContent);
 		}
 
 		/// <summary>
@@ -85,27 +123,22 @@ namespace SourcemapToolkit.SourcemapParser
 			{
 				if (submap.File == null)
 				{
-					throw new Exception("ApplySourceMap expects either the explicit source file to the map, or submap's 'file' property");
+					throw new Exception($"{nameof(ApplySourceMap)} expects either the explicit source file to the map, or submap's 'file' property");
 				}
 
 				sourceFile = submap.File;
 			}
 
-			var newSourceMap = new SourceMap()
-			{
-				File = File,
-				Version = Version,
-				Sources = new List<string>(),
-				Names = new List<string>(),
-				SourcesContent = new List<string>()
-			};
+			var sources = new HashSet<string>(StringComparer.Ordinal);
+			var names = new HashSet<string>(StringComparer.Ordinal);
+			var parsedMappings = new List<MappingEntry>(ParsedMappings.Count);
 
 			// transform mappings in this source map
 			foreach (var mappingEntry in ParsedMappings)
 			{
-				var newMappingEntry = mappingEntry.Clone();
+				var newMappingEntry = mappingEntry;
 
-				if (mappingEntry.OriginalFileName == sourceFile && mappingEntry.OriginalSourcePosition != null)
+				if (mappingEntry.OriginalFileName == sourceFile && mappingEntry.OriginalSourcePosition != SourcePosition.NotFound)
 				{
 					var correspondingSubMapMappingEntry = submap.GetMappingEntryForGeneratedSourcePosition(mappingEntry.OriginalSourcePosition);
 
@@ -113,10 +146,10 @@ namespace SourcemapToolkit.SourcemapParser
 					{
 						// Copy the mapping
 						newMappingEntry = new MappingEntry(
-							mappingEntry.GeneratedSourcePosition.Clone(),
-							correspondingSubMapMappingEntry.OriginalSourcePosition?.Clone(),
-							correspondingSubMapMappingEntry.OriginalName ?? mappingEntry.OriginalName,
-							correspondingSubMapMappingEntry.OriginalFileName ?? mappingEntry.OriginalFileName);
+							mappingEntry.GeneratedSourcePosition,
+							correspondingSubMapMappingEntry.Value.OriginalSourcePosition,
+							correspondingSubMapMappingEntry.Value.OriginalName ?? mappingEntry.OriginalName,
+							correspondingSubMapMappingEntry.Value.OriginalFileName ?? mappingEntry.OriginalFileName);
 					}
 				}
 
@@ -124,20 +157,27 @@ namespace SourcemapToolkit.SourcemapParser
 				var originalFileName = newMappingEntry.OriginalFileName;
 				var originalName = newMappingEntry.OriginalName;
 
-				if (originalFileName != null && !newSourceMap.Sources.Contains(originalFileName))
+				if (originalFileName != null)
 				{
-					newSourceMap.Sources.Add(originalFileName);
+					sources.Add(originalFileName);
 				}
 
-				if (originalName != null && !newSourceMap.Names.Contains(originalName))
+				if (originalName != null)
 				{
-					newSourceMap.Names.Add(originalName);
+					names.Add(originalName);
 				}
 
-				newSourceMap.ParsedMappings.Add(newMappingEntry);
+				parsedMappings.Add(newMappingEntry);
 			}
 
-			return newSourceMap;
+			return new SourceMap(
+				Version,
+				File,
+				null,
+				sources.ToList(),
+				names.ToList(),
+				parsedMappings,
+				new List<string>());
 		}
 
 		/// <summary>
@@ -146,26 +186,22 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		/// <param name="generatedSourcePosition">The location in generated code for which we want to discover a mapping entry</param>
 		/// <returns>A mapping entry that is a close match for the desired generated code location</returns>
-		public virtual MappingEntry? GetMappingEntryForGeneratedSourcePosition(SourcePosition? generatedSourcePosition)
+		public virtual MappingEntry? GetMappingEntryForGeneratedSourcePosition(SourcePosition generatedSourcePosition)
 		{
-			if (generatedSourcePosition == null)
-			{
-				return null;
-			}
-
 			var mappingEntryToFind = new MappingEntry(generatedSourcePosition);
 
-			var index = ParsedMappings.BinarySearch(mappingEntryToFind,
-				Comparer<MappingEntry>.Create((a, b) => a.GeneratedSourcePosition.CompareTo(b.GeneratedSourcePosition)));
+			var index = ParsedMappings.BinarySearch(mappingEntryToFind, _comparer);
 
 			// If we didn't get an exact match, let's try to return the closest piece of code to the given line
 			if (index < 0)
 			{
 				// The BinarySearch method returns the bitwise complement of the nearest element that is larger than the desired element when there isn't a match.
 				// Based on tests with source maps generated with the Closure Compiler, we should consider the closest source position that is smaller than the target value when we don't have a match.
-				if (~index - 1 >= 0 && ParsedMappings[~index - 1].GeneratedSourcePosition.IsEqualish(generatedSourcePosition))
+				var correctIndex = ~index - 1;
+
+				if (correctIndex >= 0 && ParsedMappings[correctIndex].GeneratedSourcePosition.IsEqualish(generatedSourcePosition))
 				{
-					index = ~index - 1;
+					index = correctIndex;
 				}
 			}
 

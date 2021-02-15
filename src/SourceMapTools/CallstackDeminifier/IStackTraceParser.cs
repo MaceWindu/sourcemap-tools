@@ -2,6 +2,9 @@
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
+	/// <summary>
+	/// Stack trace parser contract.
+	/// </summary>
 	public interface IStackTraceParser
 	{
 		/// <summary>

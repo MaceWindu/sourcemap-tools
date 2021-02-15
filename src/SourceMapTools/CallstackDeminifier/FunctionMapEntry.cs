@@ -10,12 +10,14 @@ namespace SourcemapToolkit.CallstackDeminifier
 	{
 		public FunctionMapEntry(
 			IReadOnlyList<BindingInformation> bindings,
-			SourcePosition startSourcePosition,
-			SourcePosition endSourcePosition)
+			string? deminifiedMethodName,
+			SourcePosition start,
+			SourcePosition end)
 		{
 			Bindings = bindings;
-			StartSourcePosition = startSourcePosition;
-			EndSourcePosition = endSourcePosition;
+			DeminifiedMethodName = deminifiedMethodName;
+			Start = start;
+			End = end;
 		}
 
 		/// <summary>
@@ -29,16 +31,16 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// If this entry represents a function whose name was minified, this value 
 		/// may contain an associated deminfied name corresponding to the function.
 		/// </summary>
-		public string? DeminfifiedMethodName { get; set; }
+		public string? DeminifiedMethodName { get; }
 
 		/// <summary>
 		/// Denotes the location of the beginning of this function
 		/// </summary>
-		public SourcePosition StartSourcePosition { get; }
+		public SourcePosition Start { get; }
 
 		/// <summary>
 		/// Denotes the end location of this function
 		/// </summary>
-		public SourcePosition EndSourcePosition { get; }
+		public SourcePosition End { get; }
 	}
 }

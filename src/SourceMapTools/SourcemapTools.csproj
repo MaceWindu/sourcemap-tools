@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\Shared.props" />
 
+	<PropertyGroup>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SourcemapTools.xml</DocumentationFile>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="esprima" Version="2.0.0-beta-1338" />
 		<PackageReference Include="System.Text.Json" Version="5.0.1" />

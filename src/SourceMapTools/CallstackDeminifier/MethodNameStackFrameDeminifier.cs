@@ -50,7 +50,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 			return new StackFrameDeminificationResult(
 				deminificationError,
-				new StackFrame(wrappingFunction?.DeminfifiedMethodName));
+				new StackFrame(wrappingFunction?.DeminifiedMethodName));
 		}
 	}
 }

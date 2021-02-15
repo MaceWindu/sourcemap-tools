@@ -16,7 +16,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		{
 			foreach (var mapEntry in functionMap)
 			{
-				if (mapEntry.StartSourcePosition < sourcePosition && mapEntry.EndSourcePosition > sourcePosition)
+				if (mapEntry.Start < sourcePosition && mapEntry.End > sourcePosition)
 				{
 					return mapEntry;
 				}

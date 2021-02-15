@@ -11,8 +11,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void GetMappingEntryForGeneratedSourcePosition_NullMappingList_ReturnNull()
 		{
 			// Arrange
-			var sourceMap = new SourceMap();
-			var sourcePosition = new SourcePosition(3, 4);
+			var sourceMap = CreateSourceMap();
+			var sourcePosition = new SourcePosition(4, 3);
 
 			// Act
 			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
@@ -25,9 +25,14 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void GetMappingEntryForGeneratedSourcePosition_NoMatchingEntryInMappingList_ReturnNull()
 		{
 			// Arrange
-			var sourceMap = new SourceMap();
-			sourceMap.ParsedMappings.Add(new MappingEntry(new SourcePosition(0, 0)));
-			var sourcePosition = new SourcePosition(3, 4);
+			var parsedMappings = new List<MappingEntry>
+			{
+				new MappingEntry(
+					generatedSourcePosition: new SourcePosition(0, 0))
+			};
+
+			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
+			var sourcePosition = new SourcePosition(4, 3);
 
 			// Act
 			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
@@ -40,13 +45,16 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void GetMappingEntryForGeneratedSourcePosition_MatchingEntryInMappingList_ReturnMatchingEntry()
 		{
 			// Arrange
-			var sourceMap = new SourceMap();
-			var matchingMappingEntry = new MappingEntry(new SourcePosition(8, 13));
-			sourceMap.ParsedMappings.AddRange(new MappingEntry[]
+			var matchingMappingEntry = new MappingEntry(
+				generatedSourcePosition: new SourcePosition(8, 13));
+			var parsedMappings = new List<MappingEntry>
 			{
-				new MappingEntry(new SourcePosition(0, 0)),
+				new MappingEntry(
+					generatedSourcePosition: new SourcePosition(0, 0)),
 				matchingMappingEntry
-			});
+			};
+
+			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 			var sourcePosition = new SourcePosition(8, 13);
 
 			// Act
@@ -60,13 +68,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void GetMappingEntryForGeneratedSourcePosition_NoExactMatchHasSimilarOnSameLine_ReturnSimilarEntry()
 		{
 			// Arrange
-			var sourceMap = new SourceMap();
-			var matchingMappingEntry = new MappingEntry(new SourcePosition(10, 13));
-			sourceMap.ParsedMappings.AddRange(new MappingEntry[]
+			var matchingMappingEntry = new MappingEntry(
+				generatedSourcePosition: new SourcePosition(10, 13));
+			var parsedMappings = new List<MappingEntry>
 			{
-				new MappingEntry(new SourcePosition(0, 0)),
+				new MappingEntry(
+					generatedSourcePosition: new SourcePosition(0, 0)),
 				matchingMappingEntry
-			});
+			};
+			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 			var sourcePosition = new SourcePosition(10, 14);
 
 			// Act
@@ -80,13 +90,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void GetMappingEntryForGeneratedSourcePosition_NoExactMatchHasSimilarOnDifferentLinesLine_ReturnSimilarEntry()
 		{
 			// Arrange
-			var sourceMap = new SourceMap();
-			var matchingMappingEntry = new MappingEntry(new SourcePosition(23, 15));
-			sourceMap.ParsedMappings.AddRange(new MappingEntry[]
+			var matchingMappingEntry = new MappingEntry(
+				generatedSourcePosition: new SourcePosition(23, 15));
+			var parsedMappings = new List<MappingEntry>
 			{
-				new MappingEntry(new SourcePosition(0, 0)),
+				new MappingEntry(
+					generatedSourcePosition: new SourcePosition(0, 0)),
 				matchingMappingEntry
-			});
+			};
+			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 			var sourcePosition = new SourcePosition(24, 0);
 
 			// Act
@@ -100,15 +112,13 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void GetRootMappingEntryForGeneratedSourcePosition_NoChildren_ReturnsSameEntry()
 		{
 			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber: 5);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber:1, colNumber: 5);
+			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
+			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 5);
 			var mappingEntry = UnitTestUtils.GetSimpleEntry(generated1, original1, "generated.js");
 
-			var sourceMap = new SourceMap
-			{
-				Sources = new List<string> { "generated.js" },
-			};
-			sourceMap.ParsedMappings.Add(mappingEntry);
+			var sourceMap = CreateSourceMap(
+				sources: new List<string>() { "generated.js" },
+				parsedMappings: new List<MappingEntry> { mappingEntry });
 
 			// Act
 			var rootEntry = sourceMap.GetMappingEntryForGeneratedSourcePosition(generated1);
@@ -121,16 +131,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void ApplyMap_NullSubmap_ThrowsException()
 		{
 			// Arrange
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber: 5);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber: 5);
+			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
+			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
 			var mapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var map = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" }
-			};
-			map.ParsedMappings.Add(mapping);
+			var map = CreateSourceMap(
+				file: "generated.js",
+				sources: new List<string>() { "sourceOne.js" },
+				parsedMappings: new List<MappingEntry> { mapping });
+
 
 			// Act
 			Assert.Throws<ArgumentNullException>(() => map.ApplySourceMap(null!));
@@ -142,27 +151,23 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void ApplyMap_NoMatchingSources_ReturnsSameMap()
 		{
 			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber: 3);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber:1, colNumber: 2);
+			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
+			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 2);
 			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "someOtherSource.js");
 
-			var childMap = new SourceMap
-			{
-				File = "notSourceOne.js",
-				Sources = new List<string> { "someOtherSource.js" }
-			};
-			childMap.ParsedMappings.Add(childMapping);
+			var childMap = CreateSourceMap(
+				file: "notSourceOne.js",
+				sources: new List<string>() { "someOtherSource.js" },
+				parsedMappings: new List<MappingEntry> { childMapping });
 
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber: 7);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber: 3);
+			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 7);
+			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
 			var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var parentMap = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" }
-			};
-			parentMap.ParsedMappings.Add(parentMapping);
+			var parentMap = CreateSourceMap(
+				file: "generated.js",
+				sources: new List<string>() { "sourceOne.js" },
+				parsedMappings: new List<MappingEntry> { parentMapping });
 
 			// Act
 			var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -177,27 +182,23 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void ApplyMap_NoMatchingMappings_ReturnsSameMap()
 		{
 			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber:2);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber:10);
+			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 2);
+			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 10);
 			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
 
-			var childMap = new SourceMap
-			{
-				File = "sourceOne.js",
-				Sources = new List<string> { "sourceTwo.js" }
-			};
-			childMap.ParsedMappings.Add(childMapping);
+			var childMap = CreateSourceMap(
+				file: "sourceOne.js",
+				sources: new List<string>() { "sourceTwo.js" },
+				parsedMappings: new List<MappingEntry> { childMapping });
 
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber:4);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber:5);
+			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 4);
+			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
 			var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var parentMap = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" }
-			};
-			parentMap.ParsedMappings.Add(parentMapping);
+			var parentMap = CreateSourceMap(
+				file: "generated.js",
+				sources: new List<string>() { "sourceOne.js" },
+				parsedMappings: new List<MappingEntry> { parentMapping });
 
 			// Act
 			var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -214,27 +215,23 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			// Expect mapping with same source filename as the applied source-map to be replaced
 
 			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber:4);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber:1, colNumber:3);
+			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
+			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 3);
 			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
 
-			var childMap = new SourceMap
-			{
-				File = "sourceOne.js",
-				Sources = new List<string> { "sourceTwo.js" }
-			};
-			childMap.ParsedMappings.Add(childMapping);
+			var childMap = CreateSourceMap(
+				file: "sourceOne.js",
+				sources: new List<string>() { "sourceTwo.js" },
+				parsedMappings: new List<MappingEntry> { childMapping });
 
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber: 5);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber: 4);
+			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
+			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
 			var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var parentMap = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" }
-			};
-			parentMap.ParsedMappings.Add(parentMapping);
+			var parentMap = CreateSourceMap(
+				file: "generated.js",
+				sources: new List<string>() { "sourceOne.js" },
+				parsedMappings: new List<MappingEntry> { parentMapping });
 
 			// Act
 			var combinedMap = parentMap.ApplySourceMap(childMap)!;
@@ -244,7 +241,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.Single(combinedMap.ParsedMappings);
 			Assert.Single(combinedMap.Sources);
 			var rootMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2)!;
-			Assert.Equal(0, rootMapping.OriginalSourcePosition!.CompareTo(childMapping.OriginalSourcePosition!));
+			Assert.Equal(0, rootMapping.Value.OriginalSourcePosition!.CompareTo(childMapping.OriginalSourcePosition!));
 		}
 
 		[Fact]
@@ -254,31 +251,27 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			// mappings with a different source filename should stay the same
 
 			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber:10);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber:1, colNumber:5);
+			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
+			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 5);
 			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
 
-			var childMap = new SourceMap
-			{
-				File = "sourceOne.js",
-				Sources = new List<string> { "sourceTwo.js" }
-			};
-			childMap.ParsedMappings.Add(childMapping);
+			var childMap = CreateSourceMap(
+				file: "sourceOne.js",
+				sources: new List<string>() { "sourceTwo.js" },
+				parsedMappings: new List<MappingEntry> { childMapping });
 
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber:2);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber: 10);
+			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
+			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
 			var mapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
 
-			var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber:4, colNumber:3);
-			var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber:2);
+			var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
+			var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
 			var mapping2 = UnitTestUtils.GetSimpleEntry(generated3, original3, "noMapForThis.js");
 
-			var parentMap = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js", "noMapForThis.js" }
-			};
-			parentMap.ParsedMappings.AddRange(new[] { mapping, mapping2 });
+			var parentMap = CreateSourceMap(
+				file: "generated.js",
+				sources: new List<string> { "sourceOne.js", "noMapForThis.js" },
+				parsedMappings: new List<MappingEntry> { mapping, mapping2 });
 
 			// Act
 			var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -288,47 +281,41 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.Equal(2, combinedMap.ParsedMappings.Count);
 			Assert.Equal(2, combinedMap.Sources!.Count);
 			var firstCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated3)!;
-			Assert.True(firstCombinedMapping.IsValueEqual(mapping2));
+			Assert.True(firstCombinedMapping.Value.IsValueEqual(mapping2));
 			var secondCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2)!;
-			Assert.Equal(0, secondCombinedMapping.OriginalSourcePosition!.CompareTo(childMapping.OriginalSourcePosition!));
+			Assert.Equal(0, secondCombinedMapping.Value.OriginalSourcePosition!.CompareTo(childMapping.OriginalSourcePosition!));
 		}
 
 		[Fact]
 		public void ApplyMap_ExactMatchDeep_ReturnsCorrectMappingEntry()
 		{
 			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber:5);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber:2, colNumber:10);
+			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
+			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
 			var mapLevel2 = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceThree.js");
 
-			var grandChildMap = new SourceMap
-			{
-				File = "sourceTwo.js",
-				Sources = new List<string> { "sourceThree.js" }
-			};
-			grandChildMap.ParsedMappings.Add(mapLevel2);
+			var grandChildMap = CreateSourceMap(
+				file: "sourceTwo.js",
+				sources: new List<string>() { "sourceThree.js" },
+				parsedMappings: new List<MappingEntry> { mapLevel2 });
 
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber:4, colNumber:3);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber:3, colNumber:5);
+			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
+			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
 			var mapLevel1 = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceTwo.js");
 
-			var childMap = new SourceMap
-			{
-				File = "sourceOne.js",
-				Sources = new List<string> { "sourceTwo.js" }
-			};
-			childMap.ParsedMappings.Add(mapLevel1);
+			var childMap = CreateSourceMap(
+				file: "sourceOne.js",
+				sources: new List<string>() { "sourceTwo.js" },
+				parsedMappings: new List<MappingEntry> { mapLevel1 });
 
-			var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber:5, colNumber:5);
-			var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber:4, colNumber:3);
+			var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 5, colNumber: 5);
+			var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
 			var mapLevel0 = UnitTestUtils.GetSimpleEntry(generated3, original3, "sourceOne.js");
 
-			var parentMap = new SourceMap
-			{
-				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" }
-			};
-			parentMap.ParsedMappings.Add(mapLevel0);
+			var parentMap = CreateSourceMap(
+				file: "generated.js",
+				sources: new List<string>() { "sourceOne.js" },
+				parsedMappings: new List<MappingEntry> { mapLevel0 });
 
 			// Act
 			var firstCombinedMap = parentMap.ApplySourceMap(childMap);
@@ -338,7 +325,26 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var secondCombinedMap = firstCombinedMap.ApplySourceMap(grandChildMap);
 			Assert.NotNull(secondCombinedMap);
 			var rootMapping = secondCombinedMap.GetMappingEntryForGeneratedSourcePosition(generated3)!;
-			Assert.Equal(0, rootMapping.OriginalSourcePosition!.CompareTo(mapLevel2.OriginalSourcePosition!));
+			Assert.Equal(0, rootMapping.Value.OriginalSourcePosition!.CompareTo(mapLevel2.OriginalSourcePosition!));
+		}
+
+		private static SourceMap CreateSourceMap(
+			int version = default,
+			string? file = default,
+			string? mappings = default,
+			IReadOnlyList<string>? sources = default,
+			IReadOnlyList<string>? names = default,
+			IReadOnlyList<MappingEntry>? parsedMappings = default,
+			IReadOnlyList<string>? sourcesContent = default)
+		{
+			return new SourceMap(
+				version: version,
+				file: file,
+				mappings: mappings,
+				sources: sources,
+				names: names,
+				parsedMappings: parsedMappings ?? new List<MappingEntry>(),
+				sourcesContent: sourcesContent);
 		}
 	}
 }

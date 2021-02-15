@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Esprima;
 using SourcemapToolkit.SourcemapParser;
@@ -22,12 +21,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 			IReadOnlyList<FunctionMapEntry>? result;
 			try
 			{
-				result = ParseSourceCode(sourceCodeStream);
-
-				foreach (var functionMapEntry in result)
-				{
-					functionMapEntry.DeminfifiedMethodName = GetDeminifiedMethodNameFromSourceMap(functionMapEntry, sourceMap);
-				}
+				result = ParseSourceCode(sourceCodeStream, sourceMap);
 			}
 			catch
 			{
@@ -42,7 +36,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// Iterates over all the code in the JavaScript file to get a list of all the functions declared in that file.
 		/// </summary>
-		internal static IReadOnlyList<FunctionMapEntry> ParseSourceCode(Stream sourceCodeStream)
+		internal static IReadOnlyList<FunctionMapEntry> ParseSourceCode(Stream sourceCodeStream, SourceMap sourceMap)
 		{
 			string sourceCode;
 			using (sourceCodeStream)
@@ -55,61 +49,16 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 			var script = jsParser.ParseScript();
 
-			var functionFinderVisitor = new FunctionFinderVisitor();
+			var functionFinderVisitor = new FunctionFinderVisitor(sourceMap);
 			functionFinderVisitor.Visit(script);
 
-			// Sort in descending order by start position
-			functionFinderVisitor.FunctionMap.Sort((x, y) => y.StartSourcePosition.CompareTo(x.StartSourcePosition));
+			// Sort in descending order by start position.  This allows the first result found in a linear search to be the "closest function to the [consumer's] source position".
+			//
+			// ATTN: It may be possible to do this with an ascending order sort, followed by a series of binary searches on rows & columns.
+			//       Our current profiles show the memory pressure being a bigger issue than the stack lookup, so I'm leaving this for now.
+			functionFinderVisitor.FunctionMap.Sort((x, y) => y.Start.CompareTo(x.Start));
 
 			return functionFinderVisitor.FunctionMap;
-		}
-
-		/// <summary>
-		/// Gets the original name corresponding to a function based on the information provided in the source map.
-		/// </summary>
-		internal static string? GetDeminifiedMethodNameFromSourceMap(FunctionMapEntry wrappingFunction, SourceMap sourceMap)
-		{
-			if (wrappingFunction == null)
-			{
-				throw new ArgumentNullException(nameof(wrappingFunction));
-			}
-
-			if (sourceMap == null)
-			{
-				throw new ArgumentNullException(nameof(sourceMap));
-			}
-
-			if (wrappingFunction.Bindings != null && wrappingFunction.Bindings.Count > 0)
-			{
-				var entryNames = new List<string>();
-
-				foreach (var binding in wrappingFunction.Bindings)
-				{
-					var entry = sourceMap.GetMappingEntryForGeneratedSourcePosition(binding.SourcePosition);
-					if (entry != null && entry.OriginalName != null)
-					{
-						entryNames.Add(entry.OriginalName);
-					}
-				}
-
-				// // The object name already contains the method name, so do not append it
-				if (entryNames.Count > 1 && entryNames[entryNames.Count - 2].EndsWith("." + entryNames[entryNames.Count - 1], StringComparison.Ordinal))
-				{
-					entryNames.RemoveAt(entryNames.Count - 1);
-				}
-
-				if (entryNames.Count > 2 && entryNames[entryNames.Count - 2] == "prototype")
-				{
-					entryNames.RemoveAt(entryNames.Count - 2);
-				}
-
-				if (entryNames.Count > 0)
-				{
-					return string.Join(".", entryNames);
-				}
-			}
-
-			return null;
 		}
 	}
 }

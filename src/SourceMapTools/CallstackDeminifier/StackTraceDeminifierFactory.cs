@@ -3,7 +3,10 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
-	public class StackTraceDeminfierFactory
+	/// <summary>
+	/// Provides factory methods to create stack trace deminifier instance.
+	/// </summary>
+	public class StackTraceDeminifierFactory
 	{
 		private static void ValidateArguments(ISourceMapProvider sourceMapProvider, ISourceCodeProvider generatedCodeProvider, IStackTraceParser stackTraceParser)
 		{
