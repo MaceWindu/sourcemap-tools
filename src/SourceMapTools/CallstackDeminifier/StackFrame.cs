@@ -32,7 +32,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// The name of the method
 		/// </summary>
-		public string? MethodName { get; internal set; }
+		public string? MethodName { get; }
 
 		/// <summary>
 		/// The path of the file where this code is defined
