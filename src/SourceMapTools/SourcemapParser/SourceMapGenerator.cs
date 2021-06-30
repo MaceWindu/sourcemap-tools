@@ -29,11 +29,6 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		public static string SerializeMapping(SourceMap sourceMap, JsonSerializerOptions? jsonSerializerSettings = null)
 		{
-			if (sourceMap == null)
-			{
-				throw new ArgumentNullException(nameof(sourceMap));
-			}
-
 			string? mappings = null;
 			if (sourceMap.ParsedMappings.Count > 0)
 			{

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
 
 	public class SourceMapGeneratorUnitTests
 	{
-		[Fact]
+		[Test]
 		public void SerializeMappingEntry_DifferentLineNumber_SemicolonAdded()
 		{
 			// Arrange
@@ -29,7 +29,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.True(result.ToString().IndexOf(';') >= 0);
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeMappingEntry_NoOriginalFileName_OneSegment()
 		{
 			// Arrange
@@ -45,10 +45,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			SourceMapGenerator.SerializeMappingEntry(entry, state, result);
 
 			// Assert
-			Assert.Equal("U", result.ToString());
+			Assert.AreEqual("U", result.ToString());
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeMappingEntry_WithOriginalFileNameNoOriginalName_FourSegments()
 		{
 			// Arrange
@@ -68,10 +68,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			SourceMapGenerator.SerializeMappingEntry(entry, state, result);
 
 			// Assert
-			Assert.Equal(",UAAK", result.ToString());
+			Assert.AreEqual(",UAAK", result.ToString());
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeMappingEntry_WithOriginalFileNameAndOriginalName_FiveSegments()
 		{
 			// Arrange
@@ -89,20 +89,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			SourceMapGenerator.SerializeMappingEntry(entry, state, result);
 
 			// Assert
-			Assert.Equal("KACMA", result.ToString());
+			Assert.AreEqual("KACMA", result.ToString());
 		}
 
-		[Fact]
-		public void SerializeMapping_NullInput_ThrowsException()
-		{
-			// Arrange
-			SourceMap? input = null;
-
-			// Act
-			Assert.Throws<ArgumentNullException>(() => SourceMapGenerator.SerializeMapping(input!));
-		}
-
-		[Fact]
+		[Test]
 		public void SerializeMapping_SimpleSourceMap_CorrectlySerialized()
 		{
 			// Arrange
@@ -112,20 +102,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var output = SourceMapGenerator.SerializeMapping(input);
 
 			// Assert
-			Assert.Equal("{\"version\":3,\"file\":\"CommonIntl\",\"mappings\":\"AACAA,aAAA,CAAc;\",\"sources\":[\"input/CommonIntl.js\"],\"names\":[\"CommonStrings\",\"afrikaans\"]}", output);
+			Assert.AreEqual("{\"version\":3,\"file\":\"CommonIntl\",\"mappings\":\"AACAA,aAAA,CAAc;\",\"sources\":[\"input/CommonIntl.js\"],\"names\":[\"CommonStrings\",\"afrikaans\"]}", output);
 		}
 
-		[Fact]
-		public void SerializeMappingIntoBast64_NullInput_ThrowsException()
-		{
-			// Arrange
-			SourceMap? input = null;
-
-			// Act
-			Assert.Throws<ArgumentNullException>(() => SourceMapGenerator.GenerateSourceMapInlineComment(input!));
-		}
-
-		[Fact]
+		[Test]
 		public void SerializeMappingBase64_SimpleSourceMap_CorrectlySerialized()
 		{
 			// Arrange
@@ -135,7 +115,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var output = SourceMapGenerator.GenerateSourceMapInlineComment(input);
 
 			// Assert
-			Assert.Equal("//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ29tbW9uSW50bCIsIm1hcHBpbmdzIjoiQUFDQUEsYUFBQSxDQUFjOyIsInNvdXJjZXMiOlsiaW5wdXQvQ29tbW9uSW50bC5qcyJdLCJuYW1lcyI6WyJDb21tb25TdHJpbmdzIiwiYWZyaWthYW5zIl19", output);
+			Assert.AreEqual("//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ29tbW9uSW50bCIsIm1hcHBpbmdzIjoiQUFDQUEsYUFBQSxDQUFjOyIsInNvdXJjZXMiOlsiaW5wdXQvQ29tbW9uSW50bC5qcyJdLCJuYW1lcyI6WyJDb21tb25TdHJpbmdzIiwiYWZyaWthYW5zIl19", output);
 		}
 
 		private static SourceMap GetSimpleSourceMap()

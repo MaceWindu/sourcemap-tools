@@ -114,11 +114,6 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		public SourceMap ApplySourceMap(SourceMap submap, string? sourceFile = null)
 		{
-			if (submap == null)
-			{
-				throw new ArgumentNullException(nameof(submap));
-			}
-
 			if (sourceFile == null)
 			{
 				if (submap.File == null)

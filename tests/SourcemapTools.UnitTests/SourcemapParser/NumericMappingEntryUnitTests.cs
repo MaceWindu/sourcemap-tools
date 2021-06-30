@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
 	public class NumericMappingEntryUnitTests
 	{
-		[Fact]
+		[Test]
 		public void ToMappingEntry_ContainsGeneratedSourcePosition_CorrectMappingEntryFieldsPopulated()
 		{
 			// Arrange
@@ -21,14 +21,14 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
 			// Assert
-			Assert.Equal(12, mappingEntry.GeneratedSourcePosition.Column);
-			Assert.Equal(13, mappingEntry.GeneratedSourcePosition.Line);
-			Assert.Equal(SourcePosition.NotFound, mappingEntry.OriginalSourcePosition);
+			Assert.AreEqual(12, mappingEntry.GeneratedSourcePosition.Column);
+			Assert.AreEqual(13, mappingEntry.GeneratedSourcePosition.Line);
+			Assert.AreEqual(SourcePosition.NotFound, mappingEntry.OriginalSourcePosition);
 			Assert.Null(mappingEntry.OriginalFileName);
 			Assert.Null(mappingEntry.OriginalName);
 		}
 
-		[Fact]
+		[Test]
 		public void ToMappingEntry_ContainsGeneratedAndOriginalSourcePosition_CorrectMappingEntryFieldsPopulated()
 		{
 			// Arrange
@@ -46,15 +46,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
 			// Assert
-			Assert.Equal(2, mappingEntry.GeneratedSourcePosition.Column);
-			Assert.Equal(3, mappingEntry.GeneratedSourcePosition.Line);
-			Assert.Equal(16, mappingEntry.OriginalSourcePosition!.Column);
-			Assert.Equal(23, mappingEntry.OriginalSourcePosition.Line);
+			Assert.AreEqual(2, mappingEntry.GeneratedSourcePosition.Column);
+			Assert.AreEqual(3, mappingEntry.GeneratedSourcePosition.Line);
+			Assert.AreEqual(16, mappingEntry.OriginalSourcePosition!.Column);
+			Assert.AreEqual(23, mappingEntry.OriginalSourcePosition.Line);
 			Assert.Null(mappingEntry.OriginalFileName);
 			Assert.Null(mappingEntry.OriginalName);
 		}
 
-		[Fact]
+		[Test]
 		public void ToMappingEntry_ContainsGeneratedPositionNameIndexAndSourcesIndex_CorrectMappingEntryFieldsPopulated()
 		{
 			// Arrange
@@ -72,11 +72,11 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
 			// Assert
-			Assert.Equal(8, mappingEntry.GeneratedSourcePosition.Column);
-			Assert.Equal(48, mappingEntry.GeneratedSourcePosition.Line);
-			Assert.Equal(SourcePosition.NotFound, mappingEntry.OriginalSourcePosition);
-			Assert.Equal("three", mappingEntry.OriginalFileName);
-			Assert.Equal("bar", mappingEntry.OriginalName);
+			Assert.AreEqual(8, mappingEntry.GeneratedSourcePosition.Column);
+			Assert.AreEqual(48, mappingEntry.GeneratedSourcePosition.Line);
+			Assert.AreEqual(SourcePosition.NotFound, mappingEntry.OriginalSourcePosition);
+			Assert.AreEqual("three", mappingEntry.OriginalFileName);
+			Assert.AreEqual("bar", mappingEntry.OriginalName);
 		}
 	}
 }

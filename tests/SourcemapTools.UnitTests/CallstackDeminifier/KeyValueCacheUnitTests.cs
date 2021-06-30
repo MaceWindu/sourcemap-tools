@@ -1,13 +1,13 @@
 ﻿using System;
 using Moq;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
 
 	public class KeyValueCacheUnitTests
 	{
-		[Fact]
+		[Test]
 		public void GetValue_KeyNotInCache_CallValueGetter()
 		{
 			// Arrange
@@ -19,11 +19,11 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = keyValueCache.GetValue("bar");
 
 			// Assert
-			Assert.Equal("foo", result);
+			Assert.AreEqual("foo", result);
 
 		}
 
-		[Fact]
+		[Test]
 		public void GetValue_CallGetTwice_OnlyCallValueGetterOnce()
 		{
 			// Arrange
@@ -36,11 +36,11 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = keyValueCache.GetValue("bar");
 
 			// Assert
-			Assert.Equal("foo", result);
+			Assert.AreEqual("foo", result);
 			valueGetter.Verify(x => x("bar"), Times.Once());
 		}
 
-		[Fact]
+		[Test]
 		public void GetValue_CallGetTwiceValueGetterReturnsNull_CallGetterTwice()
 		{
 			// Arrange
@@ -57,7 +57,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			valueGetter.Verify(x => x("bar"), Times.Exactly(2));
 		}
 
-		[Fact]
+		[Test]
 		public void GetValue_CallGetMultipleTimesFirstGetterReturnsNull_CacheFirstNonNullValue()
 		{
 			// Arrange
@@ -74,7 +74,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = keyValueCache.GetValue("bar");
 
 			// Assert
-			Assert.Equal("foo", result);
+			Assert.AreEqual("foo", result);
 			valueGetter.Verify(x => x("bar"), Times.Exactly(2));
 		}
 	}
