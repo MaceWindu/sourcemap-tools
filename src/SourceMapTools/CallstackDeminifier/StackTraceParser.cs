@@ -47,11 +47,6 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// </returns>
 		public virtual IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message)
 		{
-			if (stackTraceString == null)
-			{
-				throw new ArgumentNullException(nameof(stackTraceString));
-			}
-
 			message = null;
 
 			var stackFrameStrings = stackTraceString.SplitFast('\n');
@@ -137,11 +132,6 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// </summary>
 		protected internal virtual StackFrame? TryParseSingleStackFrame(string frame)
 		{
-			if (frame == null)
-			{
-				throw new ArgumentNullException(nameof(frame));
-			}
-
 			var lineNumberMatch = _lineNumberRegex.Match(frame);
 
 			if (!lineNumberMatch.Success)

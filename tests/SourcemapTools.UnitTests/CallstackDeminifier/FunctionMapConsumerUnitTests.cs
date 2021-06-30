@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using SourcemapToolkit.SourcemapParser;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
 
 	public class FunctionMapConsumerUnitTests
 	{
-		[Fact]
+		[Test]
 		public void GetWrappingFunctionForSourceLocation_EmptyFunctionMap_ReturnNull()
 		{
 			// Arrange
@@ -22,7 +22,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			Assert.Null(wrappingFunction);
 		}
 
-		[Fact]
+		[Test]
 		public void GetWrappingFunctionForSourceLocation_SingleIrrelevantFunctionMapEntry_ReturnNull()
 		{
 			// Arrange
@@ -44,7 +44,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			Assert.Null(wrappingFunction);
 		}
 
-		[Fact]
+		[Test]
 		public void GetWrappingFunctionForSourceLocation_SingleRelevantFunctionMapEntry_ReturnWrappingFunction()
 		{
 			// Arrange
@@ -65,10 +65,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
 
 			// Assert
-			Assert.Equal(functionMapEntry, wrappingFunction);
+			Assert.AreEqual(functionMapEntry, wrappingFunction);
 		}
 
-		[Fact]
+		[Test]
 		public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesSingleRelevantFunctionMapEntry_ReturnWrappingFunction()
 		{
 			// Arrange
@@ -96,10 +96,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
 
 			// Assert
-			Assert.Equal(functionMapEntry2, wrappingFunction);
+			Assert.AreEqual(functionMapEntry2, wrappingFunction);
 		}
 
-		[Fact]
+		[Test]
 		public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesMultipleRelevantFunctionMapEntry_ReturnClosestWrappingFunction()
 		{
 			// Arrange
@@ -127,7 +127,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
 
 			// Assert
-			Assert.Equal(functionMapEntry2, wrappingFunction);
+			Assert.AreEqual(functionMapEntry2, wrappingFunction);
 		}
 	}
 }

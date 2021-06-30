@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
 	public class IReadOnlyListExtensionsUnitTests
 	{
-		[Fact]
+		[Test]
 		public void IndexOf_ValueInList_CorrectlyReturnsIndex()
 		{
 			// Arrange
@@ -15,10 +15,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var index = IReadOnlyListExtensions.IndexOf(list, 1);
 
 			// Assert
-			Assert.Equal(2, index);
+			Assert.AreEqual(2, index);
 		}
 
-		[Fact]
+		[Test]
 		public void IndexOf_ValueNotInList_CorrectlyReturnsNegativeOne()
 		{
 			// Arrange
@@ -28,10 +28,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var index = IReadOnlyListExtensions.IndexOf(list, 1);
 
 			// Assert
-			Assert.Equal(-1, index);
+			Assert.AreEqual(-1, index);
 		}
 
-		[Fact]
+		[Test]
 		public void IndexOf_ValueAppearsMultipleTimes_CorrectlyReturnsFirstInstance()
 		{
 			// Arrange
@@ -41,10 +41,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var index = IReadOnlyListExtensions.IndexOf(list, 4);
 
 			// Assert
-			Assert.Equal(1, index);
+			Assert.AreEqual(1, index);
 		}
 
-		[Fact]
+		[Test]
 		public void BinarySearch_EvenNumberOfElements_CorrectlyMatchesListImplementation()
 		{
 			// Arrange
@@ -63,12 +63,12 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			// Act & Assert
 			for (var i = minFillIndexInclusive - 1; i <= maxFillIndexInclusive + 1; i++)
 			{
-				Assert.Equal(list.BinarySearch(i, comparer), IReadOnlyListExtensions.BinarySearch(list, i, comparer));
-				Assert.Equal(list.BinarySearch(i + 1, comparer), IReadOnlyListExtensions.BinarySearch(list, i + 1, comparer));
+				Assert.AreEqual(list.BinarySearch(i, comparer), IReadOnlyListExtensions.BinarySearch(list, i, comparer));
+				Assert.AreEqual(list.BinarySearch(i + 1, comparer), IReadOnlyListExtensions.BinarySearch(list, i + 1, comparer));
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void BinarySearch_OddNumberOfElements_CorrectlyMatchesListImplementation()
 		{
 			// Arrange
@@ -87,8 +87,8 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			// Act & Assert
 			for (var i = minFillIndexInclusive - 1; i <= maxFillIndexInclusive + 1; i++)
 			{
-				Assert.Equal(list.BinarySearch(i, comparer), IReadOnlyListExtensions.BinarySearch(list, i, comparer));
-				Assert.Equal(list.BinarySearch(i + 1, comparer), IReadOnlyListExtensions.BinarySearch(list, i + 1, comparer));
+				Assert.AreEqual(list.BinarySearch(i, comparer), IReadOnlyListExtensions.BinarySearch(list, i, comparer));
+				Assert.AreEqual(list.BinarySearch(i + 1, comparer), IReadOnlyListExtensions.BinarySearch(list, i + 1, comparer));
 			}
 		}
 	}

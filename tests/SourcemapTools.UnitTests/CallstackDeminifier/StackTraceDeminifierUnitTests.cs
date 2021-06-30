@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Moq;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
 
 	public class StackTraceDeminifierUnitTests
 	{
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_UnableToParseStackTraceString_ReturnsEmptyList()
 		{
 			// Arrange
@@ -24,10 +24,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString);
 
 			// Assert
-			Assert.Equal(0, result.DeminifiedStackFrameResults.Count);
+			Assert.AreEqual(0, result.DeminifiedStackFrameResults.Count);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_AbleToDeminifyStackTrace_ResultContainsDeminifiedFrame()
 		{
 			// Arrange
@@ -47,9 +47,9 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString);
 
 			// Assert
-			Assert.Equal(1, result.DeminifiedStackFrameResults.Count);
-			Assert.Equal(minifiedStackFrames[0], result.MinifiedStackFrames[0]);
-			Assert.Equal(stackFrameDeminification, result.DeminifiedStackFrameResults[0]);
+			Assert.AreEqual(1, result.DeminifiedStackFrameResults.Count);
+			Assert.AreEqual(minifiedStackFrames[0], result.MinifiedStackFrames[0]);
+			Assert.AreEqual(stackFrameDeminification, result.DeminifiedStackFrameResults[0]);
 		}
 	}
 }

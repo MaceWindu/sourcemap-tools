@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
@@ -10,7 +10,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 	public class SourceMapTransformerUnitTests
 	{
 
-		[Fact]
+		[Test]
 		public void FlattenMap_ReturnsOnlyLineInformation()
 		{
 			// Arrange
@@ -31,16 +31,16 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 			// Assert
 			Assert.NotNull(linesOnlyMap);
-			Assert.Single(linesOnlyMap.Sources);
-			Assert.Single(linesOnlyMap.SourcesContent);
-			Assert.Single(linesOnlyMap.ParsedMappings);
-			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
-			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
+			Assert.AreEqual(1, linesOnlyMap.Sources?.Count);
+			Assert.AreEqual(1, linesOnlyMap.SourcesContent?.Count);
+			Assert.AreEqual(1, linesOnlyMap.ParsedMappings.Count);
+			Assert.AreEqual(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
+			Assert.AreEqual(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
+			Assert.AreEqual(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
+			Assert.AreEqual(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
 		}
 
-		[Fact]
+		[Test]
 		public void FlattenMap_MultipleMappingsSameLine_ReturnsOnlyOneMappingPerLine()
 		{
 			// Arrange
@@ -66,16 +66,16 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 			// Assert
 			Assert.NotNull(linesOnlyMap);
-			Assert.Single(linesOnlyMap.Sources);
-			Assert.Single(linesOnlyMap.SourcesContent);
-			Assert.Single(linesOnlyMap.ParsedMappings);
-			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
-			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
+			Assert.AreEqual(1, linesOnlyMap.Sources?.Count);
+			Assert.AreEqual(1, linesOnlyMap.SourcesContent?.Count);
+			Assert.AreEqual(1, linesOnlyMap.ParsedMappings.Count);
+			Assert.AreEqual(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
+			Assert.AreEqual(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
+			Assert.AreEqual(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
+			Assert.AreEqual(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
 		}
 
-		[Fact]
+		[Test]
 		public void FlattenMap_MultipleOriginalLineToSameGeneratedLine_ReturnsFirstOriginalLine()
 		{
 			// Arrange
@@ -102,13 +102,13 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 
 			// Assert
 			Assert.NotNull(linesOnlyMap);
-			Assert.Single(linesOnlyMap.Sources);
-			Assert.Single(linesOnlyMap.SourcesContent);
-			Assert.Single(linesOnlyMap.ParsedMappings);
-			Assert.Equal(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
-			Assert.Equal(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
-			Assert.Equal(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
+			Assert.AreEqual(1, linesOnlyMap.Sources?.Count);
+			Assert.AreEqual(1, linesOnlyMap.SourcesContent?.Count);
+			Assert.AreEqual(1, linesOnlyMap.ParsedMappings.Count);
+			Assert.AreEqual(1, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line);
+			Assert.AreEqual(0, linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column);
+			Assert.AreEqual(2, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Line);
+			Assert.AreEqual(0, linesOnlyMap.ParsedMappings[0].OriginalSourcePosition!.Column);
 		}
 	}
 }

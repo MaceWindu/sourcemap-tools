@@ -6,7 +6,7 @@ variables:
   - name: assemblyVersion
     value: 1.0.0
   - name: packageVersion
-    value: 1.0.0-rc.3
+    value: 1.0.0
   - name: nugetDevVersion
     value: 1.0.0
 

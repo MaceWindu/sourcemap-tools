@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
@@ -33,7 +33,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			return StackTraceDeminifierFactory.GetStackTraceDeminfier(provider, provider);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_MinifiedStackTrace_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -49,7 +49,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace);
 
 			// Assert
-			Assert.Equal(deminifiedStackTrace.Replace("\r", ""), results.ToString().Replace("\r", ""));
+			Assert.AreEqual(deminifiedStackTrace.Replace("\r", ""), results.ToString().Replace("\r", ""));
 		}
 	}
 }

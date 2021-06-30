@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Moq;
 using SourcemapToolkit.SourcemapParser;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
 	public class SourceMapExtensionsUnitTests
 	{
-		[Fact]
+		[Test]
 		public void GetDeminifiedMethodName_EmptyBinding_ReturnNullMethodName()
 		{
 			// Arrange
@@ -21,7 +21,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			Assert.Null(result);
 		}
 
-		[Fact]
+		[Test]
 		public void GetDeminifiedMethodName_HasSingleBindingNoMatchingMapping_ReturnNullMethodName()
 		{
 			// Arrange
@@ -42,7 +42,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			Assert.Null(result);
 		}
 
-		[Fact]
+		[Test]
 		public void GetDeminifiedMethodName_HasSingleBindingMatchingMapping_ReturnsMethodName()
 		{
 			// Arrange
@@ -64,11 +64,11 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = SourceMapExtensions.GetDeminifiedMethodName(sourceMap.Object, bindings);
 
 			// Assert
-			Assert.Equal("foo", result);
+			Assert.AreEqual("foo", result);
 			sourceMap.Verify();
 		}
 
-		[Fact]
+		[Test]
 		public void GetDeminifiedMethodName_MatchingMappingMultipleBindingsMissingPrototypeMapping_ReturnsMethodName()
 		{
 			// Arrange
@@ -99,11 +99,11 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = SourceMapExtensions.GetDeminifiedMethodName(sourceMap.Object, bindings);
 
 			// Assert
-			Assert.Equal("baz", result);
+			Assert.AreEqual("baz", result);
 			sourceMap.Verify();
 		}
 
-		[Fact]
+		[Test]
 		public void GetDeminifiedMethodName_MatchingMappingMultipleBindings_ReturnsMethodNameWithFullBinding()
 		{
 			// Arrange
@@ -134,7 +134,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var result = SourceMapExtensions.GetDeminifiedMethodName(sourceMap.Object, bindings);
 
 			// Assert
-			Assert.Equal("bar.baz", result);
+			Assert.AreEqual("bar.baz", result);
 			sourceMap.Verify();
 		}
 

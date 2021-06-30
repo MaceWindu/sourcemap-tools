@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
-
 	public class Base64VlqDecoderUnitTests
 	{
-		[Fact]
+		[Test]
 		public void Base64VlqDecoder_SingleEncodedValue_ListWithOnlyOneValue()
 		{
 			// Arrange
@@ -16,10 +15,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var result = Base64VlqDecoder.Decode(input);
 
 			// Assert
-			Assert.Equal(new List<int> { 701 }, result);
+			Assert.AreEqual(new List<int> { 701 }, result);
 		}
 
-		[Fact]
+		[Test]
 		public void Base64VlqDecoder_MultipleEncodedValues_ListWithMultipleValues()
 		{
 			// Arrange
@@ -29,10 +28,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var result = Base64VlqDecoder.Decode(input);
 
 			// Assert
-			Assert.Equal(new List<int> { 0, 0, 16, 1 }, result);
+			Assert.AreEqual(new List<int> { 0, 0, 16, 1 }, result);
 		}
 
-		[Fact]
+		[Test]
 		public void Base64VlqDecoder_InputIncludesNegativeValue_ListContainsNegativeValue()
 		{
 			// Arrange
@@ -42,7 +41,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var result = Base64VlqDecoder.Decode(input);
 
 			// Assert
-			Assert.Equal(new List<int> { 1, 0, 1, -15 }, result);
+			Assert.AreEqual(new List<int> { 1, 0, 1, -15 }, result);
 		}
 	}
 }
