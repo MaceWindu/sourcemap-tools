@@ -1,6 +1,6 @@
 ﻿using Moq;
 using SourcemapToolkit.SourcemapParser.UnitTests;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
@@ -23,15 +23,15 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 
 		private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results)
 		{
-			Assert.Equal(4, results.DeminifiedStackFrameResults.Count);
-			Assert.Equal(DeminificationError.None, results.DeminifiedStackFrameResults[0].DeminificationError);
-			Assert.Equal("mynamespace.objectWithMethods.propertyMethodLevel2", results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName);
-			Assert.Equal("mynamespace.objectWithMethods.prototypeMethodLevel1", results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName);
-			Assert.Equal("GlobalFunction", results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName);
-			Assert.Equal("window.onload", results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual(4, results.DeminifiedStackFrameResults.Count);
+			Assert.AreEqual(DeminificationError.None, results.DeminifiedStackFrameResults[0].DeminificationError);
+			Assert.AreEqual("mynamespace.objectWithMethods.propertyMethodLevel2", results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual("mynamespace.objectWithMethods.prototypeMethodLevel1", results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual("GlobalFunction", results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual("window.onload", results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyClosureStackTrace_ChromeStackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -49,7 +49,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyClosureStackTrace_FireFoxStackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -66,7 +66,7 @@ window.onload/<@http://localhost:11323/closurecrashcauser.minified.js:1:504";
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyClosureStackTrace_IE11StackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -84,7 +84,7 @@ window.onload/<@http://localhost:11323/closurecrashcauser.minified.js:1:504";
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyClosureStackTrace_EdgeStackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange

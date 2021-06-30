@@ -5,10 +5,10 @@
 		<TargetFrameworks>net48;netcoreapp2.1;netcoreapp3.1;net5.0;</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="xunit" Version="2.4.1" />
-		<PackageReference Include="Moq" Version="4.16.0" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+		<PackageReference Include="NUnit3TestAdapter" />
+		<PackageReference Include="NUnit" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 	</ItemGroup>
 
 	<ItemGroup>

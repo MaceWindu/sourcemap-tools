@@ -1,6 +1,6 @@
 ﻿using Moq;
 using SourcemapToolkit.SourcemapParser.UnitTests;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
@@ -24,17 +24,17 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 
 		private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results)
 		{
-			Assert.Equal(6, results.DeminifiedStackFrameResults.Count);
-			Assert.Equal(DeminificationError.None, results.DeminifiedStackFrameResults[0].DeminificationError);
-			Assert.Equal(16, results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.SourcePosition!.Line);
-			Assert.Equal("level3", results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName);
-			Assert.Equal("level2", results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName);
-			Assert.Equal("level1", results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName);
-			Assert.Equal("causeCrash", results.DeminifiedStackFrameResults[4].DeminifiedStackFrame.MethodName);
-			Assert.Equal(32, results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.SourcePosition!.Line);
+			Assert.AreEqual(6, results.DeminifiedStackFrameResults.Count);
+			Assert.AreEqual(DeminificationError.None, results.DeminifiedStackFrameResults[0].DeminificationError);
+			Assert.AreEqual(16, results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.SourcePosition!.Line);
+			Assert.AreEqual("level3", results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual("level2", results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual("level1", results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual("causeCrash", results.DeminifiedStackFrameResults[4].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual(32, results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.SourcePosition!.Line);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_ChromeStackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -54,7 +54,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_FireFoxStackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -73,7 +73,7 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_IE11StackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -93,7 +93,7 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyStackTrace_EdgeStackTraceString_CorrectDeminificationWhenPossible()
 		{
 			// Arrange
@@ -113,7 +113,7 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 			ValidateDeminifyStackTraceResults(results);
 		}
 
-		[Fact]
+		[Test]
 		public void DeminifyResultToString_SuccessfullyDeminified_AllLinesDeminified()
 		{
 			// Arrange
@@ -138,7 +138,7 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 			var formatted = results.ToString();
 
 			// Assert
-			Assert.Equal(exectedResult.Replace("\r", ""), formatted.Replace("\r", ""));
+			Assert.AreEqual(exectedResult.Replace("\r", ""), formatted.Replace("\r", ""));
 		}
 	}
 }

@@ -1,28 +1,11 @@
 ﻿using System;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
 	public class StringExtensionsUnitTests
 	{
-		[Fact]
-		public void SplitFast_NullInput_Throws()
-		{
-			// Arrange
-			const string? input = null;
-			const char delimiter = ',';
-
-			// Act
-			static void testAction()
-			{
-				StringExtensions.SplitFast(input!, delimiter);
-			}
-
-			//Throws Assert
-			Assert.Throws<NullReferenceException>(testAction);
-		}
-
-		[Fact]
+		[Test]
 		public void SplitFast_EmptyInput_Matches()
 		{
 			// Arrange
@@ -34,15 +17,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_OneCharacterNotSplit_Matches()
 		{
 			// Arrange
@@ -54,15 +37,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_OneCharacterDelimiter_Matches()
 		{
 			// Arrange
@@ -74,15 +57,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_DelimiterAtStart_Matches()
 		{
 			// Arrange
@@ -94,15 +77,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_DelimiterAtEnd_Matches()
 		{
 			// Arrange
@@ -114,15 +97,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_BackToBack_Matches()
 		{
 			// Arrange
@@ -134,15 +117,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_LongSentence_Matches()
 		{
 			// Arrange
@@ -154,15 +137,15 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void SplitFast_Complex_Matches()
 		{
 			// Arrange
@@ -174,11 +157,11 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var normalSplit = input.Split(delimiter);
 
 			// Assert
-			Assert.Equal(normalSplit.Length, fastSplit.Length);
+			Assert.AreEqual(normalSplit.Length, fastSplit.Length);
 
 			for (var i = 0; i < normalSplit.Length; i++)
 			{
-				Assert.Equal(normalSplit[i], fastSplit[i]);
+				Assert.AreEqual(normalSplit[i], fastSplit[i]);
 			}
 		}
 	}

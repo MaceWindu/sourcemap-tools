@@ -1,8 +1,11 @@
-﻿namespace SourcemapToolkit.SourcemapParser
+﻿using System.Diagnostics;
+
+namespace SourcemapToolkit.SourcemapParser
 {
 	/// <summary>
 	/// Source map entry.
 	/// </summary>
+	[DebuggerDisplay("(Column: {GeneratedSourcePosition.Column}, Line: {GeneratedSourcePosition.Line}): {OriginalName}")]
 	public struct MappingEntry
 	{
 		/// <summary>

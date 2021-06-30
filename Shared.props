@@ -29,5 +29,7 @@
 		<AnalysisLevel>preview</AnalysisLevel>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<RunAnalyzers>true</RunAnalyzers>
+
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 </Project>

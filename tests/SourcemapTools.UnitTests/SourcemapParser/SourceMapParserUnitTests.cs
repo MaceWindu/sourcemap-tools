@@ -1,12 +1,12 @@
 ﻿using System.IO;
-using Xunit;
+using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
 {
 
 	public class SourceMapParserUnitTests
 	{
-		[Fact]
+		[Test]
 		public void ParseSourceMap_NullInputStream_ReturnsNull()
 		{
 			// Arrange
@@ -19,7 +19,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			Assert.Null(output);
 		}
 
-		[Fact]
+		[Test]
 		public void ParseSourceMap_SimpleSourceMap_CorrectlyParsed()
 		{
 			// Arrange
@@ -29,14 +29,14 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var output = SourceMapParser.ParseSourceMap(UnitTestUtils.StreamFromString(input))!;
 
 			// Assert
-			Assert.Equal(3, output.Version);
-			Assert.Equal("CommonIntl", output.File);
-			Assert.Equal("AACAA,aAAA,CAAc", output.Mappings);
-			Assert.Single(output.Sources);
-			Assert.Equal("input/CommonIntl.js", output.Sources![0]);
-			Assert.Equal(2, output.Names!.Count);
-			Assert.Equal("CommonStrings", output.Names[0]);
-			Assert.Equal("afrikaans", output.Names[1]);
+			Assert.AreEqual(3, output.Version);
+			Assert.AreEqual("CommonIntl", output.File);
+			Assert.AreEqual("AACAA,aAAA,CAAc", output.Mappings);
+			Assert.AreEqual(1, output.Sources?.Count);
+			Assert.AreEqual("input/CommonIntl.js", output.Sources![0]);
+			Assert.AreEqual(2, output.Names!.Count);
+			Assert.AreEqual("CommonStrings", output.Names[0]);
+			Assert.AreEqual("afrikaans", output.Names[1]);
 		}
 	}
 }

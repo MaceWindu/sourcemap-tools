@@ -11,7 +11,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	// should be removed if https://github.com/sebastienros/esprima-dotnet/pull/148 accepted
 	internal class AllAstVisitor
 	{
-		private readonly List<Node> _parentStack = new List<Node>();
+		private readonly List<Node> _parentStack = new ();
 		protected IReadOnlyList<Node> ParentStack => _parentStack;
 
 		/// <summary>
@@ -240,12 +240,20 @@ namespace SourcemapToolkit.CallstackDeminifier
 				case Nodes.ClassExpression:
 					VisitClassExpression(node.As<ClassExpression>());
 					break;
+				case Nodes.ChainExpression:
+					VisitChainExpression(node.As<ChainExpression>());
+					break;
 				default:
 					VisitUnknownNode(node);
 					break;
 			}
 
 			_parentStack.RemoveAt(_parentStack.Count - 1);
+		}
+
+		protected virtual void VisitChainExpression(ChainExpression chainExpression)
+		{
+			Visit(chainExpression.Expression);
 		}
 
 		protected virtual void VisitProgram(Program program)
@@ -260,7 +268,10 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 		protected virtual void VisitCatchClause(CatchClause catchClause)
 		{
-			Visit(catchClause.Param);
+			if (catchClause.Param != null)
+			{
+				Visit(catchClause.Param);
+			}
 			Visit(catchClause.Body);
 		}
 
