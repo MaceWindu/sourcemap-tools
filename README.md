@@ -4,7 +4,7 @@ This is a C# library for working with JavaScript source maps and deminifying Jav
 
 This is a fork of [microsoft/sourcemap-toolkit](https://github.com/microsoft/sourcemap-toolkit) project that solves following outstanding issues with original project:
 
-- no active development is done anymore for original project
+- no active development is done anymore for original project, mostly support-only changes for use inside MS teams
 - no nuget publishing for recent changes: [#64](https://github.com/microsoft/sourcemap-toolkit/issues/64)
 - lack of support for modern frameworks (.net core): [#57](https://github.com/microsoft/sourcemap-toolkit/issues/57)
 - lack of support for ES6+: [#66](https://github.com/microsoft/sourcemap-toolkit/issues/66)
@@ -12,56 +12,7 @@ This is a fork of [microsoft/sourcemap-toolkit](https://github.com/microsoft/sou
 ## Source Map Parsing
 The `SourcemapTools.dll` provides an API for parsing a souce map into an object that is easy to work with and an API for serializing source map object back to json string. 
 The source map class has a method `GetMappingEntryForGeneratedSourcePosition`, which can be used to find a source map mapping entry that likely corresponds to a piece of generated code. 
-### Example
-#### Source map string
-```
-{
-    "version": 3,
-    "file": "CommonIntl",
-    "mappings": "AACAA,aAAA,CAAc",
-    "sources": ["CommonIntl.js"],
-    "names": ["CommonStrings", "afrikaans"]
-}
-```
-#### Sample source map object
-|Name|Value|Type
-|--- | --- | ---
-|map&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|{SourcemapToolkit.SourcemapParser.SourceMap}|SourcemapToolkit.SourcemapParser.SourceMap
-|&nbsp;\|--File|"CommonIntl"|string
-|&nbsp;\|--Mappings|"AACAA,aAAA,CAAc"|string
-|&nbsp;\|--Names|Count=2|System.Collections.Generic.List<string>
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--[0]|"CommonStrings"|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--[1]|"afrikaans"|string
-|&nbsp;\|--ParsedMappings|Count=3|System.Collections.Generic.List<SourcemapToolkit.SourcemapParser.MappingEntry>
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--[0]|{SourcemapToolkit.SourcemapParser.MappingEntry}|SourcemapToolkit.SourcemapParser.MappingEntry
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--GeneratedSourcePosition|{SourcemapToolkit.SourcemapParser.SourcePosition}|SourcemapToolkit.SourcemapParser.SourcePosition
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedColumnNumber|0|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedLineNumber|0|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalFileName|"CommonIntl.js"|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalName|"CommonStrings"|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalSourcePosition|{SourcemapToolkit.SourcemapParser.SourcePosition}|SourcemapToolkit.SourcemapParser.SourcePosition
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedColumnNumber|0|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedLineNumber|1|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--[1]|{SourcemapToolkit.SourcemapParser.MappingEntry}|SourcemapToolkit.SourcemapParser.MappingEntry
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--GeneratedSourcePosition|{SourcemapToolkit.SourcemapParser.SourcePosition}|SourcemapToolkit.SourcemapParser.SourcePosition
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedColumnNumber|13|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedLineNumber|0|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalFileName|"CommonIntl.js"|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalName|null|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalSourcePosition|{SourcemapToolkit.SourcemapParser.SourcePosition}|SourcemapToolkit.SourcemapParser.SourcePosition
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedColumnNumber|0|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedLineNumber|1|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--[2]|{SourcemapToolkit.SourcemapParser.MappingEntry}|SourcemapToolkit.SourcemapParser.MappingEntry
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--GeneratedSourcePosition|{SourcemapToolkit.SourcemapParser.SourcePosition}|SourcemapToolkit.SourcemapParser.SourcePosition
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedColumnNumber|14|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedLineNumber|0|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalFileName|"CommonIntl.js"|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalName|null|string
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--OriginalSourcePosition|{SourcemapToolkit.SourcemapParser.SourcePosition}|SourcemapToolkit.SourcemapParser.SourcePosition
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedColumnNumber|14|int
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--ZeroBasedLineNumber|1|int
-|&nbsp;\|--Sources|Count=1|System.Collections.Generic.List<string>
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|--[0]|"CommonIntl.js"|string
+
 ### Usage
 The top level API for source map parsing is the `SourceMapParser.ParseSourceMap` method. The input is a `Stream` that can be used to access the contents of the source map.
 The top level API for source map serializing is the `SourceMapGenerator.SerializeMapping` method. The input is a `SourceMap` that to be serialized and an optional JsonSerializerSettings that can be used to control the json serialization.
@@ -70,7 +21,7 @@ A sample usage of the library is shown below.
 ```csharp
 // Parse the source map from file
 SourceMap sourceMap;
-using (FileStream stream = new FileStream(@"sample.sourcemap", FileMode.Open))
+using (var stream = new FileStream(@"sample.sourcemap", FileMode.Open))
 {
     sourceMap = SourceMapParser.ParseSourceMap(stream);
 }
@@ -86,37 +37,30 @@ File.WriteAllText(@"updatedSample.sourcemap", serializedMap);
 ### Chaining source maps
 A common use case when dealing with source maps is multiple mapping layers. You can use `ApplySourceMap` to chain maps together to link back to the source
 
-```csharp
-SourcePosition inOriginal = new SourcePosition { ZeroBasedLineNumber = 34, ZeroBasedColumnNumber = 23 };
-SourcePosition inBundled = new SourcePosition { ZeroBasedLineNumber = 23, ZeroBasedColumnNumber = 12 };
-SourcePosition inMinified = new SourcePosition { ZeroBasedLineNumber = 3, ZeroBasedColumnNumber = 2 };
+```cs
+var inOriginal = new SourcePosition(34, 23);
+var inBundled  = new SourcePosition(23, 12);
+var inMinified = new SourcePosition(3 , 2 );
 
-MappingEntry originalToBundledEntry = new MappingEntry {
-  GeneratedSourcePosition = inBundled,
-  OriginalSourcePosition = inOriginal,
-  OriginalFileName = "original.js"
-};
+var originalToBundledEntry = new MappingEntry(inBundled, inOriginal, null, "original.js");
+var bundledToMinifiedEntry = new MappingEntry(inMinified, inBundled, null, "bundle.js");
 
-MappingEntry bundledToMinifiedEntry = new MappingEntry {
-  GeneratedSourcePosition = inMinified,
-  OriginalSourcePosition = inBundled,
-  OriginalFileName = "bundle.js"
-};
-
-SourceMap bundledToOriginal = new SourceMap { 
+var bundledToOriginal = new SourceMap()
+{
   File = "bundled.js",
   Sources = new List<string> { "original.js" },
-  ParsedMappings = new List<MappingEntry> { originalToBundledEntry } 
+  ParsedMappings = new List<MappingEntry> { originalToBundledEntry }
 }
 
-SourceMap minifiedToBundled = new SourceMap { 
+var minifiedToBundled = new SourceMap()
+{
   File = "bundled.min.js",
   Sources = new List<string> { "bundled.js" },
   ParsedMappings = new List<MappingEntry> { bundledToMinifiedEntry }
 }
 
 // will contain mapping for line 3, column 2 in the minified file to line 34, column 23 in the original file
-SourceMap minifiedToOriginal = minifiedToBundled.ApplySourceMap(bundledToOriginal);
+var minifiedToOriginal = minifiedToBundled.ApplySourceMap(bundledToOriginal);
 ```
 
 ## Call Stack Deminification
@@ -135,23 +79,23 @@ TypeError: Cannot read property 'length' of undefined
 ```
     FilePath: "http://localhost:11323/crashcauser.min.js"
     MethodName: "i"
-    SourcePosition.ZeroBasedColumnNumber: 49
-    SourcePosition.ZeroBasedLineNumber: 0
+    SourcePosition.Column: 49
+    SourcePosition.Line: 0
 ```
 #### Sample Deminified `StackFrame` entry
 ```
     FilePath: "crashcauser.js"
     MethodName: "level1"
-    SourcePosition.ZeroBasedColumnNumber: 8
-    SourcePosition.ZeroBasedLineNumber: 5
+    SourcePosition.Column: 8
+    SourcePosition.Line: 5
 ```
 ### Usage
 The top level API for call stack deminification is the `StackTraceDeminifier.DeminifyStackTrace` method. For each url that appears in a JavaScript callstack, the library requires the contents of the JavaScript file and corresponding source map in order to determine the original method name and code location. This information is provided by the consumer of the API by implementing the `ISourceMapProvider` and `ISourceCodeProvider` interfaces. These interfaces are expected to return a `Stream` that can be used to access the contents of the requested JavaScript code or corresponding source map. A `StackTraceDeminifier` can be instantiated using one of the methods on `StackTraceDeminfierFactory`. A sample usage of the library is shown below.
 
 ```csharp
-StackTraceDeminifier sourceMapCallstackDeminifier = StackTraceDeminifierFactory.GetStackTraceDeminfier(new SourceMapProvider(), new SourceCodeProvider());
-DeminifyStackTraceResult deminifyStackTraceResult = sourceMapCallstackDeminifier.DeminifyStackTrace(callstack);
-string deminifiedCallstack = deminifyStackTraceResult.ToString();
+var sourceMapCallstackDeminifier = StackTraceDeminifierFactory.GetStackTraceDeminfier(new SourceMapProvider(), new SourceCodeProvider());
+var deminifyStackTraceResult     = sourceMapCallstackDeminifier.DeminifyStackTrace(callstack);
+var deminifiedCallstack          = deminifyStackTraceResult.ToString();
 ```
 
 The result of `DeminifyStackTrace` is a `DeminifyStackTraceResult`, which is an object that contains a list of `StackFrameDeminificationResults` which contains the parsed minified `StackFrame` objects in the `MinifiedStackFrame` property and an enum indicating if any errors occured when attempting to deminify the `StackFrame`. The `DeminifiedStackFrame` property contains the best guess `StackFrame` object that maps to the `MinifiedStackFrame` element with the same index. Note that any of the properties on a `StackTrace` object may be null if no value could be extracted from the input callstack string or source map.

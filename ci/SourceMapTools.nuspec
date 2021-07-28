@@ -15,8 +15,8 @@
 		
 		<dependencies>
 			<group targetFramework=".NETStandard2.0">
-				<dependency id="esprima"          version="2.0.0-beta-1338" />
-				<dependency id="System.Text.Json" version="5.0.1"           />
+				<dependency id="esprima"          version="2.0.2" />
+				<dependency id="System.Text.Json" version="5.0.2" />
 			</group>
 		</dependencies>
 	</metadata>
