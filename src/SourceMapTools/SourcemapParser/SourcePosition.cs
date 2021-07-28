@@ -10,7 +10,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <summary>
 		/// Unresolved stack frame postion token.
 		/// </summary>
-		public static readonly SourcePosition NotFound = new SourcePosition(-1, -1);
+		public static readonly SourcePosition NotFound = new (-1, -1);
 
 		/// <summary>
 		/// Zero-based position line number.

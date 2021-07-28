@@ -1,6 +1,6 @@
 <Project>
 	<ItemGroup>
-		<PackageVersion Include="esprima" Version="2.0.0" />
+		<PackageVersion Include="esprima" Version="2.0.2" />
 		<PackageVersion Include="System.Text.Json" Version="5.0.2" />
 		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
 		<PackageVersion Include="NUnit3TestAdapter" Version="4.0.0" />
