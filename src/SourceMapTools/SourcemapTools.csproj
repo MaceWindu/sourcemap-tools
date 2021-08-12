@@ -4,7 +4,7 @@
 	<PropertyGroup>
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SourcemapTools.xml</DocumentationFile>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="esprima" />
 		<PackageReference Include="System.Text.Json" />
@@ -14,4 +14,10 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DebugType>portable</DebugType>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
 </Project>

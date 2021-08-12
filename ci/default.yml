@@ -6,9 +6,9 @@ variables:
   - name: assemblyVersion
     value: 1.0.0
   - name: packageVersion
-    value: 1.0.1
-  - name: nugetDevVersion
     value: 1.0.2
+  - name: nugetDevVersion
+    value: 1.0.3
 
 trigger:
   - master
