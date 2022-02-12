@@ -21,9 +21,9 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			var map = new SourceMap
 			{
 				File = "generated.js",
-				Sources = new List<string> { "sourceOne.js" },
-				ParsedMappings = new List<MappingEntry> { mappingEntry },
-				SourcesContent = new List<string>{"var a = b"}
+				Sources = new List<string>() { "sourceOne.js" },
+				ParsedMappings = new List<MappingEntry>() { mappingEntry },
+				SourcesContent = new List<string>() { "var a = b" }
 			};
 
 			// Act

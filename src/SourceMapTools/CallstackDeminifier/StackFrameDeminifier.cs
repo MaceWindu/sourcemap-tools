@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SourcemapToolkit.CallstackDeminifier
+﻿namespace SourcemapToolkit.CallstackDeminifier
 {
 	/// <summary>
 	/// Class responsible for deminifying a single stack frame in a minified stack trace.
@@ -8,7 +6,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// Since source maps take up a large amount of memory, this class consumes considerably 
 	/// more memory than SimpleStackFrame Deminifier during runtime.
 	/// </summary>
-	internal class StackFrameDeminifier : IStackFrameDeminifier
+	internal sealed class StackFrameDeminifier : IStackFrameDeminifier
 	{
 		private readonly ISourceMapStore _sourceMapStore;
 		private readonly IStackFrameDeminifier? _methodNameDeminifier;
@@ -27,7 +25,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// This method will deminify a single stack from from a minified stack trace.
 		/// </summary>
 		/// <returns>Returns a StackFrameDeminificationResult that contains a stack trace that has been translated to the original source code. The DeminificationError Property indicates if the StackFrame could not be deminified. DeminifiedStackFrame will not be null, but any properties of DeminifiedStackFrame could be null if the value could not be extracted. </returns>
-		StackFrameDeminificationResult IStackFrameDeminifier.DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName)
+		StackFrameDeminificationResult IStackFrameDeminifier.DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName, bool preferSourceMapsSymbols)
 		{
 			var sourceMap = _sourceMapStore.GetSourceMapForUrl(stackFrame.FilePath);
 			var generatedSourcePosition = stackFrame.SourcePosition;
@@ -35,7 +33,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 			StackFrameDeminificationResult? result = null;
 			if (_methodNameDeminifier != null)
 			{
-				result = _methodNameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName);
+				result = _methodNameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName, false);
 			}
 
 			if (result == null || result.DeminificationError == DeminificationError.NoSourceCodeProvided)
@@ -52,17 +50,15 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 				if (generatedSourcePositionMappingEntry == null)
 				{
-					if (sourceMap == null)
-					{
-						result.DeminificationError = DeminificationError.NoSourceMap;
-					}
-					else
-					{
-						result.DeminificationError = DeminificationError.NoMatchingMapingInSourceMap;
-					}
+					result.DeminificationError = sourceMap == null ? DeminificationError.NoSourceMap : DeminificationError.NoMatchingMapingInSourceMap;
 				}
 				else
 				{
+					if (preferSourceMapsSymbols)
+					{
+						result.DeminifiedStackFrame.MethodName = generatedSourcePositionMappingEntry.Value.OriginalName;
+					}
+
 					result.DeminifiedStackFrame.FilePath = generatedSourcePositionMappingEntry.Value.OriginalFileName;
 					result.DeminifiedStackFrame.SourcePosition = generatedSourcePositionMappingEntry.Value.OriginalSourcePosition;
 					result.DeminifiedSymbolName = generatedSourcePositionMappingEntry.Value.OriginalName;

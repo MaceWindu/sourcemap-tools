@@ -138,16 +138,13 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			sourceMap.Verify();
 		}
 
-		private static Mock<SourceMap> CreateSourceMapMock()
-		{
-			return new Mock<SourceMap>(() => new SourceMap(
-				0 /* version */,
-				default /* file */,
-				default /* mappings */,
-				default /* sources */,
-				default /* names */,
-				new List<MappingEntry>() /* parsedMappings */,
-				default /* sourcesContent */));
-		}
+		private static Mock<SourceMap> CreateSourceMapMock() => new(() => new SourceMap(
+			0 /* version */,
+			default /* file */,
+			default /* mappings */,
+			default /* sources */,
+			default /* names */,
+			new List<MappingEntry>() /* parsedMappings */,
+			default /* sourcesContent */));
 	}
 }

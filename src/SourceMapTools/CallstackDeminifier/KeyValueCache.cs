@@ -3,10 +3,11 @@ using System.Collections.Concurrent;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
-	internal class KeyValueCache<TKey, TValue> where TValue : class
+	internal sealed class KeyValueCache<TKey, TValue> where TValue : class
 	{
 		private readonly ConcurrentDictionary<TKey, TValue?> _cache;
 		private readonly Func<TKey, TValue?> _valueGetter;
+
 		public KeyValueCache(Func<TKey, TValue?> valueGetter)
 		{
 			_cache = new ConcurrentDictionary<TKey, TValue?>();

@@ -15,9 +15,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			// Arrange
 			IFunctionMapGenerator functionMapGenerator = new FunctionMapGenerator();
 			var sourceCode = "";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = functionMapGenerator.GenerateFunctionMap(UnitTestUtils.StreamFromString(sourceCode), null);
+			var functionMap = functionMapGenerator.GenerateFunctionMap(stream, null);
 
 			// Assert
 			Assert.Null(functionMap);
@@ -29,9 +30,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "bar();";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(0, functionMap.Count);
@@ -42,9 +44,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "function foo(){bar();}";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(1, functionMap.Count);
@@ -63,9 +66,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			// Arrange
 			var sourceCode = "function foo()" + Environment.NewLine + "{" + Environment.NewLine + "bar();" +
 								Environment.NewLine + "}";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(1, functionMap.Count);
@@ -83,9 +87,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "function foo(){bar();}function bar(){baz();}";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -112,9 +117,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "function foo(){function bar(){baz();}}";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -141,9 +147,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){bar();}";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(1, functionMap.Count);
@@ -162,9 +169,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){};foo.bar = function() { baz(); }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -192,9 +200,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){}; foo.prototype.bar = function () { baz(); }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -223,9 +232,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){}; foo.prototype = { bar: function () { baz(); } }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -256,9 +266,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function myCoolFunctionName(){ bar(); }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(1, functionMap.Count);
@@ -277,9 +288,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){};foo.bar = function myCoolFunctionName() { baz(); }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -307,9 +319,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){}; foo.prototype.bar = function myCoolFunctionName() { baz(); }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -338,9 +351,10 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		{
 			// Arrange
 			var sourceCode = "var foo = function(){}; foo.prototype = { bar: function myCoolFunctionName() { baz(); } }";
+			using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 			// Act
-			var functionMap = FunctionMapGenerator.ParseSourceCode(UnitTestUtils.StreamFromString(sourceCode), CreateSourceMapMock());
+			var functionMap = FunctionMapGenerator.ParseSourceCode(stream, CreateSourceMapMock());
 
 			// Assert
 			Assert.AreEqual(2, functionMap.Count);
@@ -366,9 +380,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			Assert.AreEqual(22, functionMap[1].End.Column);
 		}
 
-		private static SourceMap CreateSourceMapMock()
-		{
-			return new SourceMap(
+		private static SourceMap CreateSourceMapMock() => new(
 				0 /* version */,
 				default /* file */,
 				default /* mappings */,
@@ -376,6 +388,5 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 				default /* names */,
 				new List<MappingEntry>() /* parsedMappings */,
 				default /* sourcesContent */);
-		}
 	}
 }

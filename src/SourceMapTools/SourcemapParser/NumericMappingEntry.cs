@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SourcemapToolkit.SourcemapParser
 {
@@ -7,76 +8,81 @@ namespace SourcemapToolkit.SourcemapParser
 	/// Corresponds to a single parsed entry in the source map mapping string that is used internally by the parser.
 	/// The public API exposes the MappingEntry object, which is more useful to consumers of the library.
 	/// </summary>
-	internal struct NumericMappingEntry
+	[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not used in equality")]
+	internal readonly struct NumericMappingEntry
 	{
+		public NumericMappingEntry(
+			int generatedLineNumber,
+			int generatedColumnNumber,
+			int? originalSourceFileIndex,
+			int? originalLineNumber,
+			int? originalColumnNumber,
+			int? originalNameIndex)
+		{
+			GeneratedLineNumber = generatedLineNumber;
+			GeneratedColumnNumber = generatedColumnNumber;
+			OriginalSourceFileIndex = originalSourceFileIndex;
+			OriginalLineNumber = originalLineNumber;
+			OriginalColumnNumber = originalColumnNumber;
+			OriginalNameIndex = originalNameIndex;
+		}
+
 		/// <summary>
 		/// The zero-based line number in the generated code that corresponds to this mapping segment.
 		/// </summary>
-		public int GeneratedLineNumber { get; internal set; }
+		public int GeneratedLineNumber { get; }
 
 		/// <summary>
 		/// The zero-based column number in the generated code that corresponds to this mapping segment.
 		/// </summary>
-		public int GeneratedColumnNumber { get; internal set; }
+		public int GeneratedColumnNumber { get; }
 
 		/// <summary>
 		/// The zero-based index into the sources array that corresponds to this mapping segment.
 		/// </summary>
-		public int? OriginalSourceFileIndex { get; internal set; }
+		public int? OriginalSourceFileIndex { get; }
 
 		/// <summary>
 		/// The zero-based line number in the source code that corresponds to this mapping segment.
 		/// </summary>
-		public int? OriginalLineNumber { get; internal set; }
+		public int? OriginalLineNumber { get; }
 
 		/// <summary>
 		/// The zero-based line number in the source code that corresponds to this mapping segment.
 		/// </summary>
-		public int? OriginalColumnNumber { get; internal set; }
+		public int? OriginalColumnNumber { get; }
 
 		/// <summary>
 		/// The zero-based index into the names array that can be used to identify names associated with this object.
 		/// </summary>
-		public int? OriginalNameIndex { get; internal set; }
+		public int? OriginalNameIndex { get; }
 
 		public MappingEntry ToMappingEntry(IReadOnlyList<string> names, IReadOnlyList<string> sources)
 		{
-			SourcePosition originalSourcePosition;
-
-			if (OriginalColumnNumber.HasValue && OriginalLineNumber.HasValue)
-			{
-				originalSourcePosition = new SourcePosition(OriginalLineNumber.Value, OriginalColumnNumber.Value);
-			}
-			else
-			{
-				originalSourcePosition = SourcePosition.NotFound;
-			}
+			var originalSourcePosition = OriginalColumnNumber.HasValue && OriginalLineNumber.HasValue
+				? new SourcePosition(OriginalLineNumber.Value, OriginalColumnNumber.Value)
+				: SourcePosition.NotFound;
 
 			string? originalName = null;
 			if (OriginalNameIndex.HasValue)
 			{
-				try
+				if (OriginalNameIndex.Value < 0 || OriginalNameIndex.Value >= names.Count)
 				{
-					originalName = names[OriginalNameIndex.Value];
-				}
-				catch (IndexOutOfRangeException e)
-				{
-					throw new IndexOutOfRangeException("Source map contains original name index that is outside the range of the provided names array", e);
+					throw new ArgumentOutOfRangeException($"Source map contains original name index (={OriginalNameIndex.Value}) that is outside the range of the provided names array[{names.Count}]");
 				}
 
+				originalName = names[OriginalNameIndex.Value];
 			}
 
 			string? originalFileName = null;
 			if (OriginalSourceFileIndex.HasValue)
 			{
-				try
+				if (OriginalSourceFileIndex.Value < 0 || OriginalSourceFileIndex.Value >= sources.Count)
 				{
-					originalFileName = sources[OriginalSourceFileIndex.Value];
+					throw new ArgumentOutOfRangeException($"Source map contains original name index (={OriginalSourceFileIndex.Value}) that is outside the range of the provided names array[{sources.Count}]");
 				}
-				catch (IndexOutOfRangeException e)
-				{
-					throw new IndexOutOfRangeException("Source map contains original source index that is outside the range of the provided sources array", e);
-				}
+
+				originalFileName = sources[OriginalSourceFileIndex.Value];
 			}
 
 			return new MappingEntry(

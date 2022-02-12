@@ -5,21 +5,21 @@ namespace SourcemapToolkit.SourcemapParser
 	/// <summary>
 	/// Identifies the location of a piece of code in a JavaScript file
 	/// </summary>
-	public struct SourcePosition : IComparable<SourcePosition>, IEquatable<SourcePosition>
+	public readonly struct SourcePosition : IComparable<SourcePosition>, IEquatable<SourcePosition>
 	{
 		/// <summary>
 		/// Unresolved stack frame postion token.
 		/// </summary>
-		public static readonly SourcePosition NotFound = new (-1, -1);
+		public static readonly SourcePosition NotFound = new(-1, -1);
 
 		/// <summary>
 		/// Zero-based position line number.
 		/// </summary>
-		public readonly int Line;
+		public int Line { get; }
 		/// <summary>
 		/// Zero-based position column number.
 		/// </summary>
-		public readonly int Column;
+		public int Column { get; }
 
 		/// <summary>
 		/// Creates position instance with specified coordinates.
@@ -43,15 +43,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item>1: current position located after other position</item>
 		/// </list>
 		/// </returns>
-		public int CompareTo(SourcePosition other)
-		{
-			if (Line == other.Line)
-			{
-				return Column.CompareTo(other.Column);
-			}
-
-			return Line.CompareTo(other.Line);
-		}
+		public int CompareTo(SourcePosition other) => Line == other.Line ? Column.CompareTo(other.Column) : Line.CompareTo(other.Line);
 
 		/// <summary>
 		/// Checks if left position is going before right position.
@@ -64,10 +56,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: left postion is same or goes after right position.</item>
 		/// </list>
 		/// </returns>
-		public static bool operator <(SourcePosition x, SourcePosition y)
-		{
-			return x.CompareTo(y) < 0;
-		}
+		public static bool operator <(SourcePosition x, SourcePosition y) => x.CompareTo(y) < 0;
 
 		/// <summary>
 		/// Checks if left position is going after right position.
@@ -80,10 +69,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: left postion is same or goes before right position.</item>
 		/// </list>
 		/// </returns>
-		public static bool operator >(SourcePosition x, SourcePosition y)
-		{
-			return x.CompareTo(y) > 0;
-		}
+		public static bool operator >(SourcePosition x, SourcePosition y) => x.CompareTo(y) > 0;
 
 		/// <summary>
 		/// Checks if both positions are the same.
@@ -96,10 +82,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: positions differ from each other.</item>
 		/// </list>
 		/// </returns>
-		public static bool operator ==(SourcePosition x, SourcePosition y)
-		{
-			return x.Equals(y);
-		}
+		public static bool operator ==(SourcePosition x, SourcePosition y) => x.Equals(y);
 
 		/// <summary>
 		/// Checks if both positions are not the same.
@@ -112,10 +95,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: positions are the same.</item>
 		/// </list>
 		/// </returns>
-		public static bool operator !=(SourcePosition x, SourcePosition y)
-		{
-			return !x.Equals(y);
-		}
+		public static bool operator !=(SourcePosition x, SourcePosition y) => !x.Equals(y);
 
 		/// <summary>
 		/// Compares current postion with other one.
@@ -127,11 +107,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: positions differ from each other.</item>
 		/// </list>
 		/// </returns>
-		public bool Equals(SourcePosition other)
-		{
-			return Line == other.Line
-				&& Column == other.Column;
-		}
+		public bool Equals(SourcePosition other) => Line == other.Line && Column == other.Column;
 
 		/// <summary>
 		/// Compares current postion with other one.
@@ -143,16 +119,10 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: positions differ from each other oth <paramref name="obj"/> is not an instance of <see cref="SourcePosition"/>.</item>
 		/// </list>
 		/// </returns>
-		public override bool Equals(object obj)
-		{
-			return (obj is SourcePosition otherSourcePosition) && Equals(otherSourcePosition);
-		}
+		public override bool Equals(object obj) => (obj is SourcePosition otherSourcePosition) && Equals(otherSourcePosition);
 
 		/// <inheritdoc cref="object.GetHashCode"/>
-		public override int GetHashCode()
-		{
-			return Column.GetHashCode() ^ Column.GetHashCode();
-		}
+		public override int GetHashCode() => Column.GetHashCode() ^ Column.GetHashCode();
 
 		/// <summary>
 		/// Returns true if we think that the two source positions are close enough together that they may in fact be the referring to the same piece of code.
@@ -180,5 +150,31 @@ namespace SourcemapToolkit.SourcemapParser
 
 			return false;
 		}
+
+		/// <summary>
+		/// Checks if left position is same or going before right position.
+		/// </summary>
+		/// <param name="left">left position.</param>
+		/// <param name="right">right position.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><c>true</c>: left postion is same or goes before right position.</item>
+		/// <item><c>false</c>: left postion is same or goes after right position.</item>
+		/// </list>
+		/// </returns>
+		public static bool operator <=(SourcePosition left, SourcePosition right) => left.CompareTo(right) <= 0;
+
+		/// <summary>
+		/// Checks if left position is same or going after right position.
+		/// </summary>
+		/// <param name="left">left position.</param>
+		/// <param name="right">right position.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><c>true</c>: left postion is same or goes after right position.</item>
+		/// <item><c>false</c>: left postion goes before right position.</item>
+		/// </list>
+		/// </returns>
+		public static bool operator >=(SourcePosition left, SourcePosition right) => left.CompareTo(right) >= 0;
 	}
 }

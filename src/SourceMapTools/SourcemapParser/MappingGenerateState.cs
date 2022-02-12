@@ -5,7 +5,7 @@ namespace SourcemapToolkit.SourcemapParser
 	/// <summary>
 	/// Class to track the internal state during source map serialize
 	/// </summary>
-	internal class MappingGenerateState
+	internal sealed class MappingGenerateState
 	{
 		/// <summary>
 		/// Last location of the code in the transformed code
@@ -49,14 +49,8 @@ namespace SourcemapToolkit.SourcemapParser
 			IsFirstSegment = true;
 		}
 
-		public void AdvanceLastGeneratedPositionLine()
-		{
-			LastGeneratedPosition = new SourcePosition(LastGeneratedPosition.Line + 1, 0);
-		}
+		public void AdvanceLastGeneratedPositionLine() => LastGeneratedPosition = new SourcePosition(LastGeneratedPosition.Line + 1, 0);
 
-		public void UpdateLastGeneratedPositionColumn(int zeroBasedColumnNumber)
-		{
-			LastGeneratedPosition = new SourcePosition(LastGeneratedPosition.Line, zeroBasedColumnNumber);
-		}
+		public void UpdateLastGeneratedPositionColumn(int zeroBasedColumnNumber) => LastGeneratedPosition = new SourcePosition(LastGeneratedPosition.Line, zeroBasedColumnNumber);
 	}
 }

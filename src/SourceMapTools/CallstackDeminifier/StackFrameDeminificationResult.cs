@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Represents the result of attmpting to deminify a single entry in a JavaScript stack frame. 
 	/// </summary>
-	public class StackFrameDeminificationResult
+	public sealed class StackFrameDeminificationResult
 	{
 		internal StackFrameDeminificationResult(
 			DeminificationError deminificationError,

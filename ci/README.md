@@ -1,13 +1,9 @@
-# Source Map Tools [![Build Status](https://img.shields.io/azure-devops/build/sourcemaptools/sourcemaptools/1/master?label=build%20(master))](https://dev.azure.com/sourcemaptools/sourcemaptools/_build/latest?definitionId=1&branchName=master) [![NuGet](https://img.shields.io/nuget/v/SourceMapTools.svg)](https://www.nuget.org/packages/SourceMapTools/) [![License](https://img.shields.io/github/license/MaceWindu/sourcemap-tools)](LICENSE.txt)
+# Source Map Tools [![License](https://img.shields.io/github/license/MaceWindu/sourcemap-tools)](https://github.com/MaceWindu/sourcemap-tools/blob/master/LICENSE.txt)
 
-This is a C# library for working with JavaScript source maps and deminifying JavaScript callstacks.
+This is a C# library for working with JavaScript source maps and deminifying JavaScript callstacks, based on [microsoft/sourcemap-toolkit](https://github.com/microsoft/sourcemap-toolkit) project with following new features:
 
-This is a fork of [microsoft/sourcemap-toolkit](https://github.com/microsoft/sourcemap-toolkit) project that solves following outstanding issues with original project:
-
-- no active development is done anymore for original project, mostly support-only changes for use inside MS teams
-- no nuget publishing for recent changes: [#64](https://github.com/microsoft/sourcemap-toolkit/issues/64)
-- lack of support for modern frameworks (.net core): [#57](https://github.com/microsoft/sourcemap-toolkit/issues/57)
-- lack of support for ES6+: [#66](https://github.com/microsoft/sourcemap-toolkit/issues/66)
+- .NET Core support
+- EcmaScript 6+ support
 
 ## Source Map Parsing
 The `SourcemapTools.dll` provides an API for parsing a souce map into an object that is easy to work with and an API for serializing source map object back to json string. 
@@ -99,24 +95,3 @@ var deminifiedCallstack          = deminifyStackTraceResult.ToString();
 ```
 
 The result of `DeminifyStackTrace` is a `DeminifyStackTraceResult`, which is an object that contains a list of `StackFrameDeminificationResults` which contains the parsed minified `StackFrame` objects in the `MinifiedStackFrame` property and an enum indicating if any errors occured when attempting to deminify the `StackFrame`. The `DeminifiedStackFrame` property contains the best guess `StackFrame` object that maps to the `MinifiedStackFrame` element with the same index. Note that any of the properties on a `StackTrace` object may be null if no value could be extracted from the input callstack string or source map.
-
-#### Memory Consumption
-Parsed soure maps can take up a lot of memory for large JavaScript files. In order to allow for the `StackTraceDeminifier` to be used on servers with limited memory resources, the `StackTraceDeminfierFactory` exposes a `GetMethodNameOnlyStackTraceDeminfier` method that returns a `StackTraceDeminifier` that does not keep source maps in memory. Since the `StackTraceDeminifier` returned from this method only reads the source map once, the deminified stack frames will only contain the deminified method name and will not contain the original source location. 
-
-## Remarks
-Browsers return one based line and column numbers, while the source map spec calls for zero based line and column numbers. In order to minimize confusion, line and column numbers are normalized to be zero based throughout the library.
-
-## Acknowledgements
-The Base64 VLQ decoding code was based on the implmentation in the [Closure Compiler](https://github.com/google/closure-compiler/blob/master/src/com/google/debugging/sourcemap/Base64VLQ.java) which is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-
-The source map parsing implementation and the relevant comments were based on the [Source Maps V3 spec](https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/mobilebasic?pref=2&pli=1) which is licensed under a [Creative Commons Attribution-ShareAlike 3.0 Unported License](https://creativecommons.org/licenses/by-sa/3.0/).
-
-The source map parser uses [System.Text.Json](https://www.nuget.org/packages/System.Text.Json) which is licensed under the [MIT License](https://github.com/dotnet/runtime/blob/master/LICENSE.TXT).
-
-The call stack deminifier use [Esprima .NET](https://www.nuget.org/packages/esprima) which is licensed under the [BSD 3-Clause License](https://github.com/sebastienros/esprima-dotnet/blob/dev/LICENSE.txt).
-
-The unit tests for this library leverage the functionality provided by [Moq](https://www.nuget.org/packages/Moq). Moq is Open Source and released under the [BSD 3-Clause License](https://github.com/moq/moq4/blob/main/License.txt).
-
-## License
-
-Licensed under the [MIT](LICENSE.txt) License.

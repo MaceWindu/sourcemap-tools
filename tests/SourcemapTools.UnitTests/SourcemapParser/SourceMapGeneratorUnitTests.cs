@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !NETFRAMEWORK
+using System;
+#endif
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -26,7 +28,11 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			SourceMapGenerator.SerializeMappingEntry(entry, state, result);
 
 			// Assert
-			Assert.True(result.ToString().IndexOf(';') >= 0);
+#if NETFRAMEWORK
+			Assert.True(result.ToString().Contains(";"));
+#else
+			Assert.True(result.ToString().Contains(';', StringComparison.Ordinal));
+#endif
 		}
 
 		[Test]

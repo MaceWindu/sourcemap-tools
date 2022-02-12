@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Moq;
-using SourcemapToolkit.SourcemapParser;
 using NUnit.Framework;
+using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
@@ -26,25 +25,20 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 				functionMapConsumer = new Mock<IFunctionMapConsumer>().Object;
 			}
 
-			if (useSimpleStackFrameDeminier)
-			{
-				return new MethodNameStackFrameDeminifier(functionMapStore, functionMapConsumer);
-			}
-			else
-			{
-				return new StackFrameDeminifier(sourceMapStore, functionMapStore, functionMapConsumer);
-			}
+			return useSimpleStackFrameDeminier
+				? new MethodNameStackFrameDeminifier(functionMapStore, functionMapConsumer)
+				: new StackFrameDeminifier(sourceMapStore, functionMapStore, functionMapConsumer);
 		}
 
 		[Test]
-		public void DeminifyStackFrame_StackFrameNullProperties_DoesNotThrowException()
+		public void DeminifyStackFrame_StackFrameNullProperties_DoesNotThrowException([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackFrame = new StackFrame(null);
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies();
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.Null(stackFrameDeminification.DeminifiedStackFrame.MethodName);
@@ -53,19 +47,19 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void SimpleStackFrameDeminierDeminifyStackFrame_FunctionMapReturnsNull_NoFunctionMapDeminificationError()
+		public void SimpleStackFrameDeminierDeminifyStackFrame_FunctionMapReturnsNull_NoFunctionMapDeminificationError([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var filePath = "foo";
-			var stackFrame = new StackFrame(null) {FilePath = filePath };
+			var stackFrame = new StackFrame(null) { FilePath = filePath };
 			var functionMapStore = new Mock<IFunctionMapStore>();
 			functionMapStore.Setup(c => c.GetFunctionMapForSourceCode(filePath))
 				.Returns<FunctionMapEntry>(null);
 
-			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore.Object, useSimpleStackFrameDeminier:true);
+			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore.Object, useSimpleStackFrameDeminier: true);
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(DeminificationError.NoSourceCodeProvided, stackFrameDeminification.DeminificationError);
@@ -75,7 +69,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void SimpleStackFrameDeminierDeminifyStackFrame_GetWRappingFunctionForSourceLocationReturnsNull_NoWrapingFunctionDeminificationError()
+		public void SimpleStackFrameDeminierDeminifyStackFrame_GetWRappingFunctionForSourceLocationReturnsNull_NoWrapingFunctionDeminificationError([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var filePath = "foo";
@@ -90,7 +84,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore.Object, functionMapConsumer: functionMapConsumer.Object, useSimpleStackFrameDeminier: true);
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(DeminificationError.NoWrapingFunctionFound, stackFrameDeminification.DeminificationError);
@@ -100,7 +94,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void SimpleStackFrameDeminierDeminifyStackFrame_WrapingFunctionFound_NoDeminificationError()
+		public void SimpleStackFrameDeminierDeminifyStackFrame_WrapingFunctionFound_NoDeminificationError([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var filePath = "foo";
@@ -116,7 +110,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore.Object, functionMapConsumer: functionMapConsumer.Object, useSimpleStackFrameDeminier: true);
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(DeminificationError.None, stackFrameDeminification.DeminificationError);
@@ -127,7 +121,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 
 
 		[Test]
-		public void StackFrameDeminierDeminifyStackFrame_SourceMapProviderReturnsNull_NoSourcemapProvidedError()
+		public void StackFrameDeminierDeminifyStackFrame_SourceMapProviderReturnsNull_NoSourcemapProvidedError([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var filePath = "foo";
@@ -143,7 +137,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore.Object, functionMapConsumer: functionMapConsumer.Object);
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(DeminificationError.NoSourceMap, stackFrameDeminification.DeminificationError);
@@ -153,7 +147,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void StackFrameDeminierDeminifyStackFrame_SourceMapParsingNull_SourceMapFailedToParseError()
+		public void StackFrameDeminierDeminifyStackFrame_SourceMapParsingNull_SourceMapFailedToParseError([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var filePath = "foo";
@@ -171,7 +165,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(sourceMapStore: sourceMapStore.Object, functionMapStore: functionMapStore.Object, functionMapConsumer: functionMapConsumer.Object);
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(DeminificationError.NoMatchingMapingInSourceMap, stackFrameDeminification.DeminificationError);
@@ -181,7 +175,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void StackFrameDeminierDeminifyStackFrame_SourceMapGeneratedMappingEntryNull_NoMatchingMapingInSourceMapError()
+		public void StackFrameDeminierDeminifyStackFrame_SourceMapGeneratedMappingEntryNull_NoMatchingMapingInSourceMapError([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var filePath = "foo";
@@ -201,7 +195,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(sourceMapStore: sourceMapStore.Object, functionMapStore: functionMapStore.Object, functionMapConsumer: functionMapConsumer.Object);
 
 			// Act
-			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null);
+			var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(DeminificationError.NoMatchingMapingInSourceMap, stackFrameDeminification.DeminificationError);
@@ -211,25 +205,19 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 
-		private static FunctionMapEntry CreateFunctionMapEntry(string deminifiedMethodName)
-		{
-			return new FunctionMapEntry(
-				default!,
-				deminifiedMethodName,
-				default,
-				default);
-		}
+		private static FunctionMapEntry CreateFunctionMapEntry(string deminifiedMethodName) => new(
+			default!,
+			deminifiedMethodName,
+			default,
+			default);
 
-		private static SourceMap CreateSourceMap(List<MappingEntry>? parsedMappings = null)
-		{
-			return new SourceMap(
-				default,
-				default,
-				default,
-				default,
-				default,
-				parsedMappings ?? new List<MappingEntry>(),
-				default);
-		}
+		private static SourceMap CreateSourceMap(List<MappingEntry>? parsedMappings = null) => new(
+			default,
+			default,
+			default,
+			default,
+			default,
+			parsedMappings ?? new List<MappingEntry>(),
+			default);
 	}
 }

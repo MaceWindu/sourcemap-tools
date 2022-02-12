@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SourcemapToolkit.SourcemapParser
 {
@@ -15,6 +16,11 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		public static SourceMap Flatten(SourceMap sourceMap)
 		{
+			if (sourceMap == null)
+			{
+				throw new ArgumentNullException(nameof(sourceMap));
+			}
+
 			var visitedLines = new HashSet<int>();
 			var parsedMappings = new List<MappingEntry>(sourceMap.ParsedMappings.Count); // assume each line will not have been visited before
 

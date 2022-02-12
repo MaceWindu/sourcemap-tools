@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests
@@ -315,9 +314,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 			IReadOnlyList<string>? sources = default,
 			IReadOnlyList<string>? names = default,
 			IReadOnlyList<MappingEntry>? parsedMappings = default,
-			IReadOnlyList<string>? sourcesContent = default)
-		{
-			return new SourceMap(
+			IReadOnlyList<string>? sourcesContent = default) => new(
 				version: version,
 				file: file,
 				mappings: mappings,
@@ -325,6 +322,5 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 				names: names,
 				parsedMappings: parsedMappings ?? new List<MappingEntry>(),
 				sourcesContent: sourcesContent);
-		}
 	}
 }
