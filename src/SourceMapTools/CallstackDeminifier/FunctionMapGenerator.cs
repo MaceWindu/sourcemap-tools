@@ -5,7 +5,7 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
-	internal class FunctionMapGenerator : IFunctionMapGenerator
+	internal sealed class FunctionMapGenerator : IFunctionMapGenerator
 	{
 		/// <summary>
 		/// Returns a FunctionMap describing the locations of every funciton in the source code.
@@ -23,9 +23,11 @@ namespace SourcemapToolkit.CallstackDeminifier
 			{
 				result = ParseSourceCode(sourceCodeStream, sourceMap);
 			}
+#pragma warning disable CA1031 // Do not catch general exception types
 			catch
+#pragma warning restore CA1031 // Do not catch general exception types
 			{
-				// Failed to parse JavaScript source. This is common as the JS parser does not support ES2015+.
+				// Failed to parse JavaScript source
 				// Continue to regular source map deminification.
 				result = null;
 			}
@@ -52,13 +54,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 			var functionFinderVisitor = new FunctionFinderVisitor(sourceMap);
 			functionFinderVisitor.Visit(script);
 
-			// Sort in descending order by start position.  This allows the first result found in a linear search to be the "closest function to the [consumer's] source position".
-			//
-			// ATTN: It may be possible to do this with an ascending order sort, followed by a series of binary searches on rows & columns.
-			//       Our current profiles show the memory pressure being a bigger issue than the stack lookup, so I'm leaving this for now.
-			functionFinderVisitor.FunctionMap.Sort((x, y) => y.Start.CompareTo(x.Start));
-
-			return functionFinderVisitor.FunctionMap;
+			return functionFinderVisitor.GetFunctionMap();
 		}
 	}
 }

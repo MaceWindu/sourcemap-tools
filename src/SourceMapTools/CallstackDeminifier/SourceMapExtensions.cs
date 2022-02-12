@@ -26,14 +26,14 @@ namespace SourcemapToolkit.CallstackDeminifier
 
 				// // The object name already contains the method name, so do not append it
 				if (entryNames.Count > 1
-					&& entryNames[entryNames.Count - 2].Length > entryNames[entryNames.Count - 1].Length
-					&& entryNames[entryNames.Count - 2].EndsWith(entryNames[entryNames.Count - 1], StringComparison.Ordinal)
-					&& entryNames[entryNames.Count - 2][entryNames[entryNames.Count - 2].Length - 1 - entryNames[entryNames.Count - 1].Length] == '.')
+					&& entryNames[^2].Length > entryNames[^1].Length
+					&& entryNames[^2].EndsWith(entryNames[^1], StringComparison.Ordinal)
+					&& entryNames[^2][entryNames[^2].Length - 1 - entryNames[^1].Length] == '.')
 				{
 					entryNames.RemoveAt(entryNames.Count - 1);
 				}
 
-				if (entryNames.Count > 2 && entryNames[entryNames.Count - 2] == "prototype")
+				if (entryNames.Count > 2 && entryNames[^2] == "prototype")
 				{
 					entryNames.RemoveAt(entryNames.Count - 2);
 				}

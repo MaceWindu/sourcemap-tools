@@ -8,7 +8,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 	public class StackTraceDeminifierUnitTests
 	{
 		[Test]
-		public void DeminifyStackTrace_UnableToParseStackTraceString_ReturnsEmptyList()
+		public void DeminifyStackTrace_UnableToParseStackTraceString_ReturnsEmptyList([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceParser = new Mock<IStackTraceParser>();
@@ -21,14 +21,14 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			var stackTraceDeminifier = new StackTraceDeminifier(stackFrameDeminifier, stackTraceParser.Object);
 
 			// Act
-			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString);
+			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(0, result.DeminifiedStackFrameResults.Count);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_AbleToDeminifyStackTrace_ResultContainsDeminifiedFrame()
+		public void DeminifyStackTrace_AbleToDeminifyStackTrace_ResultContainsDeminifiedFrame([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceParser = new Mock<IStackTraceParser>();
@@ -39,12 +39,12 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 
 			var stackFrameDeminifier = new Mock<IStackFrameDeminifier>();
 			var stackFrameDeminification = new StackFrameDeminificationResult(default, null!);
-			stackFrameDeminifier.Setup(x => x.DeminifyStackFrame(minifiedStackFrames[0], null)).Returns(stackFrameDeminification);
+			stackFrameDeminifier.Setup(x => x.DeminifyStackFrame(minifiedStackFrames[0], null, preferSourceMapsSymbols)).Returns(stackFrameDeminification);
 
 			var stackTraceDeminifier = new StackTraceDeminifier(stackFrameDeminifier.Object, stackTraceParser.Object);
 
 			// Act
-			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString);
+			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
 
 			// Assert
 			Assert.AreEqual(1, result.DeminifiedStackFrameResults.Count);

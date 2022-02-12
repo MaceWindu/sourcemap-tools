@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
@@ -23,6 +24,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// </remarks>
 		IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString);
 
+
 		/// <summary>
 		/// Generates a list of StackFrame objects based on the input stack trace.
 		/// This method normalizes differences between different browsers.
@@ -34,6 +36,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// Any parts of the stack trace that could not be parsed are excluded from
 		/// the result. Does not ever return null.
 		/// </returns>
+		[SuppressMessage("Design", "CA1021:Avoid out parameters", Justification = "Any better options?")]
 		IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message);
 	}
 }

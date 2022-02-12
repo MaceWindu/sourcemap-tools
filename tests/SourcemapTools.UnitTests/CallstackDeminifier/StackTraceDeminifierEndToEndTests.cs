@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿#if !NETFRAMEWORK
+using System;
+#endif
+using Moq;
 using SourcemapToolkit.SourcemapParser.UnitTests;
 using NUnit.Framework;
 
@@ -13,28 +16,32 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		private static StackTraceDeminifier GetStackTraceDeminifierWithDependencies()
 		{
 			var sourceMapProvider = new Mock<ISourceMapProvider>();
-			sourceMapProvider.Setup(x => x.GetSourceMapContentsForCallstackUrl("http://localhost:11323/crashcauser.min.js")).Returns(UnitTestUtils.StreamFromString(SourceMapString));
+			sourceMapProvider
+				.Setup(x => x.GetSourceMapContentsForCallstackUrl("http://localhost:11323/crashcauser.min.js"))
+				.Returns(() => UnitTestUtils.StreamFromString(SourceMapString));
 
 			var sourceCodeProvider = new Mock<ISourceCodeProvider>();
-			sourceCodeProvider.Setup(x => x.GetSourceCode("http://localhost:11323/crashcauser.min.js")).Returns(UnitTestUtils.StreamFromString(GeneratedCodeString));
+			sourceCodeProvider
+				.Setup(x => x.GetSourceCode("http://localhost:11323/crashcauser.min.js"))
+				.Returns(() => UnitTestUtils.StreamFromString(GeneratedCodeString));
 
 			return StackTraceDeminifierFactory.GetStackTraceDeminfier(sourceMapProvider.Object, sourceCodeProvider.Object);
 		}
 
-		private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results)
+		private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results, bool preferSourceMapsSymbols, string? topSymbolOverride = null)
 		{
 			Assert.AreEqual(6, results.DeminifiedStackFrameResults.Count);
 			Assert.AreEqual(DeminificationError.None, results.DeminifiedStackFrameResults[0].DeminificationError);
-			Assert.AreEqual("level3", results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual(topSymbolOverride ?? (preferSourceMapsSymbols ? "=> console" : "level3"), results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName);
 			Assert.AreEqual("level3", results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName);
 			Assert.AreEqual("level2", results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName);
 			Assert.AreEqual("level1", results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName);
 			Assert.AreEqual("causeCrash", results.DeminifiedStackFrameResults[4].DeminifiedStackFrame.MethodName);
-			Assert.AreEqual("window.onload", results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.MethodName);
+			Assert.AreEqual(preferSourceMapsSymbols ? null : "window.onload", results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.MethodName);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_ChromeStackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_ChromeStackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -47,14 +54,14 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 	at HTMLButtonElement.<anonymous> (http://localhost:11323/crashcauser.min.js:1:445)";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace, preferSourceMapsSymbols);
 
 			// Assert
-			ValidateDeminifyStackTraceResults(results);
+			ValidateDeminifyStackTraceResults(results, preferSourceMapsSymbols, preferSourceMapsSymbols ? "=> length" : null);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_FireFoxStackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_FireFoxStackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -66,14 +73,14 @@ causeCrash@http://localhost:11323/crashcauser.min.js:1:341
 window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(fireFoxStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(fireFoxStackTrace, preferSourceMapsSymbols);
 
 			// Assert
-			ValidateDeminifyStackTraceResults(results);
+			ValidateDeminifyStackTraceResults(results, preferSourceMapsSymbols);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_IE11StackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_IE11StackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -86,14 +93,14 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
    at Anonymous function (http://localhost:11323/crashcauser.min.js:1:445)";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace, preferSourceMapsSymbols);
 
 			// Assert
-			ValidateDeminifyStackTraceResults(results);
+			ValidateDeminifyStackTraceResults(results, preferSourceMapsSymbols);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_EdgeStackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_EdgeStackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -106,14 +113,14 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
    at Anonymous function (http://localhost:11323/crashcauser.min.js:1:445)";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(dgeStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(dgeStackTrace, preferSourceMapsSymbols);
 
 			// Assert
-			ValidateDeminifyStackTraceResults(results);
+			ValidateDeminifyStackTraceResults(results, preferSourceMapsSymbols);
 		}
 
 		[Test]
-		public void DeminifyResultToString_SuccessfullyDeminified_AllLinesDeminified()
+		public void DeminifyResultToString_SuccessfullyDeminified_AllLinesDeminified([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -124,20 +131,32 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
    at n (http://localhost:11323/crashcauser.min.js:1:50)
    at causeCrash (http://localhost:11323/crashcauser.min.js:1:341)
    at Anonymous function (http://localhost:11323/crashcauser.min.js:1:445)";
-			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace);
-			var exectedResult = @"TypeError: Unable to get property 'length' of undefined or null reference
+			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace, preferSourceMapsSymbols);
+			var exectedResult = !preferSourceMapsSymbols
+				? @"TypeError: Unable to get property 'length' of undefined or null reference
   at level3 in crashcauser.js:17:13
   at level3 in crashcauser.js:15:10
   at level2 in crashcauser.js:11:9
   at level1 in crashcauser.js:6:9
   at causeCrash in crashcauser.js:28:5
-  at window.onload in crashcauser.js:33:9";
+  at window.onload in crashcauser.js:33:9"
+				: @"TypeError: Unable to get property 'length' of undefined or null reference
+  at => console in crashcauser.js:17:13
+  at level3 in crashcauser.js:15:10
+  at level2 in crashcauser.js:11:9
+  at level1 in crashcauser.js:6:9
+  at causeCrash in crashcauser.js:28:5
+  at Anonymous function in crashcauser.js:33:9";
 
 			// Act
 			var formatted = results.ToString();
 
 			// Assert
+#if NETFRAMEWORK
 			Assert.AreEqual(exectedResult.Replace("\r", ""), formatted.Replace("\r", ""));
+#else
+			Assert.AreEqual(exectedResult.Replace("\r", "", StringComparison.Ordinal), formatted.Replace("\r", "", StringComparison.Ordinal));
+#endif
 		}
 	}
 }

@@ -65,7 +65,7 @@ namespace SourcemapToolkit.SourcemapParser
 				_backingString = s;
 			}
 
-			internal char GetNextCharacter()
+			internal char ReadNextCharacter()
 			{
 				var nextChar = _backingString[_currentIndex];
 				_currentIndex += 1;
@@ -75,10 +75,7 @@ namespace SourcemapToolkit.SourcemapParser
 			/// <summary>
 			/// Returns true when no more characters can be provided.
 			/// </summary>
-			internal bool IsEmpty()
-			{
-				return _currentIndex >= _backingString.Length;
-			}
+			internal bool IsEmpty() => _currentIndex >= _backingString.Length;
 		}
 
 		/// <summary>
@@ -91,7 +88,7 @@ namespace SourcemapToolkit.SourcemapParser
 			var shift = 0;
 			do
 			{
-				var c = charProvider.GetNextCharacter();
+				var c = charProvider.ReadNextCharacter();
 				var digit = Base64Converter.FromBase64(c);
 				continuation = (digit & Base64VlqConstants.VlqContinuationBit) != 0;
 				digit &= Base64VlqConstants.VlqBaseMask;

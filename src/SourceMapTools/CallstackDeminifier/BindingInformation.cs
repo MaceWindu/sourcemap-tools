@@ -1,4 +1,5 @@
-﻿using SourcemapToolkit.SourcemapParser;
+﻿using System.Diagnostics.CodeAnalysis;
+using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
@@ -6,7 +7,8 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// Describes information regarding a binding that can be used for minification.
 	/// Examples include methods, functions, and object declarations.
 	/// </summary>
-	internal struct BindingInformation
+	[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not used in equality")]
+	internal readonly struct BindingInformation
 	{
 		public BindingInformation(string name, SourcePosition sourcePosition)
 		{
@@ -16,11 +18,11 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// The name of the method or class
 		/// </summary>
-		public readonly string Name;
+		public string Name { get; }
 
 		/// <summary>
 		/// The location of the function name or class declaration
 		/// </summary>
-		public readonly SourcePosition SourcePosition;
+		public SourcePosition SourcePosition { get; }
 	}
 }

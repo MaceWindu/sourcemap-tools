@@ -6,7 +6,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// <summary>
 	/// This class is responsible for providing the source map that corresponds to a given JavaScript file.
 	/// </summary>
-	internal class SourceMapStore : ISourceMapStore
+	internal sealed class SourceMapStore : ISourceMapStore
 	{
 		private readonly ISourceMapProvider _sourceMapProvider;
 		private readonly KeyValueCache<string, SourceMap> _sourceMapCache;
@@ -23,14 +23,6 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// Once a source map is generated, the value is cached in memory for future usages.
 		/// </summary>
 		/// <param name="sourceCodeUrl">The URL of the file for which a function map is required</param>
-		SourceMap? ISourceMapStore.GetSourceMapForUrl(string? sourceCodeUrl)
-		{
-			if (sourceCodeUrl == null)
-			{
-				return null;
-			}
-
-			return _sourceMapCache.GetValue(sourceCodeUrl);
-		}
+		SourceMap? ISourceMapStore.GetSourceMapForUrl(string? sourceCodeUrl) => sourceCodeUrl == null ? null : _sourceMapCache.GetValue(sourceCodeUrl);
 	}
 }

@@ -14,15 +14,9 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 			return File.Exists(filePath) ? File.OpenRead(filePath) : null;
 		}
 
-		public Stream? GetSourceCode(string sourceCodeUrl)
-		{
-			return GetStreamOrNull(Path.GetFileName(sourceCodeUrl));
-		}
+		public Stream? GetSourceCode(string sourceCodeUrl) => GetStreamOrNull(Path.GetFileName(sourceCodeUrl));
 
-		public Stream? GetSourceMapContentsForCallstackUrl(string correspondingCallStackFileUrl)
-		{
-			return GetStreamOrNull($"{Path.GetFileName(correspondingCallStackFileUrl)}.map");
-		}
+		public Stream? GetSourceMapContentsForCallstackUrl(string correspondingCallStackFileUrl) => GetStreamOrNull($"{Path.GetFileName(correspondingCallStackFileUrl)}.map");
 	}
 
 	public class StackTraceDeminifierWebpackEndToEndTests
@@ -34,22 +28,30 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void DeminifyStackTrace_MinifiedStackTrace_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_MinifiedStackTrace_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
 			var chromeStackTrace = @"TypeError: Cannot read property 'nonExistantmember' of undefined
 	at t.onButtonClick (http://localhost:3000/js/bundle.ffe51781aee314a37903.min.js:1:3573)
 	at Object.sh (https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js:164:410)";
-			var deminifiedStackTrace = @"TypeError: Cannot read property 'nonExistantmember' of undefined
+			var deminifiedStackTrace = !preferSourceMapsSymbols
+				? @"TypeError: Cannot read property 'nonExistantmember' of undefined
   at _this.onButtonClick in webpack:///./components/App.tsx:11:46
+  at Object.sh in https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js:164:410"
+				: @"TypeError: Cannot read property 'nonExistantmember' of undefined
+  at => nonExistantmember in webpack:///./components/App.tsx:11:46
   at Object.sh in https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js:164:410";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace, preferSourceMapsSymbols);
 
 			// Assert
+#if NETFRAMEWORK
 			Assert.AreEqual(deminifiedStackTrace.Replace("\r", ""), results.ToString().Replace("\r", ""));
+#else
+			Assert.AreEqual(deminifiedStackTrace.Replace("\r", "", StringComparison.Ordinal), results.ToString().Replace("\r", "", StringComparison.Ordinal));
+#endif
 		}
 	}
 }

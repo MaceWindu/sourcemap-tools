@@ -7,7 +7,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// <summary>
 	/// Contains stack trace details (both minified and diminified).
 	/// </summary>
-	public class DeminifyStackTraceResult
+	public sealed class DeminifyStackTraceResult
 	{
 		internal DeminifyStackTraceResult(
 			string? message,

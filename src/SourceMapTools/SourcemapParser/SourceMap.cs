@@ -8,6 +8,7 @@ namespace SourcemapToolkit.SourcemapParser
 	/// <summary>
 	/// Source map object.
 	/// </summary>
+	// :-/ unsealed just for test mocks to work
 	public class SourceMap
 	{
 		/// <summary>
@@ -15,7 +16,6 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		[JsonIgnore]
 		private static readonly Comparer<MappingEntry> _comparer = Comparer<MappingEntry>.Create((a, b) => a.GeneratedSourcePosition.CompareTo(b.GeneratedSourcePosition));
-
 
 		/// <summary>
 		/// The version of the source map specification being used
@@ -91,17 +91,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// Creates copy fo source map.
 		/// </summary>
 		/// <returns>Returns copy of current source map object.</returns>
-		public SourceMap Clone()
-		{
-			return new SourceMap(
-				Version,
-				File,
-				Mappings,
-				Sources,
-				Names,
-				ParsedMappings,
-				SourcesContent);
-		}
+		public SourceMap Clone() => new(Version, File, Mappings, Sources, Names, ParsedMappings, SourcesContent);
 
 		/// <summary>
 		/// Applies the mappings of a sub source map to the current source map
@@ -114,11 +104,16 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		public SourceMap ApplySourceMap(SourceMap submap, string? sourceFile = null)
 		{
+			if (submap == null)
+			{
+				throw new ArgumentNullException(nameof(submap));
+			}
+
 			if (sourceFile == null)
 			{
 				if (submap.File == null)
 				{
-					throw new Exception($"{nameof(ApplySourceMap)} expects either the explicit source file to the map, or submap's 'file' property");
+					throw new InvalidOperationException($"{nameof(ApplySourceMap)} expects either the explicit source file to the map, or submap's 'file' property");
 				}
 
 				sourceFile = submap.File;
@@ -181,6 +176,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// </summary>
 		/// <param name="generatedSourcePosition">The location in generated code for which we want to discover a mapping entry</param>
 		/// <returns>A mapping entry that is a close match for the desired generated code location</returns>
+		// :-/ virtual just for test mocks to work
 		public virtual MappingEntry? GetMappingEntryForGeneratedSourcePosition(SourcePosition generatedSourcePosition)
 		{
 			var mappingEntryToFind = new MappingEntry(generatedSourcePosition);

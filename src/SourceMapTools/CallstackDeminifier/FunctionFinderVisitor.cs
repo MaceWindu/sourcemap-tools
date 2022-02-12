@@ -11,15 +11,25 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// syntax tree and create an entry in the function map that describes
 	/// the start and and location of the function.
 	/// </summary>
-	internal class FunctionFinderVisitor : AllAstVisitor
+	internal sealed class FunctionFinderVisitor : AstVisitorWithStack
 	{
 		private readonly SourceMap _sourceMap;
-
-		internal List<FunctionMapEntry> FunctionMap { get; } = new List<FunctionMapEntry>();
+		private readonly List<FunctionMapEntry> _functionMap = new();
 
 		public FunctionFinderVisitor(SourceMap sourceMap)
 		{
 			_sourceMap = sourceMap;
+		}
+
+		internal IReadOnlyList<FunctionMapEntry> GetFunctionMap()
+		{
+			// Sort in descending order by start position.  This allows the first result found in a linear search to be the "closest function to the [consumer's] source position".
+			//
+			// ATTN: It may be possible to do this with an ascending order sort, followed by a series of binary searches on rows & columns.
+			//       Our current profiles show the memory pressure being a bigger issue than the stack lookup, so I'm leaving this for now.
+			_functionMap.Sort(static (x, y) => y.Start.CompareTo(x.Start));
+
+			return _functionMap;
 		}
 
 		protected override void VisitArrowFunctionExpression(ArrowFunctionExpression arrowFunctionExpression)
@@ -53,16 +63,13 @@ namespace SourcemapToolkit.CallstackDeminifier
 					GetSourcePosition(function.Body.Location.Start),
 					GetSourcePosition(function.Body.Location.End));
 
-				FunctionMap.Add(functionMapEntry);
+				_functionMap.Add(functionMapEntry);
 			}
 		}
 
-		private static SourcePosition GetSourcePosition(Position position)
-		{
-			// esprima use 1-based line counter
-			// https://github.com/estree/estree/blob/master/es5.md#node-objects
-			return new SourcePosition(position.Line - 1, position.Column);
-		}
+		// esprima use 1-based line counter
+		// https://github.com/estree/estree/blob/master/es5.md#node-objects
+		private static SourcePosition GetSourcePosition(Position position) => new(position.Line - 1, position.Column);
 
 		/// <summary>
 		/// Gets the name and location information related to the function name binding for a function-like nodes.
@@ -129,89 +136,89 @@ namespace SourcemapToolkit.CallstackDeminifier
 			}
 
 			// extract binding information from current node
-			foreach (var binding in getBindingFromNode(node))
+			foreach (var binding in GetBindingFromNode(node))
 			{
 				yield return binding;
 			}
+		}
 
-			static IEnumerable<BindingInformation> getBindingFromNode(Node node)
+		private static IEnumerable<BindingInformation> GetBindingFromNode(Node node)
+		{
+			// try to extract name from function-like node
+			if (node is IFunction currentFunction)
 			{
-				// try to extract name from function-like node
-				if (node is IFunction currentFunction)
+				if (currentFunction.Id != null)
 				{
-					if (currentFunction.Id != null)
-					{
-						foreach (var binding in getBindingFromNode(currentFunction.Id))
-						{
-							yield return binding;
-						}
-					}
-				}
-				// extract class name from class expression
-				else if (node is ClassExpression classExpression)
-				{
-					if (classExpression.Id != null)
-					{
-						foreach (var binding in getBindingFromNode(classExpression.Id))
-						{
-							yield return binding;
-						}
-					}
-				}
-				// extract variable name from variable declaration
-				else if (node is VariableDeclarator variableDeclarator)
-				{
-					foreach (var binding in getBindingFromNode(variableDeclarator.Id))
+					foreach (var binding in GetBindingFromNode(currentFunction.Id))
 					{
 						yield return binding;
 					}
 				}
-				// extract object+member names from member expression
-				else if (node is MemberExpression member)
-				{
-					foreach (var binding in getBindingFromNode(member.Object))
-					{
-						yield return binding;
-					}
-
-					foreach (var binding in getBindingFromNode(member.Property))
-					{
-						yield return binding;
-					}
-				}
-				// extract class method name
-				else if (node is MethodDefinition method)
-				{
-					foreach (var binding in getBindingFromNode(method.Key))
-					{
-						yield return binding;
-					}
-				}
-				// extract class property name
-				else if (node is Property property)
-				{
-					foreach (var binding in getBindingFromNode(property.Key))
-					{
-						yield return binding;
-					}
-				}
-				// extract identifier name (target branch for all named objects)
-				else if (node is Identifier identifier)
-				{
-					if (identifier.Name != null)
-					{
-						yield return new BindingInformation(identifier.Name, GetSourcePosition(identifier.Location.Start));
-					}
-				}
-				// extract identifier name for literal-named members
-				// e.g. obj['some-literal-name']
-				else if (node is Literal literal)
-				{
-					yield return new BindingInformation(literal.Raw, GetSourcePosition(literal.Location.Start));
-				}
-
-				yield break;
 			}
+			// extract class name from class expression
+			else if (node is ClassExpression classExpression)
+			{
+				if (classExpression.Id != null)
+				{
+					foreach (var binding in GetBindingFromNode(classExpression.Id))
+					{
+						yield return binding;
+					}
+				}
+			}
+			// extract variable name from variable declaration
+			else if (node is VariableDeclarator variableDeclarator)
+			{
+				foreach (var binding in GetBindingFromNode(variableDeclarator.Id))
+				{
+					yield return binding;
+				}
+			}
+			// extract object+member names from member expression
+			else if (node is MemberExpression member)
+			{
+				foreach (var binding in GetBindingFromNode(member.Object))
+				{
+					yield return binding;
+				}
+
+				foreach (var binding in GetBindingFromNode(member.Property))
+				{
+					yield return binding;
+				}
+			}
+			// extract class method name
+			else if (node is MethodDefinition method)
+			{
+				foreach (var binding in GetBindingFromNode(method.Key))
+				{
+					yield return binding;
+				}
+			}
+			// extract class property name
+			else if (node is Property property)
+			{
+				foreach (var binding in GetBindingFromNode(property.Key))
+				{
+					yield return binding;
+				}
+			}
+			// extract identifier name (target branch for all named objects)
+			else if (node is Identifier identifier)
+			{
+				if (identifier.Name != null)
+				{
+					yield return new BindingInformation(identifier.Name, GetSourcePosition(identifier.Location.Start));
+				}
+			}
+			// extract identifier name for literal-named members
+			// e.g. obj['some-literal-name']
+			else if (node is Literal literal)
+			{
+				yield return new BindingInformation(literal.Raw, GetSourcePosition(literal.Location.Start));
+			}
+
+			yield break;
 		}
 	}
 }

@@ -27,11 +27,9 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		}
 
 		[Test]
-		public void FromBase64_InvalidBase64Input_ThrowsException()
-		{
+		public void FromBase64_InvalidBase64Input_ThrowsException() =>
 			// Act
 			Assert.Throws<ArgumentOutOfRangeException>(() => Base64Converter.FromBase64('@'));
-		}
 
 		[Test]
 		public void ToBase64_ValidIntegerInput61_CorrectBase64Output9()
@@ -44,17 +42,13 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		}
 
 		[Test]
-		public void ToBase64_NegativeIntegerInput_ThrowsException()
-		{
+		public void ToBase64_NegativeIntegerInput_ThrowsException() =>
 			// Act
 			Assert.Throws<ArgumentOutOfRangeException>(() => Base64Converter.ToBase64(-1));
-		}
 
 		[Test]
-		public void ToBase64_InvalidIntegerInput_ThrowsException()
-		{
+		public void ToBase64_InvalidIntegerInput_ThrowsException() =>
 			// Act
 			Assert.Throws<ArgumentOutOfRangeException>(() => Base64Converter.ToBase64(64));
-		}
 	}
 }

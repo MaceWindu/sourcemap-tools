@@ -41,9 +41,6 @@ namespace SourcemapToolkit.SourcemapParser
 			} while (vlq > 0);
 		}
 
-		private static int ToVlqSigned(int value)
-		{
-			return value < 0 ? ((-value << 1) + 1) : (value << 1) + 0;
-		}
+		private static int ToVlqSigned(int value) => value < 0 ? ((-value << 1) + 1) : (value << 1) + 0;
 	}
 }

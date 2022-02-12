@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 {
@@ -62,11 +61,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_EmptyString_ReturnNull()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = string.Empty;
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame);
+			var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 			// Assert
 			Assert.Null(result);
@@ -76,11 +74,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_NoMethodNameInInput_ReturnsStackFrameWithNullMethod()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "    (http://localhost:19220/crashcauser.min.js:1:34)";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);
@@ -93,11 +90,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_StackFrameWithWebpackLink_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "    at eval (webpack-internal:///./Static/jsx/InitialStep/InitialStepForm.js:167:14)";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("webpack-internal:///./Static/jsx/InitialStep/InitialStepForm.js", result.FilePath);
@@ -110,11 +106,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_StackFrameWithoutParentheses_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "    at c http://localhost:19220/crashcauser.min.js:8:3";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);
@@ -127,11 +122,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_ChromeStackFrame_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "    at c (http://localhost:19220/crashcauser.min.js:8:3)";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);
@@ -144,11 +138,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_ChromeStackFrameWithNoMethodName_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = " at http://localhost:19220/crashcauser.min.js:10:13";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);
@@ -161,11 +154,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_ChromeStackFrameWithScriptSubfolder_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "    at c (http://localhost:19220/o/app_scripts/crashcauser.min.js:9:5)";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/o/app_scripts/crashcauser.min.js", result.FilePath);
@@ -178,11 +170,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_FireFoxStackFrame_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "c@http://localhost:19220/crashcauser.min.js:4:52";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);
@@ -195,11 +186,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_IE11StackFrame_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "   at c (http://localhost:19220/crashcauser.min.js:3:17)";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);
@@ -212,11 +202,10 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		public void TryParseSingleStackFrame_IE11StackFrameWithAnonymousFunction_CorrectStackFrame()
 		{
 			// Arrange
-			var stackTraceParser = new StackTraceParser();
 			var frame = "   at Anonymous function (http://localhost:19220/crashcauser.min.js:5:25)";
 
 			// Act
-			var result = stackTraceParser.TryParseSingleStackFrame(frame)!;
+			var result = StackTraceParser.TryParseSingleStackFrame(frame)!;
 
 			// Assert
 			Assert.AreEqual("http://localhost:19220/crashcauser.min.js", result.FilePath);

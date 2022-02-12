@@ -7,7 +7,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// <summary>
 	/// This class is responsible for providing function maps for the JavaScript code corresponding to a URL.
 	/// </summary>
-	internal class FunctionMapStore : IFunctionMapStore
+	internal sealed class FunctionMapStore : IFunctionMapStore
 	{
 		private readonly IFunctionMapGenerator _functionMapGenerator;
 		private readonly KeyValueCache<string, IReadOnlyList<FunctionMapEntry>> _functionMapCache;
@@ -26,14 +26,6 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// Once a function map is generated, the value is cached in memory for future usages.
 		/// </summary>
 		/// <param name="sourceCodeUrl">The URL of the file for which a function map is required</param>
-		IReadOnlyList<FunctionMapEntry>? IFunctionMapStore.GetFunctionMapForSourceCode(string? sourceCodeUrl)
-		{
-			if (sourceCodeUrl == null)
-			{
-				return null;
-			}
-
-			return _functionMapCache.GetValue(sourceCodeUrl);
-		}
+		IReadOnlyList<FunctionMapEntry>? IFunctionMapStore.GetFunctionMapForSourceCode(string? sourceCodeUrl) => sourceCodeUrl == null ? null : _functionMapCache.GetValue(sourceCodeUrl);
 	}
 }
