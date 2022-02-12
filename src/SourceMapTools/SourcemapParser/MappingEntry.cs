@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace SourcemapToolkit.SourcemapParser
 {
@@ -6,7 +7,7 @@ namespace SourcemapToolkit.SourcemapParser
 	/// Source map entry.
 	/// </summary>
 	[DebuggerDisplay("(Column: {GeneratedSourcePosition.Column}, Line: {GeneratedSourcePosition.Line}): {OriginalName}")]
-	public struct MappingEntry
+	public readonly struct MappingEntry : IEquatable<MappingEntry>
 	{
 		/// <summary>
 		/// Creates source map entry instance.
@@ -60,14 +61,11 @@ namespace SourcemapToolkit.SourcemapParser
 		/// Returns copy of entry with source positions having zero as column number.
 		/// </summary>
 		/// <returns>Returns copy of current entry.</returns>
-		public MappingEntry CloneWithResetColumnNumber()
-		{
-			return new MappingEntry(
-				new SourcePosition(GeneratedSourcePosition.Line, 0),
-				new SourcePosition(OriginalSourcePosition.Line, 0),
-				OriginalName,
-				OriginalFileName);
-		}
+		public MappingEntry CloneWithResetColumnNumber() => new(
+			new SourcePosition(GeneratedSourcePosition.Line, 0),
+			new SourcePosition(OriginalSourcePosition.Line, 0),
+			OriginalName,
+			OriginalFileName);
 
 		/// <summary>
 		/// Compares current mapping entry whith another one.
@@ -79,14 +77,10 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: entries differ from each other.</item>
 		/// </list>
 		/// </returns>
-		public bool IsValueEqual(MappingEntry anEntry)
-		{
-			return
-				OriginalName == anEntry.OriginalName &&
+		public bool IsValueEqual(MappingEntry anEntry) => OriginalName == anEntry.OriginalName &&
 				OriginalFileName == anEntry.OriginalFileName &&
 				GeneratedSourcePosition.Equals(anEntry.GeneratedSourcePosition) &&
 				OriginalSourcePosition.Equals(anEntry.OriginalSourcePosition);
-		}
 
 		/// <summary>
 		/// Compares current mapping entry whith another one.
@@ -98,10 +92,7 @@ namespace SourcemapToolkit.SourcemapParser
 		/// <item><c>false</c>: entries differ from each other oth <paramref name="obj"/> is not an instance of <see cref="MappingEntry"/>.</item>
 		/// </list>
 		/// </returns>
-		public override bool Equals(object? obj)
-		{
-			return obj is MappingEntry mappingEntry && IsValueEqual(mappingEntry);
-		}
+		public override bool Equals(object? obj) => obj is MappingEntry mappingEntry && Equals(mappingEntry);
 
 		/// <summary>
 		/// An implementation of Josh Bloch's hashing algorithm from Effective Java.
@@ -112,12 +103,45 @@ namespace SourcemapToolkit.SourcemapParser
 			unchecked // Wrap to protect overflow
 			{
 				var hash = 23;
-				hash = hash * 31 + GeneratedSourcePosition.GetHashCode();
-				hash = hash * 31 + OriginalSourcePosition.GetHashCode();
-				hash = hash * 31 + (OriginalName ?? "").GetHashCode();
-				hash = hash * 31 + (OriginalFileName ?? "").GetHashCode();
+				hash = (hash * 31) + GeneratedSourcePosition.GetHashCode();
+				hash = (hash * 31) + OriginalSourcePosition.GetHashCode();
+				hash = (hash * 31) + (OriginalName ?? "").GetHashCode();
+				hash = (hash * 31) + (OriginalFileName ?? "").GetHashCode();
 				return hash;
 			}
 		}
+
+		/// <inheritdoc cref="IEquatable{T}.Equals(T)"/>
+		public bool Equals(MappingEntry other) =>
+			OriginalName == other.OriginalName &&
+			OriginalFileName == other.OriginalFileName &&
+			GeneratedSourcePosition.Equals(other.GeneratedSourcePosition) &&
+			OriginalSourcePosition.Equals(other.OriginalSourcePosition);
+
+		/// <summary>
+		/// Checks if both <see cref="MappingEntry"/> are the same.
+		/// </summary>
+		/// <param name="left">Left object.</param>
+		/// <param name="right">Right object.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><c>true</c>: both objects are the same.</item>
+		/// <item><c>false</c>: objects differ from each other.</item>
+		/// </list>
+		/// </returns>
+		public static bool operator ==(MappingEntry left, MappingEntry right) => left.Equals(right);
+
+		/// <summary>
+		/// Checks if both <see cref="MappingEntry"/> are not the same.
+		/// </summary>
+		/// <param name="left">Left object.</param>
+		/// <param name="right">Right object.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><c>true</c>: objects differ from each other.</item>
+		/// <item><c>false</c>: both objects are the same.</item>
+		/// </list>
+		/// </returns>
+		public static bool operator !=(MappingEntry left, MappingEntry right) => !(left == right);
 	}
 }

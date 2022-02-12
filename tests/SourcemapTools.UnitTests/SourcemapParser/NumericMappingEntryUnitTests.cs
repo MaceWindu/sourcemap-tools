@@ -9,11 +9,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void ToMappingEntry_ContainsGeneratedSourcePosition_CorrectMappingEntryFieldsPopulated()
 		{
 			// Arrange
-			var numericMappingEntry = new NumericMappingEntry
-			{
-				GeneratedColumnNumber = 12,
-				GeneratedLineNumber = 13
-			};
+			var numericMappingEntry = new NumericMappingEntry(13, 12, null, null, null, null);
 			var names = new List<string>();
 			var sources = new List<string>();
 
@@ -32,13 +28,7 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void ToMappingEntry_ContainsGeneratedAndOriginalSourcePosition_CorrectMappingEntryFieldsPopulated()
 		{
 			// Arrange
-			var numericMappingEntry = new NumericMappingEntry
-			{
-				GeneratedColumnNumber = 2,
-				GeneratedLineNumber = 3,
-				OriginalColumnNumber = 16,
-				OriginalLineNumber = 23
-			};
+			var numericMappingEntry = new NumericMappingEntry(3, 2, null, 23, 16, null);
 			var names = new List<string>();
 			var sources = new List<string>();
 
@@ -58,15 +48,9 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		public void ToMappingEntry_ContainsGeneratedPositionNameIndexAndSourcesIndex_CorrectMappingEntryFieldsPopulated()
 		{
 			// Arrange
-			var numericMappingEntry = new NumericMappingEntry
-			{
-				GeneratedColumnNumber = 8,
-				GeneratedLineNumber = 48,
-				OriginalNameIndex = 1,
-				OriginalSourceFileIndex = 2
-			};
-			var names = new List<string> {"foo", "bar"};
-			var sources = new List<string> { "one", "two", "three"};
+			var numericMappingEntry = new NumericMappingEntry(48, 8, 2, null, null, 1);
+			var names = new List<string>() { "foo", "bar" };
+			var sources = new List<string>() { "one", "two", "three" };
 
 			// Act
 			var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);

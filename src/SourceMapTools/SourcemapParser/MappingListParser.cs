@@ -7,7 +7,7 @@ namespace SourcemapToolkit.SourcemapParser
 	/// One of the entries of the V3 source map is a base64 VLQ encoded string providing metadata about a particular line of generated code.
 	/// This class is responsible for converting this string into a more friendly format.
 	/// </summary>
-	internal class MappingsListParser
+	internal sealed class MappingsListParser
 	{
 		private static readonly char[] LineDelimiter = new[] { ',' };
 
@@ -26,11 +26,8 @@ namespace SourcemapToolkit.SourcemapParser
 				throw new ArgumentOutOfRangeException(nameof(segmentFields));
 			}
 
-			var numericMappingEntry = new NumericMappingEntry()
-			{
-				GeneratedLineNumber = mappingsParserState.CurrentGeneratedLineNumber,
-				GeneratedColumnNumber = mappingsParserState.CurrentGeneratedColumnBase + segmentFields[0]
-			};
+			var generatedLineNumber = mappingsParserState.CurrentGeneratedLineNumber;
+			var generatedColumnNumber = mappingsParserState.CurrentGeneratedColumnBase + segmentFields[0];
 
 			/*
 			 *	The following description was taken from the Sourcemap V3 spec https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/mobilebasic?pref=2&pli=1
@@ -55,26 +52,37 @@ namespace SourcemapToolkit.SourcemapParser
 			 *     to the previous occurrence of this field, unless this is the first occurrence of this field, in which case the whole value
 			 *     is represented.
 			 */
+
+			int? originalSourceFileIndex = null;
+			int? originalLineNumber = null;
+			int? originalColumnNumber = null;
+			int? originalNameIndex = null;
 			if (segmentFields.Count > 1)
 			{
-				numericMappingEntry.OriginalSourceFileIndex = mappingsParserState.SourcesListIndexBase + segmentFields[1];
-				numericMappingEntry.OriginalLineNumber = mappingsParserState.OriginalSourceStartingLineBase + segmentFields[2];
-				numericMappingEntry.OriginalColumnNumber = mappingsParserState.OriginalSourceStartingColumnBase + segmentFields[3];
+				originalSourceFileIndex = mappingsParserState.SourcesListIndexBase + segmentFields[1];
+				originalLineNumber = mappingsParserState.OriginalSourceStartingLineBase + segmentFields[2];
+				originalColumnNumber = mappingsParserState.OriginalSourceStartingColumnBase + segmentFields[3];
 			}
 
 			if (segmentFields.Count >= 5)
 			{
-				numericMappingEntry.OriginalNameIndex = mappingsParserState.NamesListIndexBase + segmentFields[4];
+				originalNameIndex = mappingsParserState.NamesListIndexBase + segmentFields[4];
 			}
 
-			return numericMappingEntry;
+			return new NumericMappingEntry(
+				generatedLineNumber,
+				generatedColumnNumber,
+				originalSourceFileIndex,
+				originalLineNumber,
+				originalColumnNumber,
+				originalNameIndex);
 		}
 
 		/// <summary>
 		/// Top level API that should be called for decoding the MappingsString element. It will convert the string containing Base64 
 		/// VLQ encoded segments into a list of MappingEntries.
 		/// </summary>
-		internal static List<MappingEntry> ParseMappings(string mappingString, IReadOnlyList<string> names, IReadOnlyList<string> sources)
+		internal static IReadOnlyList<MappingEntry> ParseMappings(string mappingString, IReadOnlyList<string> names, IReadOnlyList<string> sources)
 		{
 			var mappingEntries = new List<MappingEntry>();
 			var currentMappingsParserState = new MappingsParserState();

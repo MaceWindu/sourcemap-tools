@@ -5,7 +5,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// <summary>
 	/// Represents a single entry in a JavaScript stack frame. 
 	/// </summary>
-	public class StackFrame
+	public sealed class StackFrame
 	{
 		/// <summary>
 		/// Creates new instance stack frame with specified method name.
@@ -30,14 +30,14 @@ namespace SourcemapToolkit.CallstackDeminifier
 		}
 
 		/// <summary>
-		/// The name of the method
+		/// The name of the method.
 		/// </summary>
-		public string? MethodName { get; }
+		public string? MethodName { get; set; }
 
 		/// <summary>
-		/// The path of the file where this code is defined
+		/// The path of the file where this code is defined.
 		/// </summary>
-		public string? FilePath { get; internal set; }
+		public string? FilePath { get; set; }
 
 		/// <summary>
 		/// The zero-based position of this stack entry.

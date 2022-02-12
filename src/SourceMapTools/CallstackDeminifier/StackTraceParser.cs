@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,12 +9,12 @@ using SourcemapToolkit.SourcemapParser;
 namespace SourcemapToolkit.CallstackDeminifier
 {
 	/// <summary>
-	/// Class used to parse a JavaScript stack trace 
-	/// string into a list of StackFrame objects
+	/// Class used to parse a JavaScript stack trace
+	/// string into a list of StackFrame objects.
 	/// </summary>
-	public class StackTraceParser : IStackTraceParser
+	public sealed class StackTraceParser : IStackTraceParser
 	{
-		private static readonly Regex _lineNumberRegex = new Regex(@"([^@(\s]*\.js)[^/]*:([0-9]+):([0-9]+)[^/]*$", RegexOptions.Compiled);
+		private static readonly Regex _lineNumberRegex = new(@"([^@(\s]*\.js)[^/]*:([0-9]+):([0-9]+)[^/]*$", RegexOptions.Compiled);
 
 		/// <summary>
 		/// Generates a list of StackFrame objects based on the input stack trace.
@@ -29,10 +30,8 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <remarks>
 		/// This override drops the Message out param for backward compatibility
 		/// </remarks>
-		IReadOnlyList<StackFrame> IStackTraceParser.ParseStackTrace(string stackTraceString)
-		{
-			return ParseStackTrace(stackTraceString, out _);
-		}
+		IReadOnlyList<StackFrame> IStackTraceParser.ParseStackTrace(string stackTraceString) => ParseStackTrace(stackTraceString, out _);
+
 
 		/// <summary>
 		/// Generates a list of StackFrame objects based on the input stack trace.
@@ -45,8 +44,14 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// Any parts of the stack trace that could not be parsed are excluded from
 		/// the result. Does not ever return null.
 		/// </returns>
-		public virtual IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message)
+		[SuppressMessage("Design", "CA1021:Avoid out parameters", Justification = "Interface implementation")]
+		public IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message)
 		{
+			if (stackTraceString == null)
+			{
+				throw new ArgumentNullException(nameof(stackTraceString));
+			}
+
 			message = null;
 
 			var stackFrameStrings = stackTraceString.SplitFast('\n');
@@ -78,7 +83,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// Given a single stack frame, extract the method name.
 		/// </summary>
-		protected virtual string? TryExtractMethodNameFromFrame(string frame)
+		private static string? TryExtractMethodNameFromFrame(string frame)
 		{
 			string? methodName = null;
 
@@ -130,7 +135,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 		/// <summary>
 		/// Parses a string representing a single stack frame into a StackFrame object. 
 		/// </summary>
-		protected internal virtual StackFrame? TryParseSingleStackFrame(string frame)
+		internal static StackFrame? TryParseSingleStackFrame(string frame)
 		{
 			var lineNumberMatch = _lineNumberRegex.Match(frame);
 

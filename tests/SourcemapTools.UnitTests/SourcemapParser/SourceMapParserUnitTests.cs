@@ -24,9 +24,10 @@ namespace SourcemapToolkit.SourcemapParser.UnitTests
 		{
 			// Arrange
 			var input = "{ \"version\":3, \"file\":\"CommonIntl\", \"lineCount\":65, \"mappings\":\"AACAA,aAAA,CAAc\", \"sources\":[\"input/CommonIntl.js\"], \"names\":[\"CommonStrings\",\"afrikaans\"]}";
+			using var stream = UnitTestUtils.StreamFromString(input);
 
 			// Act
-			var output = SourceMapParser.ParseSourceMap(UnitTestUtils.StreamFromString(input))!;
+			var output = SourceMapParser.ParseSourceMap(stream)!;
 
 			// Assert
 			Assert.AreEqual(3, output.Version);

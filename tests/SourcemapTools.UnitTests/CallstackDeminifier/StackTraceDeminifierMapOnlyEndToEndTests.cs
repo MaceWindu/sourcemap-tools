@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿#if !NETFRAMEWORK
+using System;
+#endif
+using Moq;
 using SourcemapToolkit.SourcemapParser.UnitTests;
 using NUnit.Framework;
 
@@ -14,10 +17,14 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		private static StackTraceDeminifier GetStackTraceDeminifierWithDependencies()
 		{
 			var sourceMapProvider = new Mock<ISourceMapProvider>();
-			sourceMapProvider.Setup(x => x.GetSourceMapContentsForCallstackUrl("http://localhost:11323/crashcauser.min.js")).Returns(UnitTestUtils.StreamFromString(SourceMapString));
+			sourceMapProvider
+				.Setup(x => x.GetSourceMapContentsForCallstackUrl("http://localhost:11323/crashcauser.min.js"))
+				.Returns(() => UnitTestUtils.StreamFromString(SourceMapString));
 
 			var sourceCodeProvider = new Mock<ISourceCodeProvider>();
-			sourceCodeProvider.Setup(x => x.GetSourceCode("http://localhost:11323/crashcauser.min.js")).Returns(UnitTestUtils.StreamFromString(GeneratedCodeString));
+			sourceCodeProvider
+				.Setup(x => x.GetSourceCode("http://localhost:11323/crashcauser.min.js"))
+				.Returns(() => UnitTestUtils.StreamFromString(GeneratedCodeString));
 
 			return StackTraceDeminifierFactory.GetMapOnlyStackTraceDeminfier(sourceMapProvider.Object);
 		}
@@ -35,7 +42,7 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 		}
 
 		[Test]
-		public void DeminifyStackTrace_ChromeStackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_ChromeStackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -48,14 +55,14 @@ namespace SourcemapToolkit.CallstackDeminifier.UnitTests
 	at HTMLButtonElement.<anonymous> (http://localhost:11323/crashcauser.min.js:1:445)";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(chromeStackTrace, preferSourceMapsSymbols);
 
 			// Assert
 			ValidateDeminifyStackTraceResults(results);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_FireFoxStackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_FireFoxStackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -67,14 +74,14 @@ causeCrash@http://localhost:11323/crashcauser.min.js:1:341
 window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(fireFoxStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(fireFoxStackTrace, preferSourceMapsSymbols);
 
 			// Assert
 			ValidateDeminifyStackTraceResults(results);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_IE11StackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_IE11StackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -87,14 +94,14 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
    at Anonymous function (http://localhost:11323/crashcauser.min.js:1:445)";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace, preferSourceMapsSymbols);
 
 			// Assert
 			ValidateDeminifyStackTraceResults(results);
 		}
 
 		[Test]
-		public void DeminifyStackTrace_EdgeStackTraceString_CorrectDeminificationWhenPossible()
+		public void DeminifyStackTrace_EdgeStackTraceString_CorrectDeminificationWhenPossible([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -107,14 +114,14 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
    at Anonymous function (http://localhost:11323/crashcauser.min.js:1:445)";
 
 			// Act
-			var results = stackTraceDeminifier.DeminifyStackTrace(dgeStackTrace);
+			var results = stackTraceDeminifier.DeminifyStackTrace(dgeStackTrace, preferSourceMapsSymbols);
 
 			// Assert
 			ValidateDeminifyStackTraceResults(results);
 		}
 
 		[Test]
-		public void DeminifyResultToString_SuccessfullyDeminified_AllLinesDeminified()
+		public void DeminifyResultToString_SuccessfullyDeminified_AllLinesDeminified([Values] bool preferSourceMapsSymbols)
 		{
 			// Arrange
 			var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
@@ -125,9 +132,17 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
    at n (http://localhost:11323/crashcauser.min.js:1:50)
    at causeCrash (http://localhost:11323/crashcauser.min.js:1:341)
    at http://localhost:11323/crashcauser.min.js:1:445";
-			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace);
-			var exectedResult = @"TypeError: Unable to get property 'length' of undefined or null reference
+			var results = stackTraceDeminifier.DeminifyStackTrace(ieStackTrace, preferSourceMapsSymbols);
+			var exectedResult = !preferSourceMapsSymbols
+				? @"TypeError: Unable to get property 'length' of undefined or null reference
   at Anonymous function in crashcauser.js:17:13
+  at level3 in crashcauser.js:15:10
+  at level2 in crashcauser.js:11:9
+  at level1 in crashcauser.js:6:9
+  at causeCrash in crashcauser.js:28:5
+  at ? in crashcauser.js:33:9"
+				: @"TypeError: Unable to get property 'length' of undefined or null reference
+  at => console in crashcauser.js:17:13
   at level3 in crashcauser.js:15:10
   at level2 in crashcauser.js:11:9
   at level1 in crashcauser.js:6:9
@@ -138,7 +153,11 @@ window.onload/<@http://localhost:11323/crashcauser.min.js:1:445";
 			var formatted = results.ToString();
 
 			// Assert
+#if NETFRAMEWORK
 			Assert.AreEqual(exectedResult.Replace("\r", ""), formatted.Replace("\r", ""));
+#else
+			Assert.AreEqual(exectedResult.Replace("\r", "", StringComparison.Ordinal), formatted.Replace("\r", "", StringComparison.Ordinal));
+#endif
 		}
 	}
 }

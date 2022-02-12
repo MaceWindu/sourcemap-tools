@@ -4,13 +4,15 @@
 		
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 
-		<LangVersion>9.0</LangVersion>
+		<LangVersion>10.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 		<Features>strict</Features>
+		<!--required for SkipLocalInit-->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningLevel>4</WarningLevel>
+		<WarningLevel>999</WarningLevel>
 		<ErrorReport>prompt</ErrorReport>
 
 		<SignAssembly>true</SignAssembly>
@@ -26,10 +28,28 @@
 		<RepositoryUrl>https://github.com/MaceWindu/sourcemap-tools</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 
-		<AnalysisLevel>preview</AnalysisLevel>
-		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<RunAnalyzers>true</RunAnalyzers>
-
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
+
+	<PropertyGroup Label="Code Analyzers Settings">
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+		<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+		<AnalysisLevel>preview-All</AnalysisLevel>
+
+		<!--enable IDEXXXX analyzers during build-->
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+		<ReportAnalyzer>false</ReportAnalyzer>
+
+		<!--workaround for https://github.com/dotnet/roslyn/issues/41640, but also required for xml-doc validation -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup Label="Code Analyzers Imports">
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>build; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
 </Project>

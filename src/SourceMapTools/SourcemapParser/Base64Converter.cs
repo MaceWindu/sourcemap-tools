@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SourcemapToolkit.SourcemapParser
 {
@@ -11,6 +12,7 @@ namespace SourcemapToolkit.SourcemapParser
 		private const string Base64Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 		private static readonly IReadOnlyDictionary<char, int> _base64DecodeMap;
 
+		[SuppressMessage("Performance", "CA1810:Initialize reference type static fields inline", Justification = "Tell me how")]
 		static Base64Converter()
 		{
 			var base64DecodeMap = new Dictionary<char, int>();
@@ -26,26 +28,16 @@ namespace SourcemapToolkit.SourcemapParser
 		/// Converts a base64 value to an integer.
 		/// </summary>
 		internal static int FromBase64(char base64Value)
-		{
-			if (!_base64DecodeMap.TryGetValue(base64Value, out var result))
-			{
-				throw new ArgumentOutOfRangeException(nameof(base64Value), "Tried to convert an invalid base64 value");
-			}
-
-			return result;
-		}
+			=> !_base64DecodeMap.TryGetValue(base64Value, out var result)
+				? throw new ArgumentOutOfRangeException(nameof(base64Value), "Tried to convert an invalid base64 value")
+				: result;
 
 		/// <summary>
 		/// Converts a integer to base64 value
 		/// </summary>
 		internal static char ToBase64(int value)
-		{
-			if (value < 0 || value >= Base64Alphabet.Length)
-			{
-				throw new ArgumentOutOfRangeException(nameof(value));
-			}
-
-			return Base64Alphabet[value];
-		}
+			=> value < 0 || value >= Base64Alphabet.Length
+			? throw new ArgumentOutOfRangeException(nameof(value))
+			: Base64Alphabet[value];
 	}
 }

@@ -3,7 +3,7 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier
 {
-	internal class FunctionMapConsumer : IFunctionMapConsumer
+	internal sealed class FunctionMapConsumer : IFunctionMapConsumer
 	{
 		/// <summary>
 		/// Finds the JavaScript function that wraps the given source location.

@@ -1,11 +1,15 @@
 <Project>
 	<ItemGroup>
-		<PackageVersion Include="esprima" Version="2.0.2" />
-		<PackageVersion Include="System.Text.Json" Version="5.0.2" />
-		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
-		<PackageVersion Include="NUnit3TestAdapter" Version="4.0.0" />
+		<PackageVersion Include="esprima" Version="2.1.2" />
+		<PackageVersion Include="System.Text.Json" Version="6.0.2" />
+
+		<PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
 		<PackageVersion Include="NUnit" Version="3.13.2" />
 		<PackageVersion Include="Moq" Version="4.16.1" />
-		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+
+		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+
+		<PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
 	</ItemGroup>
 </Project>

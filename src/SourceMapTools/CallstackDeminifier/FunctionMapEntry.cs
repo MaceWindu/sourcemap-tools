@@ -6,7 +6,7 @@ namespace SourcemapToolkit.CallstackDeminifier
 	/// <summary>
 	/// Contains information regarding the location of a particular function in a JavaScript file
 	/// </summary>
-	internal class FunctionMapEntry
+	internal sealed class FunctionMapEntry
 	{
 		public FunctionMapEntry(
 			IReadOnlyList<BindingInformation> bindings,
