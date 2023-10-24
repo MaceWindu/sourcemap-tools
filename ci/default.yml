@@ -114,7 +114,7 @@ stages:
         command: 'push'
         packagesToPush: '$(Build.SourcesDirectory)/ci/SourceMapTools.*.nupkg'
         nuGetFeedType: 'internal'
-        publishVstsFeed: 'projects'
+        publishVstsFeed: 'd119c8d5-d981-4087-b983-65c3339155a0/8c90a52a-2539-4e08-84e4-05beb440b781'
       displayName: Publish to Azure Artifacts feed
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
 
