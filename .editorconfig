@@ -5,6 +5,7 @@ indent_style = tab
 indent_size = 4
 end_of_line = crlf
 insert_final_newline = false
+spelling_exclusion_path = spellcheck.txt
 
 [*.yml]
 indent_style = space
@@ -133,6 +134,7 @@ dotnet_diagnostic.CA1058.severity = error # CA1058: Types should not extend cert
 dotnet_diagnostic.CA1060.severity = error # CA1060: Move P/Invokes to NativeMethods class
 dotnet_diagnostic.CA1061.severity = error # CA1061: Do not hide base class methods
 dotnet_diagnostic.CA1062.severity = error # CA1062: Validate arguments of public methods
+dotnet_code_quality.CA1062.api_surface = public
 dotnet_diagnostic.CA1063.severity = error # CA1063: Implement IDisposable correctly
 dotnet_diagnostic.CA1064.severity = error # CA1064: Exceptions should be public
 dotnet_diagnostic.CA1065.severity = error # CA1065: Do not raise exceptions in unexpected locations
@@ -148,7 +150,7 @@ dotnet_diagnostic.CA1305.severity = error # CA1305: Specify IFormatProvider
 dotnet_diagnostic.CA1307.severity = error # CA1307: Specify StringComparison for clarity
 dotnet_diagnostic.CA1308.severity = error # CA1308: Normalize strings to uppercase
 dotnet_diagnostic.CA1309.severity = error # CA1309: Use ordinal StringComparison
-dotnet_diagnostic.CA1310.severity = error # CA1310: Specify StringComparison for correctness
+dotnet_diagnostic.CA1310.severity = none # CA1310: Specify StringComparison for correctness
 dotnet_diagnostic.CA1401.severity = error # CA1401: P/Invokes should not be visible
 dotnet_diagnostic.CA1416.severity = error # CA1416: Validate platform compatibility
 dotnet_diagnostic.CA1417.severity = error # CA1417: Do not use OutAttribute on string parameters for P/Invokes
@@ -220,6 +222,7 @@ dotnet_diagnostic.CA1847.severity = error # CA1847: Use string.Contains(char) in
 dotnet_diagnostic.CA1848.severity = error # CA1848: Use the LoggerMessage delegates
 dotnet_diagnostic.CA1849.severity = error # CA1849: Call async methods when in an async method
 dotnet_diagnostic.CA1850.severity = error # CA1850: Prefer static HashData method over ComputeHash
+dotnet_diagnostic.CA1859.severity = none # CA1859: change interface type to specific type (buggy in net8 previews)
 dotnet_diagnostic.CA2000.severity = error # CA2000: Dispose objects before losing scope
 dotnet_diagnostic.CA2002.severity = error # CA2002: Do not lock on objects with weak identity
 dotnet_diagnostic.CA2007.severity = error # CA2007: Do not directly await a Task
@@ -624,6 +627,8 @@ dotnet_diagnostic.IDE0130.severity = none # Namespace does not match folder stru
 dotnet_diagnostic.IDE0140.severity = error # Simplify object creation
 visual_basic_style_prefer_simplified_object_creation = true
 
+dotnet_diagnostic.IDE0160.severity = none # use block namespaces
+
 dotnet_diagnostic.IDE1005.severity = error # Use conditional delegate call
 csharp_style_conditional_delegate_call = true
 
@@ -635,34 +640,34 @@ dotnet_diagnostic.IDE1006.severity = error # Naming rule violation
 
 # styles
 dotnet_naming_style.style_pascal_case.capitalization = pascal_case
-dotnet_naming_style.style_pascal_case.required_suffix = 
-dotnet_naming_style.style_pascal_case.required_prefix = 
-dotnet_naming_style.style_pascal_case.word_separator = 
+dotnet_naming_style.style_pascal_case.required_suffix =
+dotnet_naming_style.style_pascal_case.required_prefix =
+dotnet_naming_style.style_pascal_case.word_separator =
 
 dotnet_naming_style.style_i_pascal_case.capitalization = pascal_case
-dotnet_naming_style.style_i_pascal_case.required_suffix = 
+dotnet_naming_style.style_i_pascal_case.required_suffix =
 dotnet_naming_style.style_i_pascal_case.required_prefix = I
-dotnet_naming_style.style_i_pascal_case.word_separator = 
+dotnet_naming_style.style_i_pascal_case.word_separator =
 
 dotnet_naming_style.style_t_pascal_case.capitalization = pascal_case
-dotnet_naming_style.style_t_pascal_case.required_suffix = 
+dotnet_naming_style.style_t_pascal_case.required_suffix =
 dotnet_naming_style.style_t_pascal_case.required_prefix = T
-dotnet_naming_style.style_t_pascal_case.word_separator = 
+dotnet_naming_style.style_t_pascal_case.word_separator =
 
 dotnet_naming_style.style_all_caps.capitalization = all_upper
-dotnet_naming_style.style_all_caps.required_suffix = 
-dotnet_naming_style.style_all_caps.required_prefix = 
+dotnet_naming_style.style_all_caps.required_suffix =
+dotnet_naming_style.style_all_caps.required_prefix =
 dotnet_naming_style.style_all_caps.word_separator = _
 
 dotnet_naming_style.style_underscore_camel_case.capitalization = camel_case
-dotnet_naming_style.style_underscore_camel_case.required_suffix = 
+dotnet_naming_style.style_underscore_camel_case.required_suffix =
 dotnet_naming_style.style_underscore_camel_case.required_prefix = _
-dotnet_naming_style.style_underscore_camel_case.word_separator = 
+dotnet_naming_style.style_underscore_camel_case.word_separator =
 
 dotnet_naming_style.style_camel_case.capitalization = camel_case
-dotnet_naming_style.style_camel_case.required_suffix = 
-dotnet_naming_style.style_camel_case.required_prefix = 
-dotnet_naming_style.style_camel_case.word_separator = 
+dotnet_naming_style.style_camel_case.required_suffix =
+dotnet_naming_style.style_camel_case.required_prefix =
+dotnet_naming_style.style_camel_case.word_separator =
 
 # symbols
 dotnet_naming_symbols.symbols_allways_pascal_case.applicable_kinds = namespace,class,struct,enum,property,method,event,delegate
@@ -703,3 +708,51 @@ dotnet_naming_rule.rule_for_fields.style = style_underscore_camel_case
 dotnet_naming_rule.rule_for_fields.symbols = symbols_parameters
 dotnet_naming_rule.rule_for_fields.style = style_camel_case
 ####################################################################################
+
+[*.{cs,vb}]
+#### Naming styles ####
+
+# Naming rules
+
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
+dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
+
+# Symbol specifications
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers =
+
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.types.required_modifiers =
+
+dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.required_modifiers =
+
+# Naming styles
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.required_suffix =
+dotnet_naming_style.begins_with_i.word_separator =
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
+dotnet_naming_style.pascal_case.capitalization = pascal_case

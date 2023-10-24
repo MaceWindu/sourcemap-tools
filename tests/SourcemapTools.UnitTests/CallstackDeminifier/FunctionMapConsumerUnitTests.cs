@@ -1,133 +1,133 @@
 ﻿using System.Collections.Generic;
 using SourcemapToolkit.SourcemapParser;
 using NUnit.Framework;
+using SourcemapTools.CallstackDeminifier.Internal;
+using System;
 
-namespace SourcemapToolkit.CallstackDeminifier.UnitTests
+namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
+
+public class FunctionMapConsumerUnitTests
 {
-
-	public class FunctionMapConsumerUnitTests
+	[Test]
+	public void GetWrappingFunctionForSourceLocation_EmptyFunctionMap_ReturnNull()
 	{
-		[Test]
-		public void GetWrappingFunctionForSourceLocation_EmptyFunctionMap_ReturnNull()
+		// Arrange
+		var sourcePosition = new SourcePosition(2, 3);
+		var functionMap = new List<FunctionMapEntry>();
+		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
+
+		// Act
+		var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
+
+		// Assert
+		Assert.That(wrappingFunction, Is.Null);
+	}
+
+	[Test]
+	public void GetWrappingFunctionForSourceLocation_SingleIrrelevantFunctionMapEntry_ReturnNull()
+	{
+		// Arrange
+		var sourcePosition = new SourcePosition(2, 3);
+		var functionMap = new List<FunctionMapEntry>
 		{
-			// Arrange
-			var sourcePosition = new SourcePosition(2, 3);
-			var functionMap = new List<FunctionMapEntry>();
-			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
-
-			// Act
-			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
-
-			// Assert
-			Assert.Null(wrappingFunction);
-		}
-
-		[Test]
-		public void GetWrappingFunctionForSourceLocation_SingleIrrelevantFunctionMapEntry_ReturnNull()
-		{
-			// Arrange
-			var sourcePosition = new SourcePosition(2, 3);
-			var functionMap = new List<FunctionMapEntry>
-			{
-				new FunctionMapEntry(
-					null!,
-					null,
-					new SourcePosition(40, 10),
-					new SourcePosition(50, 10))
-			};
-			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
-
-			// Act
-			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
-
-			// Assert
-			Assert.Null(wrappingFunction);
-		}
-
-		[Test]
-		public void GetWrappingFunctionForSourceLocation_SingleRelevantFunctionMapEntry_ReturnWrappingFunction()
-		{
-			// Arrange
-			var sourcePosition = new SourcePosition(41, 2);
-			var functionMapEntry = new FunctionMapEntry(
-				null!,
+			new(
+				Array.Empty<BindingInformation>(),
 				null,
 				new SourcePosition(40, 10),
-				new SourcePosition(50, 10));
+				new SourcePosition(50, 10))
+		};
+		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
-			var functionMap = new List<FunctionMapEntry>
-			{
-				functionMapEntry
-			};
-			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
+		// Act
+		var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
 
-			// Act
-			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
+		// Assert
+		Assert.That(wrappingFunction, Is.Null);
+	}
 
-			// Assert
-			Assert.AreEqual(functionMapEntry, wrappingFunction);
-		}
+	[Test]
+	public void GetWrappingFunctionForSourceLocation_SingleRelevantFunctionMapEntry_ReturnWrappingFunction()
+	{
+		// Arrange
+		var sourcePosition = new SourcePosition(41, 2);
+		var functionMapEntry = new FunctionMapEntry(
+			Array.Empty<BindingInformation>(),
+			null,
+			new SourcePosition(40, 10),
+			new SourcePosition(50, 10));
 
-		[Test]
-		public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesSingleRelevantFunctionMapEntry_ReturnWrappingFunction()
+		var functionMap = new List<FunctionMapEntry>
 		{
-			// Arrange
-			var sourcePosition = new SourcePosition(31, 0);
-			var functionMapEntry = new FunctionMapEntry(
-				null!,
-				null,
-				new SourcePosition(10, 10),
-				new SourcePosition(20, 30));
+			functionMapEntry
+		};
+		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
-			var functionMapEntry2 = new FunctionMapEntry(
-				null!,
-				null,
-				new SourcePosition(30, 0),
-				new SourcePosition(40, 2));
+		// Act
+		var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
 
-			var functionMap = new List<FunctionMapEntry>
-			{
-				functionMapEntry,
-				functionMapEntry2,
-			};
-			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
+		// Assert
+		Assert.That(wrappingFunction, Is.EqualTo(functionMapEntry));
+	}
 
-			// Act
-			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
+	[Test]
+	public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesSingleRelevantFunctionMapEntry_ReturnWrappingFunction()
+	{
+		// Arrange
+		var sourcePosition = new SourcePosition(31, 0);
+		var functionMapEntry = new FunctionMapEntry(
+			Array.Empty<BindingInformation>(),
+			null,
+			new SourcePosition(10, 10),
+			new SourcePosition(20, 30));
 
-			// Assert
-			Assert.AreEqual(functionMapEntry2, wrappingFunction);
-		}
+		var functionMapEntry2 = new FunctionMapEntry(
+			Array.Empty<BindingInformation>(),
+			null,
+			new SourcePosition(30, 0),
+			new SourcePosition(40, 2));
 
-		[Test]
-		public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesMultipleRelevantFunctionMapEntry_ReturnClosestWrappingFunction()
+		var functionMap = new List<FunctionMapEntry>
 		{
-			// Arrange
-			var sourcePosition = new SourcePosition(10, 25);
-			var functionMapEntry = new FunctionMapEntry(
-				null!,
-				null,
-				new SourcePosition(5, 10),
-				new SourcePosition(20, 30));
+			functionMapEntry,
+			functionMapEntry2,
+		};
+		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
-			var functionMapEntry2 = new FunctionMapEntry(
-				null!,
-				null,
-				new SourcePosition(9, 0),
-				new SourcePosition(15, 2));
+		// Act
+		var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
 
-			var functionMap = new List<FunctionMapEntry>
-			{
-				functionMapEntry2,
-				functionMapEntry
-			};
-			IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
+		// Assert
+		Assert.That(wrappingFunction, Is.EqualTo(functionMapEntry2));
+	}
 
-			// Act
-			var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
+	[Test]
+	public void GetWrappingFunctionForSourceLocation_MultipleFunctionMapEntriesMultipleRelevantFunctionMapEntry_ReturnClosestWrappingFunction()
+	{
+		// Arrange
+		var sourcePosition = new SourcePosition(10, 25);
+		var functionMapEntry = new FunctionMapEntry(
+			Array.Empty<BindingInformation>(),
+			null,
+			new SourcePosition(5, 10),
+			new SourcePosition(20, 30));
 
-			// Assert
-			Assert.AreEqual(functionMapEntry2, wrappingFunction);
-		}
+		var functionMapEntry2 = new FunctionMapEntry(
+			Array.Empty<BindingInformation>(),
+			null,
+			new SourcePosition(9, 0),
+			new SourcePosition(15, 2));
+
+		var functionMap = new List<FunctionMapEntry>
+		{
+			functionMapEntry2,
+			functionMapEntry
+		};
+		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
+
+		// Act
+		var wrappingFunction = functionMapConsumer.GetWrappingFunctionForSourceLocation(sourcePosition, functionMap);
+
+		// Assert
+		Assert.That(wrappingFunction, Is.EqualTo(functionMapEntry2));
 	}
 }

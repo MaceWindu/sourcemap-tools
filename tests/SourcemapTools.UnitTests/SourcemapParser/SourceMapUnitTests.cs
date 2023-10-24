@@ -1,326 +1,334 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace SourcemapToolkit.SourcemapParser.UnitTests
+namespace SourcemapToolkit.SourcemapParser.UnitTests;
+
+public class SourceMapUnitTests
 {
-
-	public class SourceMapUnitTests
+	[Test]
+	public void GetMappingEntryForGeneratedSourcePosition_NullMappingList_ReturnNull()
 	{
-		[Test]
-		public void GetMappingEntryForGeneratedSourcePosition_NullMappingList_ReturnNull()
-		{
-			// Arrange
-			var sourceMap = CreateSourceMap();
-			var sourcePosition = new SourcePosition(4, 3);
+		// Arrange
+		var sourceMap = CreateSourceMap();
+		var sourcePosition = new SourcePosition(4, 3);
 
-			// Act
-			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
+		// Act
+		var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
 
-			// Asset
-			Assert.Null(result);
-		}
-
-		[Test]
-		public void GetMappingEntryForGeneratedSourcePosition_NoMatchingEntryInMappingList_ReturnNull()
-		{
-			// Arrange
-			var parsedMappings = new List<MappingEntry>
-			{
-				new MappingEntry(
-					generatedSourcePosition: new SourcePosition(0, 0))
-			};
-
-			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
-			var sourcePosition = new SourcePosition(4, 3);
-
-			// Act
-			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
-
-			// Asset
-			Assert.Null(result);
-		}
-
-		[Test]
-		public void GetMappingEntryForGeneratedSourcePosition_MatchingEntryInMappingList_ReturnMatchingEntry()
-		{
-			// Arrange
-			var matchingMappingEntry = new MappingEntry(
-				generatedSourcePosition: new SourcePosition(8, 13));
-			var parsedMappings = new List<MappingEntry>
-			{
-				new MappingEntry(
-					generatedSourcePosition: new SourcePosition(0, 0)),
-				matchingMappingEntry
-			};
-
-			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
-			var sourcePosition = new SourcePosition(8, 13);
-
-			// Act
-			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
-
-			// Asset
-			Assert.AreEqual(matchingMappingEntry, result);
-		}
-
-		[Test]
-		public void GetMappingEntryForGeneratedSourcePosition_NoExactMatchHasSimilarOnSameLine_ReturnSimilarEntry()
-		{
-			// Arrange
-			var matchingMappingEntry = new MappingEntry(
-				generatedSourcePosition: new SourcePosition(10, 13));
-			var parsedMappings = new List<MappingEntry>
-			{
-				new MappingEntry(
-					generatedSourcePosition: new SourcePosition(0, 0)),
-				matchingMappingEntry
-			};
-			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
-			var sourcePosition = new SourcePosition(10, 14);
-
-			// Act
-			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
-
-			// Asset
-			Assert.AreEqual(matchingMappingEntry, result);
-		}
-
-		[Test]
-		public void GetMappingEntryForGeneratedSourcePosition_NoExactMatchHasSimilarOnDifferentLinesLine_ReturnSimilarEntry()
-		{
-			// Arrange
-			var matchingMappingEntry = new MappingEntry(
-				generatedSourcePosition: new SourcePosition(23, 15));
-			var parsedMappings = new List<MappingEntry>
-			{
-				new MappingEntry(
-					generatedSourcePosition: new SourcePosition(0, 0)),
-				matchingMappingEntry
-			};
-			var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
-			var sourcePosition = new SourcePosition(24, 0);
-
-			// Act
-			var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
-
-			// Asset
-			Assert.AreEqual(matchingMappingEntry, result);
-		}
-
-		[Test]
-		public void GetRootMappingEntryForGeneratedSourcePosition_NoChildren_ReturnsSameEntry()
-		{
-			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 5);
-			var mappingEntry = UnitTestUtils.GetSimpleEntry(generated1, original1, "generated.js");
-
-			var sourceMap = CreateSourceMap(
-				sources: new List<string>() { "generated.js" },
-				parsedMappings: new List<MappingEntry> { mappingEntry });
-
-			// Act
-			var rootEntry = sourceMap.GetMappingEntryForGeneratedSourcePosition(generated1);
-
-			// Assert
-			Assert.AreEqual(rootEntry, mappingEntry);
-		}
-
-		[Test]
-		public void ApplyMap_NoMatchingSources_ReturnsSameMap()
-		{
-			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 2);
-			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "someOtherSource.js");
-
-			var childMap = CreateSourceMap(
-				file: "notSourceOne.js",
-				sources: new List<string>() { "someOtherSource.js" },
-				parsedMappings: new List<MappingEntry> { childMapping });
-
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 7);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
-			var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
-
-			var parentMap = CreateSourceMap(
-				file: "generated.js",
-				sources: new List<string>() { "sourceOne.js" },
-				parsedMappings: new List<MappingEntry> { parentMapping });
-
-			// Act
-			var combinedMap = parentMap.ApplySourceMap(childMap);
-
-			// Assert
-			Assert.NotNull(combinedMap);
-			var firstMapping = combinedMap.ParsedMappings[0];
-			Assert.True(firstMapping.IsValueEqual(parentMapping));
-		}
-
-		[Test]
-		public void ApplyMap_NoMatchingMappings_ReturnsSameMap()
-		{
-			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 2);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 10);
-			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
-
-			var childMap = CreateSourceMap(
-				file: "sourceOne.js",
-				sources: new List<string>() { "sourceTwo.js" },
-				parsedMappings: new List<MappingEntry> { childMapping });
-
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 4);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
-			var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
-
-			var parentMap = CreateSourceMap(
-				file: "generated.js",
-				sources: new List<string>() { "sourceOne.js" },
-				parsedMappings: new List<MappingEntry> { parentMapping });
-
-			// Act
-			var combinedMap = parentMap.ApplySourceMap(childMap);
-
-			// Assert
-			Assert.NotNull(combinedMap);
-			var firstMapping = combinedMap.ParsedMappings[0];
-			Assert.True(firstMapping.IsValueEqual(parentMapping));
-		}
-
-		[Test]
-		public void ApplyMap_MatchingSources_ReturnsCorrectMap()
-		{
-			// Expect mapping with same source filename as the applied source-map to be replaced
-
-			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 3);
-			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
-
-			var childMap = CreateSourceMap(
-				file: "sourceOne.js",
-				sources: new List<string>() { "sourceTwo.js" },
-				parsedMappings: new List<MappingEntry> { childMapping });
-
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
-			var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
-
-			var parentMap = CreateSourceMap(
-				file: "generated.js",
-				sources: new List<string>() { "sourceOne.js" },
-				parsedMappings: new List<MappingEntry> { parentMapping });
-
-			// Act
-			var combinedMap = parentMap.ApplySourceMap(childMap)!;
-
-			// Assert
-			Assert.NotNull(combinedMap);
-			Assert.AreEqual(1, combinedMap.ParsedMappings.Count);
-			Assert.AreEqual(1, combinedMap.Sources?.Count);
-			var rootMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2)!;
-			Assert.AreEqual(0, rootMapping.Value.OriginalSourcePosition!.CompareTo(childMapping.OriginalSourcePosition!));
-		}
-
-		[Test]
-		public void ApplyMap_PartialMatchingSources_ReturnsCorrectMap()
-		{
-			// Expect mappings with same source filename as the applied source-map to be replaced
-			// mappings with a different source filename should stay the same
-
-			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 5);
-			var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
-
-			var childMap = CreateSourceMap(
-				file: "sourceOne.js",
-				sources: new List<string>() { "sourceTwo.js" },
-				parsedMappings: new List<MappingEntry> { childMapping });
-
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
-			var mapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
-
-			var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
-			var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
-			var mapping2 = UnitTestUtils.GetSimpleEntry(generated3, original3, "noMapForThis.js");
-
-			var parentMap = CreateSourceMap(
-				file: "generated.js",
-				sources: new List<string> { "sourceOne.js", "noMapForThis.js" },
-				parsedMappings: new List<MappingEntry> { mapping, mapping2 });
-
-			// Act
-			var combinedMap = parentMap.ApplySourceMap(childMap);
-
-			// Assert
-			Assert.NotNull(combinedMap);
-			Assert.AreEqual(2, combinedMap.ParsedMappings.Count);
-			Assert.AreEqual(2, combinedMap.Sources!.Count);
-			var firstCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated3)!;
-			Assert.True(firstCombinedMapping.Value.IsValueEqual(mapping2));
-			var secondCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2)!;
-			Assert.AreEqual(0, secondCombinedMapping.Value.OriginalSourcePosition!.CompareTo(childMapping.OriginalSourcePosition!));
-		}
-
-		[Test]
-		public void ApplyMap_ExactMatchDeep_ReturnsCorrectMappingEntry()
-		{
-			// Arrange
-			var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
-			var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
-			var mapLevel2 = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceThree.js");
-
-			var grandChildMap = CreateSourceMap(
-				file: "sourceTwo.js",
-				sources: new List<string>() { "sourceThree.js" },
-				parsedMappings: new List<MappingEntry> { mapLevel2 });
-
-			var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
-			var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
-			var mapLevel1 = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceTwo.js");
-
-			var childMap = CreateSourceMap(
-				file: "sourceOne.js",
-				sources: new List<string>() { "sourceTwo.js" },
-				parsedMappings: new List<MappingEntry> { mapLevel1 });
-
-			var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 5, colNumber: 5);
-			var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
-			var mapLevel0 = UnitTestUtils.GetSimpleEntry(generated3, original3, "sourceOne.js");
-
-			var parentMap = CreateSourceMap(
-				file: "generated.js",
-				sources: new List<string>() { "sourceOne.js" },
-				parsedMappings: new List<MappingEntry> { mapLevel0 });
-
-			// Act
-			var firstCombinedMap = parentMap.ApplySourceMap(childMap);
-
-			// Assert
-			Assert.NotNull(firstCombinedMap);
-			var secondCombinedMap = firstCombinedMap.ApplySourceMap(grandChildMap);
-			Assert.NotNull(secondCombinedMap);
-			var rootMapping = secondCombinedMap.GetMappingEntryForGeneratedSourcePosition(generated3)!;
-			Assert.AreEqual(0, rootMapping.Value.OriginalSourcePosition!.CompareTo(mapLevel2.OriginalSourcePosition!));
-		}
-
-		private static SourceMap CreateSourceMap(
-			int version = default,
-			string? file = default,
-			string? mappings = default,
-			IReadOnlyList<string>? sources = default,
-			IReadOnlyList<string>? names = default,
-			IReadOnlyList<MappingEntry>? parsedMappings = default,
-			IReadOnlyList<string>? sourcesContent = default) => new(
-				version: version,
-				file: file,
-				mappings: mappings,
-				sources: sources,
-				names: names,
-				parsedMappings: parsedMappings ?? new List<MappingEntry>(),
-				sourcesContent: sourcesContent);
+		// Asset
+		Assert.That(result, Is.Null);
 	}
+
+	[Test]
+	public void GetMappingEntryForGeneratedSourcePosition_NoMatchingEntryInMappingList_ReturnNull()
+	{
+		// Arrange
+		var parsedMappings = new List<MappingEntry>
+		{
+			new(generatedSourcePosition: new SourcePosition(0, 0))
+		};
+
+		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
+		var sourcePosition = new SourcePosition(4, 3);
+
+		// Act
+		var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
+
+		// Asset
+		Assert.That(result, Is.Null);
+	}
+
+	[Test]
+	public void GetMappingEntryForGeneratedSourcePosition_MatchingEntryInMappingList_ReturnMatchingEntry()
+	{
+		// Arrange
+		var matchingMappingEntry = new MappingEntry(
+			generatedSourcePosition: new SourcePosition(8, 13));
+		var parsedMappings = new List<MappingEntry>
+		{
+			new(generatedSourcePosition: new SourcePosition(0, 0)),
+			matchingMappingEntry
+		};
+
+		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
+		var sourcePosition = new SourcePosition(8, 13);
+
+		// Act
+		var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
+
+		// Asset
+		Assert.That(result, Is.EqualTo(matchingMappingEntry));
+	}
+
+	[Test]
+	public void GetMappingEntryForGeneratedSourcePosition_NoExactMatchHasSimilarOnSameLine_ReturnSimilarEntry()
+	{
+		// Arrange
+		var matchingMappingEntry = new MappingEntry(
+			generatedSourcePosition: new SourcePosition(10, 13));
+		var parsedMappings = new List<MappingEntry>
+		{
+			new(generatedSourcePosition: new SourcePosition(0, 0)),
+			matchingMappingEntry
+		};
+		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
+		var sourcePosition = new SourcePosition(10, 14);
+
+		// Act
+		var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
+
+		// Asset
+		Assert.That(result, Is.EqualTo(matchingMappingEntry));
+	}
+
+	[Test]
+	public void GetMappingEntryForGeneratedSourcePosition_NoExactMatchHasSimilarOnDifferentLinesLine_ReturnSimilarEntry()
+	{
+		// Arrange
+		var matchingMappingEntry = new MappingEntry(
+			generatedSourcePosition: new SourcePosition(23, 15));
+		var parsedMappings = new List<MappingEntry>
+		{
+			new(generatedSourcePosition: new SourcePosition(0, 0)),
+			matchingMappingEntry
+		};
+		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
+		var sourcePosition = new SourcePosition(24, 0);
+
+		// Act
+		var result = sourceMap.GetMappingEntryForGeneratedSourcePosition(sourcePosition);
+
+		// Asset
+		Assert.That(result, Is.EqualTo(matchingMappingEntry));
+	}
+
+	[Test]
+	public void GetRootMappingEntryForGeneratedSourcePosition_NoChildren_ReturnsSameEntry()
+	{
+		// Arrange
+		var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
+		var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 5);
+		var mappingEntry = UnitTestUtils.GetSimpleEntry(generated1, original1, "generated.js");
+
+		var sourceMap = CreateSourceMap(
+			sources: new List<string>() { "generated.js" },
+			parsedMappings: new List<MappingEntry> { mappingEntry });
+
+		// Act
+		var rootEntry = sourceMap.GetMappingEntryForGeneratedSourcePosition(generated1);
+
+		// Assert
+		Assert.That(mappingEntry, Is.EqualTo(rootEntry));
+	}
+
+	[Test]
+	public void ApplyMap_NoMatchingSources_ReturnsSameMap()
+	{
+		// Arrange
+		var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
+		var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 2);
+		var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "someOtherSource.js");
+
+		var childMap = CreateSourceMap(
+			file: "notSourceOne.js",
+			sources: new List<string>() { "someOtherSource.js" },
+			parsedMappings: new List<MappingEntry> { childMapping });
+
+		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 7);
+		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
+		var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
+
+		var parentMap = CreateSourceMap(
+			file: "generated.js",
+			sources: new List<string>() { "sourceOne.js" },
+			parsedMappings: new List<MappingEntry> { parentMapping });
+
+		// Act
+		var combinedMap = parentMap.ApplySourceMap(childMap);
+
+		// Assert
+		Assert.That(combinedMap, Is.Not.Null);
+		Assert.That(combinedMap.ParsedMappings, Is.Not.Null);
+		Assert.That(combinedMap.ParsedMappings, Has.Count.GreaterThan(0));
+		var firstMapping = combinedMap.ParsedMappings[0];
+		Assert.That(firstMapping.IsValueEqual(parentMapping), Is.True);
+	}
+
+	[Test]
+	public void ApplyMap_NoMatchingMappings_ReturnsSameMap()
+	{
+		// Arrange
+		var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 2);
+		var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 10);
+		var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
+
+		var childMap = CreateSourceMap(
+			file: "sourceOne.js",
+			sources: new List<string>() { "sourceTwo.js" },
+			parsedMappings: new List<MappingEntry> { childMapping });
+
+		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 4);
+		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
+		var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
+
+		var parentMap = CreateSourceMap(
+			file: "generated.js",
+			sources: new List<string>() { "sourceOne.js" },
+			parsedMappings: new List<MappingEntry> { parentMapping });
+
+		// Act
+		var combinedMap = parentMap.ApplySourceMap(childMap);
+
+		// Assert
+		Assert.That(combinedMap, Is.Not.Null);
+		Assert.That(combinedMap.ParsedMappings, Is.Not.Null);
+		Assert.That(combinedMap.ParsedMappings, Has.Count.GreaterThan(0));
+		var firstMapping = combinedMap.ParsedMappings[0];
+		Assert.That(firstMapping.IsValueEqual(parentMapping), Is.True);
+	}
+
+	[Test]
+	public void ApplyMap_MatchingSources_ReturnsCorrectMap()
+	{
+		// Expect mapping with same source filename as the applied source-map to be replaced
+
+		// Arrange
+		var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
+		var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 3);
+		var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
+
+		var childMap = CreateSourceMap(
+			file: "sourceOne.js",
+			sources: new List<string>() { "sourceTwo.js" },
+			parsedMappings: new List<MappingEntry> { childMapping });
+
+		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
+		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
+		var parentMapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
+
+		var parentMap = CreateSourceMap(
+			file: "generated.js",
+			sources: new List<string>() { "sourceOne.js" },
+			parsedMappings: new List<MappingEntry> { parentMapping });
+
+		// Act
+		var combinedMap = parentMap.ApplySourceMap(childMap);
+
+		// Assert
+		Assert.That(combinedMap, Is.Not.Null);
+		Assert.Multiple(() =>
+		{
+			Assert.That(combinedMap.ParsedMappings, Has.Count.EqualTo(1));
+			Assert.That(combinedMap.Sources?.Count, Is.EqualTo(1));
+		});
+		var rootMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2);
+		Assert.That(rootMapping, Is.Not.Null);
+		Assert.That(rootMapping.Value.OriginalSourcePosition.CompareTo(childMapping.OriginalSourcePosition), Is.EqualTo(0));
+	}
+
+	[Test]
+	public void ApplyMap_PartialMatchingSources_ReturnsCorrectMap()
+	{
+		// Expect mappings with same source filename as the applied source-map to be replaced
+		// mappings with a different source filename should stay the same
+
+		// Arrange
+		var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
+		var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 1, colNumber: 5);
+		var childMapping = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceTwo.js");
+
+		var childMap = CreateSourceMap(
+			file: "sourceOne.js",
+			sources: new List<string>() { "sourceTwo.js" },
+			parsedMappings: new List<MappingEntry> { childMapping });
+
+		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
+		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
+		var mapping = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceOne.js");
+
+		var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
+		var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
+		var mapping2 = UnitTestUtils.GetSimpleEntry(generated3, original3, "noMapForThis.js");
+
+		var parentMap = CreateSourceMap(
+			file: "generated.js",
+			sources: new List<string> { "sourceOne.js", "noMapForThis.js" },
+			parsedMappings: new List<MappingEntry> { mapping, mapping2 });
+
+		// Act
+		var combinedMap = parentMap.ApplySourceMap(childMap);
+
+		// Assert
+		Assert.That(combinedMap, Is.Not.Null);
+		Assert.Multiple(() =>
+		{
+			Assert.That(combinedMap.ParsedMappings, Has.Count.EqualTo(2));
+			Assert.That(combinedMap.Sources, Has.Count.EqualTo(2));
+		});
+		var firstCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated3);
+		Assert.That(firstCombinedMapping, Is.Not.Null);
+		Assert.That(firstCombinedMapping.Value.IsValueEqual(mapping2), Is.True);
+		var secondCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2);
+		Assert.That(secondCombinedMapping, Is.Not.Null);
+		Assert.That(secondCombinedMapping.Value.OriginalSourcePosition.CompareTo(childMapping.OriginalSourcePosition), Is.EqualTo(0));
+	}
+
+	[Test]
+	public void ApplyMap_ExactMatchDeep_ReturnsCorrectMappingEntry()
+	{
+		// Arrange
+		var generated1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
+		var original1 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
+		var mapLevel2 = UnitTestUtils.GetSimpleEntry(generated1, original1, "sourceThree.js");
+
+		var grandChildMap = CreateSourceMap(
+			file: "sourceTwo.js",
+			sources: new List<string>() { "sourceThree.js" },
+			parsedMappings: new List<MappingEntry> { mapLevel2 });
+
+		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
+		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
+		var mapLevel1 = UnitTestUtils.GetSimpleEntry(generated2, original2, "sourceTwo.js");
+
+		var childMap = CreateSourceMap(
+			file: "sourceOne.js",
+			sources: new List<string>() { "sourceTwo.js" },
+			parsedMappings: new List<MappingEntry> { mapLevel1 });
+
+		var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 5, colNumber: 5);
+		var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
+		var mapLevel0 = UnitTestUtils.GetSimpleEntry(generated3, original3, "sourceOne.js");
+
+		var parentMap = CreateSourceMap(
+			file: "generated.js",
+			sources: new List<string>() { "sourceOne.js" },
+			parsedMappings: new List<MappingEntry> { mapLevel0 });
+
+		// Act
+		var firstCombinedMap = parentMap.ApplySourceMap(childMap);
+
+		// Assert
+		Assert.That(firstCombinedMap, Is.Not.Null);
+		var secondCombinedMap = firstCombinedMap.ApplySourceMap(grandChildMap);
+		Assert.That(secondCombinedMap, Is.Not.Null);
+		var rootMapping = secondCombinedMap.GetMappingEntryForGeneratedSourcePosition(generated3);
+		Assert.That(rootMapping, Is.Not.Null);
+		Assert.That(rootMapping.Value.OriginalSourcePosition.CompareTo(mapLevel2.OriginalSourcePosition), Is.EqualTo(0));
+	}
+
+	private static SourceMap CreateSourceMap(
+		int version = default,
+		string? file = default,
+		string? mappings = default,
+		IReadOnlyList<string>? sources = default,
+		IReadOnlyList<string>? names = default,
+		IReadOnlyList<MappingEntry>? parsedMappings = default,
+		IReadOnlyList<string>? sourcesContent = default) => new(
+			version: version,
+			file: file,
+			mappings: mappings,
+			sources: sources,
+			names: names,
+			parsedMappings: parsedMappings ?? new List<MappingEntry>(),
+			sourcesContent: sourcesContent);
 }

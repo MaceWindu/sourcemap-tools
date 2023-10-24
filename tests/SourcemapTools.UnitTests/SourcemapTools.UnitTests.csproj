@@ -1,29 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\Shared.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net48;net6.0;net7.0;net8.0</TargetFrameworks>
 		<NoWarn>1591</NoWarn>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="NUnit3TestAdapter" />
 		<PackageReference Include="NUnit" />
-		<PackageReference Include="Moq" />
+		<PackageReference Include="NUnit.Analyzers" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\SourceMapTools\SourcemapTools.csproj" />
+		<ProjectReference Include="..\..\src\SourceMapTools\SourcemapTools.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="webpackapp\bundle.ffe51781aee314a37903.min.js">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="webpackapp\bundle.ffe51781aee314a37903.min.js.map">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Update="webpackapp\bundle.ffe51781aee314a37903.min.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="webpackapp\bundle.ffe51781aee314a37903.min.js.map">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>
