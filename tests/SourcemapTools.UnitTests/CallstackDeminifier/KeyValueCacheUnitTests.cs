@@ -1,81 +1,117 @@
-﻿using System;
-using Moq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using SourcemapTools.CallstackDeminifier.Internal;
 
-namespace SourcemapToolkit.CallstackDeminifier.UnitTests
+namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
+
+public class KeyValueCacheUnitTests
 {
-
-	public class KeyValueCacheUnitTests
+	[Test]
+	public void GetValue_KeyNotInCache_CallValueGetter()
 	{
-		[Test]
-		public void GetValue_KeyNotInCache_CallValueGetter()
+		// Arrange
+		static string? valueGetter(string x)
 		{
-			// Arrange
-			var valueGetter = new Mock<Func<string, string>>();
-			valueGetter.Setup(x => x("bar")).Returns("foo");
-			var keyValueCache = new KeyValueCache<string, string>(valueGetter.Object);
-
-			// Act
-			var result = keyValueCache.GetValue("bar");
-
-			// Assert
-			Assert.AreEqual("foo", result);
-
+			return x == "bar" ? "foo" : null;
 		}
 
-		[Test]
-		public void GetValue_CallGetTwice_OnlyCallValueGetterOnce()
+		var keyValueCache = new KeyValueCache<string, string>(valueGetter);
+
+		// Act
+		var result = keyValueCache.GetValue("bar");
+
+		// Assert
+		Assert.That(result, Is.EqualTo("foo"));
+	}
+
+	[Test]
+	public void GetValue_CallGetTwice_OnlyCallValueGetterOnce()
+	{
+		// Arrange
+		var cnt = 0;
+		string? valueGetter(string x)
 		{
-			// Arrange
-			var valueGetter = new Mock<Func<string, string>>();
-			valueGetter.Setup(x => x("bar")).Returns("foo");
-			var keyValueCache = new KeyValueCache<string, string>(valueGetter.Object);
-			keyValueCache.GetValue("bar"); // Place the value in the cache
+			if (x == "bar")
+			{
+				cnt++;
+				return "foo";
+			}
 
-			// Act
-			var result = keyValueCache.GetValue("bar");
-
-			// Assert
-			Assert.AreEqual("foo", result);
-			valueGetter.Verify(x => x("bar"), Times.Once());
+			return null;
 		}
 
-		[Test]
-		public void GetValue_CallGetTwiceValueGetterReturnsNull_CallGetterTwice()
+		var keyValueCache = new KeyValueCache<string, string>(valueGetter);
+		keyValueCache.GetValue("bar"); // Place the value in the cache
+
+		// Act
+		var result = keyValueCache.GetValue("bar");
+
+		Assert.Multiple(() =>
 		{
-			// Arrange
-			var valueGetter = new Mock<Func<string, string>>();
-			valueGetter.Setup(x => x("bar")).Returns<string>(null!);
-			var keyValueCache = new KeyValueCache<string, string>(valueGetter.Object);
-			keyValueCache.GetValue("bar"); // Place null in the cache
-
-			// Act
-			var result = keyValueCache.GetValue("bar");
-
 			// Assert
-			Assert.Null(result);
-			valueGetter.Verify(x => x("bar"), Times.Exactly(2));
-		}
+			Assert.That(result, Is.EqualTo("foo"));
+			Assert.That(cnt, Is.EqualTo(1));
+		});
+	}
 
-		[Test]
-		public void GetValue_CallGetMultipleTimesFirstGetterReturnsNull_CacheFirstNonNullValue()
+	[Test]
+	public void GetValue_CallGetTwiceValueGetterReturnsNull_CallGetterTwice()
+	{
+		// Arrange
+		var cnt = 0;
+		string? valueGetter(string x)
 		{
-			// Arrange
-			var valueGetter = new Mock<Func<string, string>>();
-			valueGetter.Setup(x => x("bar")).Returns<string>(null!);
-			var keyValueCache = new KeyValueCache<string, string>(valueGetter.Object);
-			keyValueCache.GetValue("bar"); // Place null in the cache
-			valueGetter.Verify(x => x("bar"), Times.Once());
+			if (x == "bar")
+			{
+				cnt++;
+			}
 
-			valueGetter.Setup(x => x("bar")).Returns("foo");
-			keyValueCache.GetValue("bar"); // Place a non null value in the cahce
-
-			// Act
-			var result = keyValueCache.GetValue("bar");
-
-			// Assert
-			Assert.AreEqual("foo", result);
-			valueGetter.Verify(x => x("bar"), Times.Exactly(2));
+			return null;
 		}
+		var keyValueCache = new KeyValueCache<string, string>(valueGetter);
+		keyValueCache.GetValue("bar"); // Place null in the cache
+
+		// Act
+		var result = keyValueCache.GetValue("bar");
+
+		Assert.Multiple(() =>
+		{
+			// Assert
+			Assert.That(result, Is.Null);
+			Assert.That(cnt, Is.EqualTo(2));
+		});
+	}
+
+	[Test]
+	public void GetValue_CallGetMultipleTimesFirstGetterReturnsNull_CacheFirstNonNullValue()
+	{
+		// Arrange
+		var cnt = 0;
+		string? returnValue = null;
+		string? valueGetter(string x)
+		{
+			if (x == "bar")
+			{
+				cnt++;
+				return returnValue;
+			}
+
+			return null;
+		}
+		var keyValueCache = new KeyValueCache<string, string>(valueGetter);
+		keyValueCache.GetValue("bar"); // Place null in the cache
+		Assert.That(cnt, Is.EqualTo(1));
+
+		returnValue = "foo";
+		keyValueCache.GetValue("bar"); // Place a non null value in the cache
+
+		// Act
+		var result = keyValueCache.GetValue("bar");
+
+		Assert.Multiple(() =>
+		{
+			// Assert
+			Assert.That(result, Is.EqualTo("foo"));
+			Assert.That(cnt, Is.EqualTo(2));
+		});
 	}
 }

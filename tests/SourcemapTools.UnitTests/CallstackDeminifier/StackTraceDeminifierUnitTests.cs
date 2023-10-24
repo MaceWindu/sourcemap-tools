@@ -1,55 +1,52 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace SourcemapToolkit.CallstackDeminifier.UnitTests
+namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
+
+public class StackTraceDeminifierUnitTests
 {
-
-	public class StackTraceDeminifierUnitTests
+	[Test]
+	public void DeminifyStackTrace_UnableToParseStackTraceString_ReturnsEmptyList([Values] bool preferSourceMapsSymbols)
 	{
-		[Test]
-		public void DeminifyStackTrace_UnableToParseStackTraceString_ReturnsEmptyList([Values] bool preferSourceMapsSymbols)
+		// Arrange
+		var stackTraceString = "foobar";
+		var stackTraceParser = new IStackTraceParserMock(x => x == stackTraceString ? new List<StackFrame>() : throw new InvalidOperationException());
+
+		var stackFrameDeminifier = new IStackFrameDeminifierMock((_, _, _) => throw new NotImplementedException());
+
+		var stackTraceDeminifier = new StackTraceDeminifier(stackFrameDeminifier, stackTraceParser);
+
+		// Act
+		var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
+
+		// Assert
+		Assert.That(result.DeminifiedStackFrameResults, Is.Empty);
+	}
+
+	[Test]
+	public void DeminifyStackTrace_AbleToDeminifyStackTrace_ResultContainsDeminifiedFrame([Values] bool preferSourceMapsSymbols)
+	{
+		// Arrange
+		var minifiedStackFrames = new List<StackFrame> { new(null) };
+		var stackTraceString = "foobar";
+		var stackTraceParser = new IStackTraceParserMock(x => x == stackTraceString ? minifiedStackFrames : throw new InvalidOperationException());
+
+		var stackFrameDeminification = new StackFrameDeminificationResult(default, new StackFrame(null));
+		var stackFrameDeminifier = new IStackFrameDeminifierMock((x, y, z) =>
+			x == minifiedStackFrames[0] && y == null && z == preferSourceMapsSymbols ? stackFrameDeminification : throw new InvalidOperationException());
+
+		var stackTraceDeminifier = new StackTraceDeminifier(stackFrameDeminifier, stackTraceParser);
+
+		// Act
+		var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
+
+		Assert.Multiple(() =>
 		{
-			// Arrange
-			var stackTraceParser = new Mock<IStackTraceParser>();
-			var stackTraceString = "foobar";
-			var message = "Error example";
-			stackTraceParser.Setup(x => x.ParseStackTrace(stackTraceString, out message)).Returns(new List<StackFrame>());
-
-			var stackFrameDeminifier = new Mock<IStackFrameDeminifier>().Object;
-
-			var stackTraceDeminifier = new StackTraceDeminifier(stackFrameDeminifier, stackTraceParser.Object);
-
-			// Act
-			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
-
 			// Assert
-			Assert.AreEqual(0, result.DeminifiedStackFrameResults.Count);
-		}
-
-		[Test]
-		public void DeminifyStackTrace_AbleToDeminifyStackTrace_ResultContainsDeminifiedFrame([Values] bool preferSourceMapsSymbols)
-		{
-			// Arrange
-			var stackTraceParser = new Mock<IStackTraceParser>();
-			var minifiedStackFrames = new List<StackFrame> { new StackFrame(null) };
-			var stackTraceString = "foobar";
-			var message = "Error example";
-			stackTraceParser.Setup(x => x.ParseStackTrace(stackTraceString, out message)).Returns(minifiedStackFrames);
-
-			var stackFrameDeminifier = new Mock<IStackFrameDeminifier>();
-			var stackFrameDeminification = new StackFrameDeminificationResult(default, null!);
-			stackFrameDeminifier.Setup(x => x.DeminifyStackFrame(minifiedStackFrames[0], null, preferSourceMapsSymbols)).Returns(stackFrameDeminification);
-
-			var stackTraceDeminifier = new StackTraceDeminifier(stackFrameDeminifier.Object, stackTraceParser.Object);
-
-			// Act
-			var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
-
-			// Assert
-			Assert.AreEqual(1, result.DeminifiedStackFrameResults.Count);
-			Assert.AreEqual(minifiedStackFrames[0], result.MinifiedStackFrames[0]);
-			Assert.AreEqual(stackFrameDeminification, result.DeminifiedStackFrameResults[0]);
-		}
+			Assert.That(result.DeminifiedStackFrameResults, Has.Count.EqualTo(1));
+			Assert.That(result.MinifiedStackFrames[0], Is.EqualTo(minifiedStackFrames[0]));
+			Assert.That(result.DeminifiedStackFrameResults[0], Is.EqualTo(stackFrameDeminification));
+		});
 	}
 }

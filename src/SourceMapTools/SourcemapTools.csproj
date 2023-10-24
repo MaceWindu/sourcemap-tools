@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\Shared.props" />
 
 	<PropertyGroup>
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SourcemapTools.xml</DocumentationFile>
@@ -9,10 +8,13 @@
 		<PackageReference Include="esprima" />
 		<PackageReference Include="System.Text.Json" />
 
+		<PackageReference Include="PolySharp" />
+
 		<PackageReference Include="Microsoft.SourceLink.GitHub">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
+
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">

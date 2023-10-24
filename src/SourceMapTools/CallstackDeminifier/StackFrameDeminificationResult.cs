@@ -1,31 +1,24 @@
-﻿namespace SourcemapToolkit.CallstackDeminifier
+﻿namespace SourcemapToolkit.CallstackDeminifier;
+
+/// <summary>
+/// Represents the result of attempting to deminify a single entry in a JavaScript stack frame.
+/// </summary>
+public sealed class StackFrameDeminificationResult(
+	DeminificationError deminificationError,
+	StackFrame deminifiedStackFrame)
 {
 	/// <summary>
-	/// Represents the result of attmpting to deminify a single entry in a JavaScript stack frame. 
+	/// The deminified StackFrame.
 	/// </summary>
-	public sealed class StackFrameDeminificationResult
-	{
-		internal StackFrameDeminificationResult(
-			DeminificationError deminificationError,
-			StackFrame deminifiedStackFrame)
-		{
-			DeminificationError = deminificationError;
-			DeminifiedStackFrame = deminifiedStackFrame;
-		}
+	public StackFrame DeminifiedStackFrame { get; } = deminifiedStackFrame;
 
-		/// <summary>
-		/// The deminified StackFrame.
-		/// </summary>
-		public StackFrame DeminifiedStackFrame { get; }
+	/// <summary>
+	/// The original name of the symbol at this frame's position.
+	/// </summary>
+	public string? DeminifiedSymbolName { get; internal set; }
 
-		/// <summary>
-		/// The original name of the symbol at this frame's position
-		/// </summary>
-		public string? DeminifiedSymbolName { get; internal set; }
-
-		/// <summary>
-		/// An enum indicating if any errors occured when deminifying the stack frame.
-		/// </summary>
-		public DeminificationError DeminificationError { get; internal set; }
-	}
+	/// <summary>
+	/// An enum indicating if any errors occurred when deminifying the stack frame.
+	/// </summary>
+	public DeminificationError DeminificationError { get; internal set; } = deminificationError;
 }
