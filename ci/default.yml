@@ -46,115 +46,29 @@ stages:
         arguments: -path $(Build.SourcesDirectory)/Directory.Build.props -version $(assemblyVersion)
       displayName: Update assembly version
 
-    - task: MSBuild@1
-      inputs:
-        solution: '$(solution)'
-        configuration: '$(build_configuration)'
-        msbuildArguments: '/t:Restore;Rebuild -m /p:ContinuousIntegrationBuild=true'
-      displayName: Build solution
-
     - task: DotNetCoreCLI@2
       inputs:
-        command: 'publish'
-        projects: '$(Build.SourcesDirectory)/tests/SourcemapTools.UnitTests/SourcemapTools.UnitTests.csproj'
-        publishWebProjects: false
-        zipAfterPublish: false
-        arguments: -f net6.0 -c $(build_configuration)
-        nobuild: true
-      displayName: Publish test project for .NET 6
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '-property:ContinuousIntegrationBuild=true --configuration $(build_configuration)'
+      displayName: Build Solution
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'publish'
-        projects: '$(Build.SourcesDirectory)/tests/SourcemapTools.UnitTests/SourcemapTools.UnitTests.csproj'
-        publishWebProjects: false
-        zipAfterPublish: false
-        arguments: -f net7.0 -c $(build_configuration)
-        nobuild: true
-      displayName: Publish test project for .NET 7
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'publish'
-        projects: '$(Build.SourcesDirectory)/tests/SourcemapTools.UnitTests/SourcemapTools.UnitTests.csproj'
-        publishWebProjects: false
-        zipAfterPublish: false
-        arguments: -f net8.0 -c $(build_configuration)
-        nobuild: true
-      displayName: Publish test project for .NET 8
 ########
 # TEST #
 ########
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\net48\SourcemapTools.UnitTests.dll /Framework:net48 /logger:trx
-      displayName: 'Tests: .NET FX 4.8'
 
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: VsTest
-        testResultsFiles: '**/*.trx'
-        testRunTitle: 'NETFX 4.8'
-      displayName: 'Publish test results'
-      condition: succeededOrFailed()
-
-    - task: DeleteFiles@1
-      inputs:
-        contents: '**/*.trx'
-      displayName: 'Cleanup'
-      condition: succeededOrFailed()
-
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\net6.0\SourcemapTools.UnitTests.dll /Framework:net6.0 /logger:trx
-      displayName: 'Tests: .NET 6'
+    - script: dotnet test $(Build.SourcesDirectory)\$(solution) -c $(build_configuration) -l trx
+      displayName: 'Run Tests'
       condition: succeededOrFailed()
 
     - task: PublishTestResults@2
       inputs:
         testRunner: VsTest
         testResultsFiles: '**/*.trx'
-        testRunTitle: '.NET 6'
+        testRunTitle: 'Tests'
       displayName: 'Publish test results'
       condition: succeededOrFailed()
 
-    - task: DeleteFiles@1
-      inputs:
-        contents: '**/*.trx'
-      displayName: 'Cleanup'
-      condition: succeededOrFailed()
-
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\net7.0\SourcemapTools.UnitTests.dll /Framework:net7.0 /logger:trx
-      displayName: 'Tests: .NET 7'
-      condition: succeededOrFailed()
-
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: VsTest
-        testResultsFiles: '**/*.trx'
-        testRunTitle: '.NET 7'
-      displayName: 'Publish test results'
-      condition: succeededOrFailed()
-
-    - task: DeleteFiles@1
-      inputs:
-        contents: '**/*.trx'
-      displayName: 'Cleanup'
-      condition: succeededOrFailed()
-
-    - script: dotnet test $(Build.SourcesDirectory)\tests\SourcemapTools.UnitTests\bin\Release\net8.0\SourcemapTools.UnitTests.dll /Framework:net8.0 /logger:trx
-      displayName: 'Tests: .NET 8'
-      condition: succeededOrFailed()
-
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: VsTest
-        testResultsFiles: '**/*.trx'
-        testRunTitle: '.NET 8'
-      displayName: 'Publish test results'
-      condition: succeededOrFailed()
-
-    - task: DeleteFiles@1
-      inputs:
-        contents: '**/*.trx'
-      displayName: 'Cleanup'
-      condition: succeededOrFailed()
 #################
 # PUBLISH NUGET #
 #################
