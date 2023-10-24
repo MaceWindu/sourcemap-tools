@@ -10,8 +10,8 @@ This is a fork of [microsoft/sourcemap-toolkit](https://github.com/microsoft/sou
 - lack of support for ES6+: [#66](https://github.com/microsoft/sourcemap-toolkit/issues/66)
 
 ## Source Map Parsing
-The `SourcemapTools.dll` provides an API for parsing a souce map into an object that is easy to work with and an API for serializing source map object back to json string. 
-The source map class has a method `GetMappingEntryForGeneratedSourcePosition`, which can be used to find a source map mapping entry that likely corresponds to a piece of generated code. 
+The `SourcemapTools.dll` provides an API for parsing a source map into an object that is easy to work with and an API for serializing source map object back to json string.
+The source map class has a method `GetMappingEntryForGeneratedSourcePosition`, which can be used to find a source map mapping entry that likely corresponds to a piece of generated code.
 
 ### Usage
 The top level API for source map parsing is the `SourceMapParser.ParseSourceMap` method. The input is a `Stream` that can be used to access the contents of the source map.
@@ -64,7 +64,7 @@ var minifiedToOriginal = minifiedToBundled.ApplySourceMap(bundledToOriginal);
 ```
 
 ## Call Stack Deminification
-The `SourcemapToolkit.dll` allows for the deminification of JavaScript call stacks. 
+The `SourcemapToolkit.dll` allows for the deminification of JavaScript call stacks.
 ### Example
 #### Call stack string
 ```
@@ -98,16 +98,16 @@ var deminifyStackTraceResult     = sourceMapCallstackDeminifier.DeminifyStackTra
 var deminifiedCallstack          = deminifyStackTraceResult.ToString();
 ```
 
-The result of `DeminifyStackTrace` is a `DeminifyStackTraceResult`, which is an object that contains a list of `StackFrameDeminificationResults` which contains the parsed minified `StackFrame` objects in the `MinifiedStackFrame` property and an enum indicating if any errors occured when attempting to deminify the `StackFrame`. The `DeminifiedStackFrame` property contains the best guess `StackFrame` object that maps to the `MinifiedStackFrame` element with the same index. Note that any of the properties on a `StackTrace` object may be null if no value could be extracted from the input callstack string or source map.
+The result of `DeminifyStackTrace` is a `DeminifyStackTraceResult`, which is an object that contains a list of `StackFrameDeminificationResults` which contains the parsed minified `StackFrame` objects in the `MinifiedStackFrame` property and an enum indicating if any errors occurred when attempting to deminify the `StackFrame`. The `DeminifiedStackFrame` property contains the best guess `StackFrame` object that maps to the `MinifiedStackFrame` element with the same index. Note that any of the properties on a `StackTrace` object may be null if no value could be extracted from the input callstack string or source map.
 
 #### Memory Consumption
-Parsed soure maps can take up a lot of memory for large JavaScript files. In order to allow for the `StackTraceDeminifier` to be used on servers with limited memory resources, the `StackTraceDeminfierFactory` exposes a `GetMethodNameOnlyStackTraceDeminfier` method that returns a `StackTraceDeminifier` that does not keep source maps in memory. Since the `StackTraceDeminifier` returned from this method only reads the source map once, the deminified stack frames will only contain the deminified method name and will not contain the original source location. 
+Parsed source maps can take up a lot of memory for large JavaScript files. In order to allow for the `StackTraceDeminifier` to be used on servers with limited memory resources, the `StackTraceDeminfierFactory` exposes a `GetMethodNameOnlyStackTraceDeminfier` method that returns a `StackTraceDeminifier` that does not keep source maps in memory. Since the `StackTraceDeminifier` returned from this method only reads the source map once, the deminified stack frames will only contain the deminified method name and will not contain the original source location.
 
 ## Remarks
 Browsers return one based line and column numbers, while the source map spec calls for zero based line and column numbers. In order to minimize confusion, line and column numbers are normalized to be zero based throughout the library.
 
 ## Acknowledgements
-The Base64 VLQ decoding code was based on the implmentation in the [Closure Compiler](https://github.com/google/closure-compiler/blob/master/src/com/google/debugging/sourcemap/Base64VLQ.java) which is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+The Base64 VLQ decoding code was based on the implementation in the [Closure Compiler](https://github.com/google/closure-compiler/blob/master/src/com/google/debugging/sourcemap/Base64VLQ.java) which is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 The source map parsing implementation and the relevant comments were based on the [Source Maps V3 spec](https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/mobilebasic?pref=2&pli=1) which is licensed under a [Creative Commons Attribution-ShareAlike 3.0 Unported License](https://creativecommons.org/licenses/by-sa/3.0/).
 

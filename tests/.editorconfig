@@ -1,2 +1,4 @@
 [*.cs]
+dotnet_diagnostic.CA1307.severity = none # CA1307: Use string.Contains(char)
 dotnet_diagnostic.CA1707.severity = none # CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1847.severity = none # CA1847: Use string.Contains(char)
