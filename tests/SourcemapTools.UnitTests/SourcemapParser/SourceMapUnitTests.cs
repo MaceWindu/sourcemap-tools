@@ -111,8 +111,8 @@ public class SourceMapUnitTests
 		var mappingEntry = UnitTestUtils.GetSimpleEntry(generated1, original1, "generated.js");
 
 		var sourceMap = CreateSourceMap(
-			sources: new List<string>() { "generated.js" },
-			parsedMappings: new List<MappingEntry> { mappingEntry });
+			sources: ["generated.js"],
+			parsedMappings: [mappingEntry]);
 
 		// Act
 		var rootEntry = sourceMap.GetMappingEntryForGeneratedSourcePosition(generated1);
@@ -131,8 +131,8 @@ public class SourceMapUnitTests
 
 		var childMap = CreateSourceMap(
 			file: "notSourceOne.js",
-			sources: new List<string>() { "someOtherSource.js" },
-			parsedMappings: new List<MappingEntry> { childMapping });
+			sources: ["someOtherSource.js"],
+			parsedMappings: [childMapping]);
 
 		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 7);
 		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 3);
@@ -140,8 +140,8 @@ public class SourceMapUnitTests
 
 		var parentMap = CreateSourceMap(
 			file: "generated.js",
-			sources: new List<string>() { "sourceOne.js" },
-			parsedMappings: new List<MappingEntry> { parentMapping });
+			sources: ["sourceOne.js"],
+			parsedMappings: [parentMapping]);
 
 		// Act
 		var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -164,8 +164,8 @@ public class SourceMapUnitTests
 
 		var childMap = CreateSourceMap(
 			file: "sourceOne.js",
-			sources: new List<string>() { "sourceTwo.js" },
-			parsedMappings: new List<MappingEntry> { childMapping });
+			sources: ["sourceTwo.js"],
+			parsedMappings: [childMapping]);
 
 		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 4);
 		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 5);
@@ -173,8 +173,8 @@ public class SourceMapUnitTests
 
 		var parentMap = CreateSourceMap(
 			file: "generated.js",
-			sources: new List<string>() { "sourceOne.js" },
-			parsedMappings: new List<MappingEntry> { parentMapping });
+			sources: ["sourceOne.js"],
+			parsedMappings: [parentMapping]);
 
 		// Act
 		var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -199,8 +199,8 @@ public class SourceMapUnitTests
 
 		var childMap = CreateSourceMap(
 			file: "sourceOne.js",
-			sources: new List<string>() { "sourceTwo.js" },
-			parsedMappings: new List<MappingEntry> { childMapping });
+			sources: ["sourceTwo.js"],
+			parsedMappings: [childMapping]);
 
 		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
 		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 4);
@@ -208,8 +208,8 @@ public class SourceMapUnitTests
 
 		var parentMap = CreateSourceMap(
 			file: "generated.js",
-			sources: new List<string>() { "sourceOne.js" },
-			parsedMappings: new List<MappingEntry> { parentMapping });
+			sources: ["sourceOne.js"],
+			parsedMappings: [parentMapping]);
 
 		// Act
 		var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -239,8 +239,8 @@ public class SourceMapUnitTests
 
 		var childMap = CreateSourceMap(
 			file: "sourceOne.js",
-			sources: new List<string>() { "sourceTwo.js" },
-			parsedMappings: new List<MappingEntry> { childMapping });
+			sources: ["sourceTwo.js"],
+			parsedMappings: [childMapping]);
 
 		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 2);
 		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 2, colNumber: 10);
@@ -252,8 +252,8 @@ public class SourceMapUnitTests
 
 		var parentMap = CreateSourceMap(
 			file: "generated.js",
-			sources: new List<string> { "sourceOne.js", "noMapForThis.js" },
-			parsedMappings: new List<MappingEntry> { mapping, mapping2 });
+			sources: ["sourceOne.js", "noMapForThis.js"],
+			parsedMappings: [mapping, mapping2]);
 
 		// Act
 		var combinedMap = parentMap.ApplySourceMap(childMap);
@@ -283,8 +283,8 @@ public class SourceMapUnitTests
 
 		var grandChildMap = CreateSourceMap(
 			file: "sourceTwo.js",
-			sources: new List<string>() { "sourceThree.js" },
-			parsedMappings: new List<MappingEntry> { mapLevel2 });
+			sources: ["sourceThree.js"],
+			parsedMappings: [mapLevel2]);
 
 		var generated2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
 		var original2 = UnitTestUtils.GenerateSourcePosition(lineNumber: 3, colNumber: 5);
@@ -292,8 +292,8 @@ public class SourceMapUnitTests
 
 		var childMap = CreateSourceMap(
 			file: "sourceOne.js",
-			sources: new List<string>() { "sourceTwo.js" },
-			parsedMappings: new List<MappingEntry> { mapLevel1 });
+			sources: ["sourceTwo.js"],
+			parsedMappings: [mapLevel1]);
 
 		var generated3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 5, colNumber: 5);
 		var original3 = UnitTestUtils.GenerateSourcePosition(lineNumber: 4, colNumber: 3);
@@ -301,8 +301,8 @@ public class SourceMapUnitTests
 
 		var parentMap = CreateSourceMap(
 			file: "generated.js",
-			sources: new List<string>() { "sourceOne.js" },
-			parsedMappings: new List<MappingEntry> { mapLevel0 });
+			sources: ["sourceOne.js"],
+			parsedMappings: [mapLevel0]);
 
 		// Act
 		var firstCombinedMap = parentMap.ApplySourceMap(childMap);
@@ -329,6 +329,6 @@ public class SourceMapUnitTests
 			mappings: mappings,
 			sources: sources,
 			names: names,
-			parsedMappings: parsedMappings ?? new List<MappingEntry>(),
+			parsedMappings: parsedMappings ?? [],
 			sourcesContent: sourcesContent);
 }

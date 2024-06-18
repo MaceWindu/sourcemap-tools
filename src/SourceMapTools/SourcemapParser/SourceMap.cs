@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using SourcemapTools.CallstackDeminifier.Internal;
 
@@ -92,7 +91,7 @@ public class SourceMap
 	/// Creates copy fo source map.
 	/// </summary>
 	/// <returns>Returns copy of current source map object.</returns>
-	public SourceMap Clone() => new(Version, File, Mappings, Sources, Names, ParsedMappings ?? new List<MappingEntry>(), SourcesContent);
+	public SourceMap Clone() => new(Version, File, Mappings, Sources, Names, ParsedMappings ?? [], SourcesContent);
 
 	/// <summary>
 	/// Applies the mappings of a sub source map to the current source map
@@ -174,10 +173,10 @@ public class SourceMap
 			Version,
 			File,
 			null,
-			sources.ToList(),
-			names.ToList(),
-			parsedMappings ?? Array.Empty<MappingEntry>(),
-			new List<string>());
+			[.. sources],
+			[.. names],
+			parsedMappings ?? [],
+			[]);
 	}
 
 	/// <summary>

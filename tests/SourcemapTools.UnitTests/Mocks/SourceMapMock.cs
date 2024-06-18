@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
@@ -20,7 +19,7 @@ internal sealed class SourceMapMock : SourceMap
 			default /* mappings */,
 			default /* sources */,
 			default /* names */,
-			new List<MappingEntry>() /* parsedMappings */,
+			[] /* parsedMappings */,
 			default /* sourcesContent */)
 	{
 	}

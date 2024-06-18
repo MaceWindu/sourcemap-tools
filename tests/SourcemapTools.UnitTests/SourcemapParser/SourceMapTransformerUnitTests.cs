@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests;
 
@@ -21,9 +19,9 @@ public class SourceMapTransformerUnitTests
 		var map = new SourceMap
 		{
 			File = "generated.js",
-			Sources = new List<string>() { "sourceOne.js" },
-			ParsedMappings = new List<MappingEntry>() { mappingEntry },
-			SourcesContent = new List<string>() { "var a = b" }
+			Sources = ["sourceOne.js"],
+			ParsedMappings = [mappingEntry],
+			SourcesContent = ["var a = b"]
 		};
 
 		// Act
@@ -62,10 +60,10 @@ public class SourceMapTransformerUnitTests
 			version: default,
 			file: "generated.js",
 			mappings: default,
-			sources: new List<string>() { "sourceOne.js" },
+			sources: ["sourceOne.js"],
 			names: default,
-			parsedMappings: new List<MappingEntry> { mappingEntry, mappingEntry2 },
-			sourcesContent: new List<string> { "var a = b" });
+			parsedMappings: [mappingEntry, mappingEntry2],
+			sourcesContent: ["var a = b"]);
 
 		// Act
 		var linesOnlyMap = SourceMapTransformer.Flatten(map);
@@ -103,10 +101,10 @@ public class SourceMapTransformerUnitTests
 			version: default,
 			file: "generated.js",
 			mappings: default,
-			sources: new List<string>() { "sourceOne.js" },
+			sources: ["sourceOne.js"],
 			names: default,
-			parsedMappings: new List<MappingEntry> { mappingEntry, mappingEntry2 },
-			sourcesContent: new List<string> { "var a = b" });
+			parsedMappings: [mappingEntry, mappingEntry2],
+			sourcesContent: ["var a = b"]);
 
 		// Act
 		var linesOnlyMap = SourceMapTransformer.Flatten(map);
