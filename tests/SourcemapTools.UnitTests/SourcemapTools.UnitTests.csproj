@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net462;net6.0;net8.0</TargetFrameworks>
 		<NoWarn>1591</NoWarn>
 	</PropertyGroup>
 
@@ -13,14 +13,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\SourceMapTools\SourcemapTools.csproj" />
+		<ProjectReference Include="../../src/SourceMapTools/SourcemapTools.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="webpackapp\bundle.ffe51781aee314a37903.min.js">
+		<None Update="webpackapp/bundle.ffe51781aee314a37903.min.js">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="webpackapp\bundle.ffe51781aee314a37903.min.js.map">
+		<None Update="webpackapp/bundle.ffe51781aee314a37903.min.js.map">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

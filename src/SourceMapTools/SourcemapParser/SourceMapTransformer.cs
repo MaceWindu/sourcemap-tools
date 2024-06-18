@@ -50,7 +50,7 @@ public static class SourceMapTransformer
 			sourceMap.Mappings,
 			sourceMap.Sources,
 			sourceMap.Names,
-			mappingEntries ?? Array.Empty<MappingEntry>(),
+			mappingEntries ?? [],
 			sourceMap.SourcesContent);
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
@@ -39,7 +38,7 @@ public static class SourceMapGenerator
 		string? mappings = null;
 		if (sourceMap.ParsedMappings?.Count > 0)
 		{
-			var state = new MappingGenerateState(sourceMap.Names ?? new List<string>(), sourceMap.Sources ?? new List<string>());
+			var state = new MappingGenerateState(sourceMap.Names ?? [], sourceMap.Sources ?? []);
 			var output = new StringBuilder();
 
 			foreach (var entry in sourceMap.ParsedMappings)
@@ -58,7 +57,7 @@ public static class SourceMapGenerator
 			mappings,
 			sourceMap.Sources,
 			sourceMap.Names,
-			Array.Empty<MappingEntry>(),
+			[],
 			sourceMap.SourcesContent);
 
 		return JsonSerializer.Serialize(mapToSerialize,

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using NUnit.Framework;
 using SourcemapToolkit.SourcemapParser;
 using SourcemapToolkit.SourcemapParser.UnitTests;
-using NUnit.Framework;
 using SourcemapTools.CallstackDeminifier.Internal;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
@@ -420,6 +419,6 @@ public class FunctionMapGeneratorUnitTests
 			default /* mappings */,
 			default /* sources */,
 			default /* names */,
-			new List<MappingEntry>() /* parsedMappings */,
+			[] /* parsedMappings */,
 			default /* sourcesContent */);
 }
