@@ -25,9 +25,9 @@
 	<files>
 		<file src="../LICENSE.txt" />
 
-		<file src="../.build/bin/SourceMapTools/Release/**/SourcemapTools.pdb" target="lib/" />
-		<file src="../.build/bin/SourceMapTools/Release/**/SourcemapTools.xml" target="lib/" />
-		<file src="../.build/bin/SourceMapTools/Release/**/SourcemapTools.dll" target="lib/" />
-		<file src="README.md"                                                                />
+		<file src="../.build/bin/SourceMapTools/Release/netstandard2.0/SourcemapTools.pdb" target="lib/netstandard2.0" />
+		<file src="../.build/bin/SourceMapTools/Release/netstandard2.0/SourcemapTools.xml" target="lib/netstandard2.0" />
+		<file src="../.build/bin/SourceMapTools/Release/netstandard2.0/SourcemapTools.dll" target="lib/netstandard2.0" />
+		<file src="README.md"                                                                                          />
 	</files>
 </package>
