@@ -59,9 +59,9 @@ stages:
         testRunner: VsTest
         testResultsFiles: '**/*.trx'
         testRunTitle: 'Tests'
+        failTaskOnMissingResultsFile: true
       displayName: 'Publish test results'
       condition: succeededOrFailed()
-      failTaskOnMissingResultsFile: true
 
 #################
 # PUBLISH NUGET #
