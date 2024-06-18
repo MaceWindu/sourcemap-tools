@@ -47,25 +47,9 @@ stages:
         arguments: '-property:ContinuousIntegrationBuild=true --configuration $(build_configuration)'
       displayName: Build Solution
 
-########
-# TEST #
-########
-    - script: dotnet test $(Build.SourcesDirectory)/$(solution) -c $(build_configuration) -l trx
-      displayName: 'Run Tests'
-      condition: succeededOrFailed()
-
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: VsTest
-        testResultsFiles: '**/*.trx'
-        testRunTitle: 'Tests'
-        failTaskOnMissingResultsFile: true
-      displayName: 'Publish test results'
-      condition: succeededOrFailed()
-
-#################
-# PUBLISH NUGET #
-#################
+###############
+# BUILD NUGET #
+###############
     - powershell: echo "##vso[task.setvariable variable=packageVersion]$(nugetDevVersion)-rc.$(Build.BuildId)"
       condition: eq(variables['Build.SourceBranchName'], 'master')
       displayName: Update nuget version
@@ -92,6 +76,25 @@ stages:
       displayName: Build nuget for Nuget.org
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'release'))
 
+########
+# TEST #
+########
+    - script: dotnet test $(Build.SourcesDirectory)/$(solution) -c $(build_configuration) -l trx
+      displayName: 'Run Tests'
+      condition: succeededOrFailed()
+
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: VsTest
+        testResultsFiles: '**/*.trx'
+        testRunTitle: 'Tests'
+        failTaskOnMissingResultsFile: true
+      displayName: 'Publish test results'
+      condition: succeededOrFailed()
+
+#################
+# PUBLISH NUGET #
+#################
     - task: NuGetCommand@2
       inputs:
         command: 'push'
