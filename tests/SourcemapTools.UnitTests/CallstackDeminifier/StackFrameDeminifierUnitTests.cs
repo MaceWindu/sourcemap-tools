@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using SourcemapToolkit.SourcemapParser;
 using SourcemapTools.CallstackDeminifier.Internal;
@@ -192,7 +191,7 @@ public class StackFrameDeminifierUnitTests
 	}
 
 	private static FunctionMapEntry CreateFunctionMapEntry(string deminifiedMethodName) => new(
-		Array.Empty<BindingInformation>(),
+		[],
 		deminifiedMethodName,
 		default,
 		default);

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using SourcemapTools.SourcemapParser.Internal;
 
@@ -26,7 +25,7 @@ public static class SourceMapParser
 			if (result != null)
 			{
 				// Since SourceMap is immutable we need to allocate a new one and copy over all the information
-				var parsedMappings = MappingsListParser.ParseMappings(result.Mappings ?? string.Empty, result.Names ?? new List<string>(), result.Sources ?? new List<string>());
+				var parsedMappings = MappingsListParser.ParseMappings(result.Mappings ?? string.Empty, result.Names ?? [], result.Sources ?? []);
 
 				result = new SourceMap(
 					result.Version,

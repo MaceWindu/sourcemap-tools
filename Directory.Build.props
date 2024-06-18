@@ -16,7 +16,7 @@
 		<ErrorReport>prompt</ErrorReport>
 
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\..\SourceMapTools.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>../../SourceMapTools.snk</AssemblyOriginatorKeyFile>
 
 		<GenerateAssemblyCompanyAttribute>False</GenerateAssemblyCompanyAttribute>
 		<GenerateAssemblyConfigurationAttribute>False</GenerateAssemblyConfigurationAttribute>
@@ -29,6 +29,9 @@
 		<RepositoryType>git</RepositoryType>
 
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+		<ArtifactsPath>$(MSBuildThisFileDirectory).build</ArtifactsPath>
+		<ArtifactsPivots>$(Configuration)/$(TargetFramework)</ArtifactsPivots>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Code Analyzers Settings">

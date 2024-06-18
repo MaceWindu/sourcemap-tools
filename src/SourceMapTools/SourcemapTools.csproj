@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SourcemapTools.xml</DocumentationFile>
+		<DocumentationFile>$(ArtifactsPath)/bin/$(MSBuildProjectName)/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -9,12 +9,18 @@
 		<PackageReference Include="System.Text.Json" />
 
 		<PackageReference Include="PolySharp" />
+		<PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" />
+		<PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" />
 
 		<PackageReference Include="Microsoft.SourceLink.GitHub">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="PublicAPI/PublicAPI.*.txt" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">

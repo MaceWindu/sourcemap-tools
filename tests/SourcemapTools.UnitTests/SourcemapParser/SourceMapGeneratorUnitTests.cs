@@ -11,7 +11,7 @@ public class SourceMapGeneratorUnitTests
 	public void SerializeMappingEntry_DifferentLineNumber_SemicolonAdded()
 	{
 		// Arrange
-		var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
+		var state = new MappingGenerateState(["Name"], ["Source"]);
 		state.UpdateLastGeneratedPositionColumn(1);
 
 		var entry = new MappingEntry(
@@ -32,7 +32,7 @@ public class SourceMapGeneratorUnitTests
 	public void SerializeMappingEntry_NoOriginalFileName_OneSegment()
 	{
 		// Arrange
-		var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
+		var state = new MappingGenerateState(["Name"], ["Source"]);
 
 		var entry = new MappingEntry(
 			new SourcePosition(0, 10),
@@ -51,7 +51,7 @@ public class SourceMapGeneratorUnitTests
 	public void SerializeMappingEntry_WithOriginalFileNameNoOriginalName_FourSegments()
 	{
 		// Arrange
-		var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" })
+		var state = new MappingGenerateState(["Name"], ["Source"])
 		{
 			IsFirstSegment = false
 		};
@@ -74,7 +74,7 @@ public class SourceMapGeneratorUnitTests
 	public void SerializeMappingEntry_WithOriginalFileNameAndOriginalName_FiveSegments()
 	{
 		// Arrange
-		var state = new MappingGenerateState(new List<string>() { "Name" }, new List<string>() { "Source" });
+		var state = new MappingGenerateState(["Name"], ["Source"]);
 		state.AdvanceLastGeneratedPositionLine();
 
 		var entry = new MappingEntry(

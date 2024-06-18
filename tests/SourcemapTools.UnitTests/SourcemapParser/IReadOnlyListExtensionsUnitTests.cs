@@ -36,7 +36,7 @@ public class IReadOnlyListExtensionsUnitTests
 	public void IndexOf_ValueAppearsMultipleTimes_CorrectlyReturnsFirstInstance()
 	{
 		// Arrange
-		IReadOnlyList<int> list = new[] { 2, 4, 6, 8, 4 };
+		IReadOnlyList<int> list = [2, 4, 6, 8, 4];
 
 		// Act
 		var index = IReadOnlyListExtensions.IndexOf(list, 4);

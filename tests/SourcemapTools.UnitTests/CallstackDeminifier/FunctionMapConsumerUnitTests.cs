@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using SourcemapToolkit.SourcemapParser;
 using NUnit.Framework;
+using SourcemapToolkit.SourcemapParser;
 using SourcemapTools.CallstackDeminifier.Internal;
-using System;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
 
@@ -31,7 +30,7 @@ public class FunctionMapConsumerUnitTests
 		var functionMap = new List<FunctionMapEntry>
 		{
 			new(
-				Array.Empty<BindingInformation>(),
+				[],
 				null,
 				new SourcePosition(40, 10),
 				new SourcePosition(50, 10))
@@ -51,7 +50,7 @@ public class FunctionMapConsumerUnitTests
 		// Arrange
 		var sourcePosition = new SourcePosition(41, 2);
 		var functionMapEntry = new FunctionMapEntry(
-			Array.Empty<BindingInformation>(),
+			[],
 			null,
 			new SourcePosition(40, 10),
 			new SourcePosition(50, 10));
@@ -75,13 +74,13 @@ public class FunctionMapConsumerUnitTests
 		// Arrange
 		var sourcePosition = new SourcePosition(31, 0);
 		var functionMapEntry = new FunctionMapEntry(
-			Array.Empty<BindingInformation>(),
+			[],
 			null,
 			new SourcePosition(10, 10),
 			new SourcePosition(20, 30));
 
 		var functionMapEntry2 = new FunctionMapEntry(
-			Array.Empty<BindingInformation>(),
+			[],
 			null,
 			new SourcePosition(30, 0),
 			new SourcePosition(40, 2));
@@ -106,13 +105,13 @@ public class FunctionMapConsumerUnitTests
 		// Arrange
 		var sourcePosition = new SourcePosition(10, 25);
 		var functionMapEntry = new FunctionMapEntry(
-			Array.Empty<BindingInformation>(),
+			[],
 			null,
 			new SourcePosition(5, 10),
 			new SourcePosition(20, 30));
 
 		var functionMapEntry2 = new FunctionMapEntry(
-			Array.Empty<BindingInformation>(),
+			[],
 			null,
 			new SourcePosition(9, 0),
 			new SourcePosition(15, 2));

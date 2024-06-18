@@ -1,0 +1,225 @@
+﻿#nullable enable
+override SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.Equals(object? obj) -> bool
+override SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.GetHashCode() -> int
+override SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.ToString() -> string!
+override SourcemapToolkit.CallstackDeminifier.StackFrame.ToString() -> string!
+override SourcemapToolkit.SourcemapParser.MappingEntry.Equals(object? obj) -> bool
+override SourcemapToolkit.SourcemapParser.MappingEntry.GetHashCode() -> int
+override SourcemapToolkit.SourcemapParser.SourcePosition.Equals(object! obj) -> bool
+override SourcemapToolkit.SourcemapParser.SourcePosition.GetHashCode() -> int
+override SourcemapTools.CallstackDeminifier.Internal.BindingInformation.GetHashCode() -> int
+override SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Equals(object? obj) -> bool
+override SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.GetHashCode() -> int
+override SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.ToString() -> string!
+override SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.GetHashCode() -> int
+SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.DeminificationError.NoMatchingMappingInSourceMap = 4 -> SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.DeminificationError.None = 0 -> SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.DeminificationError.NoSourceCodeProvided = 1 -> SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.DeminificationError.NoSourceMap = 3 -> SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.DeminificationError.NoWrappingFunctionFound = 2 -> SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.<Clone>$() -> SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult!
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.Deconstruct(out string? Message, out System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>! MinifiedStackFrames, out System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult!>! DeminifiedStackFrameResults) -> void
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.DeminifiedStackFrameResults.get -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult!>!
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.DeminifiedStackFrameResults.init -> void
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.DeminifyStackTraceResult(string? Message, System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>! MinifiedStackFrames, System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult!>! DeminifiedStackFrameResults) -> void
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.Equals(SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult? other) -> bool
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.Message.get -> string?
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.Message.init -> void
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.MinifiedStackFrames.get -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>!
+SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.MinifiedStackFrames.init -> void
+SourcemapToolkit.CallstackDeminifier.ISourceCodeProvider
+SourcemapToolkit.CallstackDeminifier.ISourceCodeProvider.GetSourceCode(string! sourceCodeUrl) -> System.IO.Stream?
+SourcemapToolkit.CallstackDeminifier.ISourceMapProvider
+SourcemapToolkit.CallstackDeminifier.ISourceMapProvider.GetSourceMapContentsForCallstackUrl(string! correspondingCallStackFileUrl) -> System.IO.Stream?
+SourcemapToolkit.CallstackDeminifier.IStackTraceParser
+SourcemapToolkit.CallstackDeminifier.IStackTraceParser.ParseStackTrace(string! stackTraceString) -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>!
+SourcemapToolkit.CallstackDeminifier.IStackTraceParser.ParseStackTrace(string! stackTraceString, out string? message) -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>!
+SourcemapToolkit.CallstackDeminifier.StackFrame
+SourcemapToolkit.CallstackDeminifier.StackFrame.FilePath.get -> string?
+SourcemapToolkit.CallstackDeminifier.StackFrame.FilePath.set -> void
+SourcemapToolkit.CallstackDeminifier.StackFrame.MethodName.get -> string?
+SourcemapToolkit.CallstackDeminifier.StackFrame.MethodName.set -> void
+SourcemapToolkit.CallstackDeminifier.StackFrame.SourcePosition.get -> SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapToolkit.CallstackDeminifier.StackFrame.StackFrame(string? methodName) -> void
+SourcemapToolkit.CallstackDeminifier.StackFrame.StackFrame(string? methodName, string? filePath, SourcemapToolkit.SourcemapParser.SourcePosition sourcePosition) -> void
+SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult
+SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult.DeminificationError.get -> SourcemapToolkit.CallstackDeminifier.DeminificationError
+SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult.DeminifiedStackFrame.get -> SourcemapToolkit.CallstackDeminifier.StackFrame!
+SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult.DeminifiedSymbolName.get -> string?
+SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult.StackFrameDeminificationResult(SourcemapToolkit.CallstackDeminifier.DeminificationError deminificationError, SourcemapToolkit.CallstackDeminifier.StackFrame! deminifiedStackFrame) -> void
+SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier
+SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier.DeminifyStackTrace(string! stackTraceString, bool preferSourceMapsSymbols) -> SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult!
+SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier.StackTraceDeminifier(SourcemapTools.CallstackDeminifier.Internal.IStackFrameDeminifier! stackFrameDeminifier, SourcemapToolkit.CallstackDeminifier.IStackTraceParser! stackTraceParser) -> void
+SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory
+SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.StackTraceDeminifierFactory() -> void
+SourcemapToolkit.CallstackDeminifier.StackTraceParser
+SourcemapToolkit.CallstackDeminifier.StackTraceParser.ParseStackTrace(string! stackTraceString, out string? message) -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>!
+SourcemapToolkit.CallstackDeminifier.StackTraceParser.StackTraceParser() -> void
+SourcemapToolkit.SourcemapParser.MappingEntry
+SourcemapToolkit.SourcemapParser.MappingEntry.CloneWithResetColumnNumber() -> SourcemapToolkit.SourcemapParser.MappingEntry
+SourcemapToolkit.SourcemapParser.MappingEntry.Equals(SourcemapToolkit.SourcemapParser.MappingEntry other) -> bool
+SourcemapToolkit.SourcemapParser.MappingEntry.GeneratedSourcePosition.get -> SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapToolkit.SourcemapParser.MappingEntry.IsValueEqual(SourcemapToolkit.SourcemapParser.MappingEntry anEntry) -> bool
+SourcemapToolkit.SourcemapParser.MappingEntry.MappingEntry() -> void
+SourcemapToolkit.SourcemapParser.MappingEntry.MappingEntry(SourcemapToolkit.SourcemapParser.SourcePosition generatedSourcePosition) -> void
+SourcemapToolkit.SourcemapParser.MappingEntry.MappingEntry(SourcemapToolkit.SourcemapParser.SourcePosition generatedSourcePosition, SourcemapToolkit.SourcemapParser.SourcePosition? originalSourcePosition, string? originalName, string? originalFileName) -> void
+SourcemapToolkit.SourcemapParser.MappingEntry.OriginalFileName.get -> string?
+SourcemapToolkit.SourcemapParser.MappingEntry.OriginalName.get -> string?
+SourcemapToolkit.SourcemapParser.MappingEntry.OriginalSourcePosition.get -> SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapToolkit.SourcemapParser.SourceMap
+SourcemapToolkit.SourcemapParser.SourceMap.ApplySourceMap(SourcemapToolkit.SourcemapParser.SourceMap! submap, string? sourceFile = null) -> SourcemapToolkit.SourcemapParser.SourceMap!
+SourcemapToolkit.SourcemapParser.SourceMap.Clone() -> SourcemapToolkit.SourcemapParser.SourceMap!
+SourcemapToolkit.SourcemapParser.SourceMap.File.get -> string?
+SourcemapToolkit.SourcemapParser.SourceMap.File.set -> void
+SourcemapToolkit.SourcemapParser.SourceMap.Mappings.get -> string?
+SourcemapToolkit.SourcemapParser.SourceMap.Mappings.set -> void
+SourcemapToolkit.SourcemapParser.SourceMap.Names.get -> System.Collections.Generic.IReadOnlyList<string!>?
+SourcemapToolkit.SourcemapParser.SourceMap.Names.set -> void
+SourcemapToolkit.SourcemapParser.SourceMap.ParsedMappings.get -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.SourcemapParser.MappingEntry>?
+SourcemapToolkit.SourcemapParser.SourceMap.ParsedMappings.set -> void
+SourcemapToolkit.SourcemapParser.SourceMap.SourceMap() -> void
+SourcemapToolkit.SourcemapParser.SourceMap.SourceMap(int version, string? file, string? mappings, System.Collections.Generic.IReadOnlyList<string!>? sources, System.Collections.Generic.IReadOnlyList<string!>? names, System.Collections.Generic.IReadOnlyList<SourcemapToolkit.SourcemapParser.MappingEntry>! parsedMappings, System.Collections.Generic.IReadOnlyList<string!>? sourcesContent) -> void
+SourcemapToolkit.SourcemapParser.SourceMap.Sources.get -> System.Collections.Generic.IReadOnlyList<string!>?
+SourcemapToolkit.SourcemapParser.SourceMap.Sources.set -> void
+SourcemapToolkit.SourcemapParser.SourceMap.SourcesContent.get -> System.Collections.Generic.IReadOnlyList<string!>?
+SourcemapToolkit.SourcemapParser.SourceMap.SourcesContent.set -> void
+SourcemapToolkit.SourcemapParser.SourceMap.Version.get -> int
+SourcemapToolkit.SourcemapParser.SourceMap.Version.set -> void
+SourcemapToolkit.SourcemapParser.SourceMapGenerator
+SourcemapToolkit.SourcemapParser.SourceMapParser
+SourcemapToolkit.SourcemapParser.SourceMapTransformer
+SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapToolkit.SourcemapParser.SourcePosition.Column.get -> int
+SourcemapToolkit.SourcemapParser.SourcePosition.CompareTo(SourcemapToolkit.SourcemapParser.SourcePosition other) -> int
+SourcemapToolkit.SourcemapParser.SourcePosition.Equals(SourcemapToolkit.SourcemapParser.SourcePosition other) -> bool
+SourcemapToolkit.SourcemapParser.SourcePosition.IsEqualish(SourcemapToolkit.SourcemapParser.SourcePosition other) -> bool
+SourcemapToolkit.SourcemapParser.SourcePosition.Line.get -> int
+SourcemapToolkit.SourcemapParser.SourcePosition.SourcePosition() -> void
+SourcemapToolkit.SourcemapParser.SourcePosition.SourcePosition(int line, int column) -> void
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.BindingInformation() -> void
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.BindingInformation(string! Name, SourcemapToolkit.SourcemapParser.SourcePosition SourcePosition) -> void
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.Deconstruct(out string! Name, out SourcemapToolkit.SourcemapParser.SourcePosition SourcePosition) -> void
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.Equals(SourcemapTools.CallstackDeminifier.Internal.BindingInformation other) -> bool
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.Name.get -> string!
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.Name.init -> void
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.SourcePosition.get -> SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapTools.CallstackDeminifier.Internal.BindingInformation.SourcePosition.init -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapConsumer
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapConsumer.FunctionMapConsumer() -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.<Clone>$() -> SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry!
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Bindings.get -> System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.BindingInformation>!
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Bindings.init -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Deconstruct(out System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.BindingInformation>! Bindings, out string? DeminifiedMethodName, out SourcemapToolkit.SourcemapParser.SourcePosition Start, out SourcemapToolkit.SourcemapParser.SourcePosition End) -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.DeminifiedMethodName.get -> string?
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.DeminifiedMethodName.init -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.End.get -> SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.End.init -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Equals(SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry? other) -> bool
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.FunctionMapEntry(System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.BindingInformation>! Bindings, string? DeminifiedMethodName, SourcemapToolkit.SourcemapParser.SourcePosition Start, SourcemapToolkit.SourcemapParser.SourcePosition End) -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Start.get -> SourcemapToolkit.SourcemapParser.SourcePosition
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.Start.init -> void
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapGenerator
+SourcemapTools.CallstackDeminifier.Internal.FunctionMapGenerator.FunctionMapGenerator() -> void
+SourcemapTools.CallstackDeminifier.Internal.IFunctionMapConsumer
+SourcemapTools.CallstackDeminifier.Internal.IFunctionMapConsumer.GetWrappingFunctionForSourceLocation(SourcemapToolkit.SourcemapParser.SourcePosition sourcePosition, System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry!>! functionMap) -> SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry?
+SourcemapTools.CallstackDeminifier.Internal.IFunctionMapGenerator
+SourcemapTools.CallstackDeminifier.Internal.IFunctionMapGenerator.GenerateFunctionMap(System.IO.Stream? sourceCodeStream, SourcemapToolkit.SourcemapParser.SourceMap? sourceMap) -> System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry!>?
+SourcemapTools.CallstackDeminifier.Internal.IFunctionMapStore
+SourcemapTools.CallstackDeminifier.Internal.IFunctionMapStore.GetFunctionMapForSourceCode(string? sourceCodeUrl) -> System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry!>?
+SourcemapTools.CallstackDeminifier.Internal.IReadOnlyListExtensions
+SourcemapTools.CallstackDeminifier.Internal.ISourceMapStore
+SourcemapTools.CallstackDeminifier.Internal.ISourceMapStore.GetSourceMapForUrl(string? sourceCodeUrl) -> SourcemapToolkit.SourcemapParser.SourceMap?
+SourcemapTools.CallstackDeminifier.Internal.IStackFrameDeminifier
+SourcemapTools.CallstackDeminifier.Internal.IStackFrameDeminifier.DeminifyStackFrame(SourcemapToolkit.CallstackDeminifier.StackFrame! stackFrame, string? callerSymbolName, bool preferSourceMapsSymbols) -> SourcemapToolkit.CallstackDeminifier.StackFrameDeminificationResult!
+SourcemapTools.CallstackDeminifier.Internal.KeyValueCache<TKey, TValue>
+SourcemapTools.CallstackDeminifier.Internal.KeyValueCache<TKey, TValue>.GetValue(TKey key) -> TValue?
+SourcemapTools.CallstackDeminifier.Internal.KeyValueCache<TKey, TValue>.KeyValueCache(System.Func<TKey, TValue?>! valueGetter) -> void
+SourcemapTools.CallstackDeminifier.Internal.MethodNameStackFrameDeminifier
+SourcemapTools.CallstackDeminifier.Internal.MethodNameStackFrameDeminifier.MethodNameStackFrameDeminifier(SourcemapTools.CallstackDeminifier.Internal.IFunctionMapStore! functionMapStore, SourcemapTools.CallstackDeminifier.Internal.IFunctionMapConsumer! functionMapConsumer) -> void
+SourcemapTools.CallstackDeminifier.Internal.SourceMapExtensions
+SourcemapTools.CallstackDeminifier.Internal.StackFrameDeminifier
+SourcemapTools.CallstackDeminifier.Internal.StackFrameDeminifier.StackFrameDeminifier(SourcemapTools.CallstackDeminifier.Internal.ISourceMapStore! sourceMapStore) -> void
+SourcemapTools.CallstackDeminifier.Internal.StackFrameDeminifier.StackFrameDeminifier(SourcemapTools.CallstackDeminifier.Internal.ISourceMapStore! sourceMapStore, SourcemapTools.CallstackDeminifier.Internal.IFunctionMapStore! functionMapStore, SourcemapTools.CallstackDeminifier.Internal.IFunctionMapConsumer! functionMapConsumer) -> void
+SourcemapTools.SourcemapParser.Internal.Base64Converter
+SourcemapTools.SourcemapParser.Internal.Base64VlqDecoder
+SourcemapTools.SourcemapParser.Internal.Base64VlqEncoder
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.AdvanceLastGeneratedPositionLine() -> void
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.IsFirstSegment.get -> bool
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.IsFirstSegment.set -> void
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.MappingGenerateState(System.Collections.Generic.IReadOnlyList<string!>! names, System.Collections.Generic.IReadOnlyList<string!>! sources) -> void
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.Names.get -> System.Collections.Generic.IReadOnlyList<string!>!
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.Sources.get -> System.Collections.Generic.IReadOnlyList<string!>!
+SourcemapTools.SourcemapParser.Internal.MappingGenerateState.UpdateLastGeneratedPositionColumn(int zeroBasedColumnNumber) -> void
+SourcemapTools.SourcemapParser.Internal.MappingsListParser
+SourcemapTools.SourcemapParser.Internal.MappingsParserState
+SourcemapTools.SourcemapParser.Internal.MappingsParserState.MappingsParserState() -> void
+SourcemapTools.SourcemapParser.Internal.MappingsParserState.MappingsParserState(SourcemapTools.SourcemapParser.Internal.MappingsParserState previousMappingsParserState = default(SourcemapTools.SourcemapParser.Internal.MappingsParserState), int? newGeneratedLineNumber = null, int? newGeneratedColumnBase = null, int? newSourcesListIndexBase = null, int? newOriginalSourceStartingLineBase = null, int? newOriginalSourceStartingColumnBase = null, int? newNamesListIndexBase = null) -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.Deconstruct(out int GeneratedLineNumber, out int GeneratedColumnNumber, out int? OriginalSourceFileIndex, out int? OriginalLineNumber, out int? OriginalColumnNumber, out int? OriginalNameIndex) -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.Equals(SourcemapTools.SourcemapParser.Internal.NumericMappingEntry other) -> bool
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.GeneratedColumnNumber.get -> int
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.GeneratedColumnNumber.init -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.GeneratedLineNumber.get -> int
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.GeneratedLineNumber.init -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.NumericMappingEntry() -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.NumericMappingEntry(int GeneratedLineNumber, int GeneratedColumnNumber, int? OriginalSourceFileIndex, int? OriginalLineNumber, int? OriginalColumnNumber, int? OriginalNameIndex) -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalColumnNumber.get -> int?
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalColumnNumber.init -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalLineNumber.get -> int?
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalLineNumber.init -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalNameIndex.get -> int?
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalNameIndex.init -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalSourceFileIndex.get -> int?
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.OriginalSourceFileIndex.init -> void
+SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.ToMappingEntry(System.Collections.Generic.IReadOnlyList<string!>! names, System.Collections.Generic.IReadOnlyList<string!>! sources) -> SourcemapToolkit.SourcemapParser.MappingEntry
+SourcemapTools.SourcemapParser.Internal.StringExtensions
+static readonly SourcemapToolkit.SourcemapParser.SourcePosition.NotFound -> SourcemapToolkit.SourcemapParser.SourcePosition
+static SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.operator !=(SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult? left, SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult? right) -> bool
+static SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult.operator ==(SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult? left, SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult? right) -> bool
+static SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.GetMapOnlyStackTraceDeminifier(SourcemapToolkit.CallstackDeminifier.ISourceMapProvider! sourceMapProvider) -> SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier!
+static SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.GetMapOnlyStackTraceDeminifier(SourcemapToolkit.CallstackDeminifier.ISourceMapProvider! sourceMapProvider, SourcemapToolkit.CallstackDeminifier.IStackTraceParser! stackTraceParser) -> SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier!
+static SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.GetMethodNameOnlyStackTraceDeminifier(SourcemapToolkit.CallstackDeminifier.ISourceMapProvider! sourceMapProvider, SourcemapToolkit.CallstackDeminifier.ISourceCodeProvider! generatedCodeProvider) -> SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier!
+static SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.GetMethodNameOnlyStackTraceDeminifier(SourcemapToolkit.CallstackDeminifier.ISourceMapProvider! sourceMapProvider, SourcemapToolkit.CallstackDeminifier.ISourceCodeProvider! generatedCodeProvider, SourcemapToolkit.CallstackDeminifier.IStackTraceParser! stackTraceParser) -> SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier!
+static SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.GetStackTraceDeminifier(SourcemapToolkit.CallstackDeminifier.ISourceMapProvider! sourceMapProvider, SourcemapToolkit.CallstackDeminifier.ISourceCodeProvider! generatedCodeProvider) -> SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier!
+static SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.GetStackTraceDeminifier(SourcemapToolkit.CallstackDeminifier.ISourceMapProvider! sourceMapProvider, SourcemapToolkit.CallstackDeminifier.ISourceCodeProvider! generatedCodeProvider, SourcemapToolkit.CallstackDeminifier.IStackTraceParser! stackTraceParser) -> SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier!
+static SourcemapToolkit.CallstackDeminifier.StackTraceParser.TryParseSingleStackFrame(string! frame) -> SourcemapToolkit.CallstackDeminifier.StackFrame?
+static SourcemapToolkit.SourcemapParser.MappingEntry.operator !=(SourcemapToolkit.SourcemapParser.MappingEntry left, SourcemapToolkit.SourcemapParser.MappingEntry right) -> bool
+static SourcemapToolkit.SourcemapParser.MappingEntry.operator ==(SourcemapToolkit.SourcemapParser.MappingEntry left, SourcemapToolkit.SourcemapParser.MappingEntry right) -> bool
+static SourcemapToolkit.SourcemapParser.SourceMapGenerator.GenerateSourceMapInlineComment(SourcemapToolkit.SourcemapParser.SourceMap! sourceMap, System.Text.Json.JsonSerializerOptions? jsonSerializerSettings = null) -> string!
+static SourcemapToolkit.SourcemapParser.SourceMapGenerator.SerializeMapping(SourcemapToolkit.SourcemapParser.SourceMap! sourceMap, System.Text.Json.JsonSerializerOptions? jsonSerializerSettings = null) -> string!
+static SourcemapToolkit.SourcemapParser.SourceMapGenerator.SerializeMappingEntry(SourcemapToolkit.SourcemapParser.MappingEntry entry, SourcemapTools.SourcemapParser.Internal.MappingGenerateState! state, System.Text.StringBuilder! output) -> void
+static SourcemapToolkit.SourcemapParser.SourceMapParser.ParseSourceMap(System.IO.Stream? sourceMapStream) -> SourcemapToolkit.SourcemapParser.SourceMap?
+static SourcemapToolkit.SourcemapParser.SourceMapTransformer.Flatten(SourcemapToolkit.SourcemapParser.SourceMap! sourceMap) -> SourcemapToolkit.SourcemapParser.SourceMap!
+static SourcemapToolkit.SourcemapParser.SourcePosition.operator !=(SourcemapToolkit.SourcemapParser.SourcePosition x, SourcemapToolkit.SourcemapParser.SourcePosition y) -> bool
+static SourcemapToolkit.SourcemapParser.SourcePosition.operator <(SourcemapToolkit.SourcemapParser.SourcePosition x, SourcemapToolkit.SourcemapParser.SourcePosition y) -> bool
+static SourcemapToolkit.SourcemapParser.SourcePosition.operator <=(SourcemapToolkit.SourcemapParser.SourcePosition left, SourcemapToolkit.SourcemapParser.SourcePosition right) -> bool
+static SourcemapToolkit.SourcemapParser.SourcePosition.operator ==(SourcemapToolkit.SourcemapParser.SourcePosition x, SourcemapToolkit.SourcemapParser.SourcePosition y) -> bool
+static SourcemapToolkit.SourcemapParser.SourcePosition.operator >(SourcemapToolkit.SourcemapParser.SourcePosition x, SourcemapToolkit.SourcemapParser.SourcePosition y) -> bool
+static SourcemapToolkit.SourcemapParser.SourcePosition.operator >=(SourcemapToolkit.SourcemapParser.SourcePosition left, SourcemapToolkit.SourcemapParser.SourcePosition right) -> bool
+static SourcemapTools.CallstackDeminifier.Internal.BindingInformation.operator !=(SourcemapTools.CallstackDeminifier.Internal.BindingInformation left, SourcemapTools.CallstackDeminifier.Internal.BindingInformation right) -> bool
+static SourcemapTools.CallstackDeminifier.Internal.BindingInformation.operator ==(SourcemapTools.CallstackDeminifier.Internal.BindingInformation left, SourcemapTools.CallstackDeminifier.Internal.BindingInformation right) -> bool
+static SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.operator !=(SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry? left, SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry? right) -> bool
+static SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry.operator ==(SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry? left, SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry? right) -> bool
+static SourcemapTools.CallstackDeminifier.Internal.FunctionMapGenerator.ParseSourceCode(System.IO.Stream! sourceCodeStream, SourcemapToolkit.SourcemapParser.SourceMap! sourceMap) -> System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.FunctionMapEntry!>!
+static SourcemapTools.CallstackDeminifier.Internal.IReadOnlyListExtensions.BinarySearch<T>(this System.Collections.Generic.IReadOnlyList<T>! input, T item, System.Collections.Generic.IComparer<T>! comparer) -> int
+static SourcemapTools.CallstackDeminifier.Internal.IReadOnlyListExtensions.IndexOf<T>(this System.Collections.Generic.IReadOnlyList<T>! input, T value) -> int
+static SourcemapTools.CallstackDeminifier.Internal.SourceMapExtensions.GetDeminifiedMethodName(this SourcemapToolkit.SourcemapParser.SourceMap! sourceMap, System.Collections.Generic.IReadOnlyList<SourcemapTools.CallstackDeminifier.Internal.BindingInformation>! bindings) -> string?
+static SourcemapTools.SourcemapParser.Internal.Base64Converter.FromBase64(char base64Value) -> int
+static SourcemapTools.SourcemapParser.Internal.Base64Converter.ToBase64(int value) -> char
+static SourcemapTools.SourcemapParser.Internal.Base64VlqDecoder.Decode(string! input) -> System.Collections.Generic.IReadOnlyList<int>!
+static SourcemapTools.SourcemapParser.Internal.Base64VlqEncoder.Encode(System.Text.StringBuilder! output, int value) -> void
+static SourcemapTools.SourcemapParser.Internal.MappingsListParser.ParseMappings(string! mappingString, System.Collections.Generic.IReadOnlyList<string!>! names, System.Collections.Generic.IReadOnlyList<string!>! sources) -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.SourcemapParser.MappingEntry>!
+static SourcemapTools.SourcemapParser.Internal.MappingsListParser.ParseSingleMappingSegment(System.Collections.Generic.IReadOnlyList<int>! segmentFields, SourcemapTools.SourcemapParser.Internal.MappingsParserState mappingsParserState) -> SourcemapTools.SourcemapParser.Internal.NumericMappingEntry
+static SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.operator !=(SourcemapTools.SourcemapParser.Internal.NumericMappingEntry left, SourcemapTools.SourcemapParser.Internal.NumericMappingEntry right) -> bool
+static SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.operator ==(SourcemapTools.SourcemapParser.Internal.NumericMappingEntry left, SourcemapTools.SourcemapParser.Internal.NumericMappingEntry right) -> bool
+static SourcemapTools.SourcemapParser.Internal.StringExtensions.SplitFast(this string! input, char delimiter) -> string![]!
+virtual SourcemapToolkit.SourcemapParser.SourceMap.GetMappingEntryForGeneratedSourcePosition(SourcemapToolkit.SourcemapParser.SourcePosition generatedSourcePosition) -> SourcemapToolkit.SourcemapParser.MappingEntry?
+~override SourcemapTools.CallstackDeminifier.Internal.BindingInformation.Equals(object obj) -> bool
+~override SourcemapTools.CallstackDeminifier.Internal.BindingInformation.ToString() -> string
+~override SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.Equals(object obj) -> bool
+~override SourcemapTools.SourcemapParser.Internal.NumericMappingEntry.ToString() -> string
