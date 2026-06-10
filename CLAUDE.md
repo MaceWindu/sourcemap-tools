@@ -16,7 +16,7 @@ C# library (`SourceMapTools` NuGet package) for parsing JavaScript source maps a
 
 `global.json` pins the .NET 10 SDK (`rollForward: latestFeature`) and selects the **Microsoft.Testing.Platform** test runner — `dotnet test` drives MTP, not VSTest, so the test project is `OutputType=Exe` with `EnableNUnitRunner`. The solution is the XML-based `.slnx` format (no `.sln`).
 
-Warnings are errors (`TreatWarningsAsErrors`, `WarningLevel 999`, `AnalysisLevel preview-All`, code style enforced in build). The full AsyncFixer and Meziantou.Analyzer rule sets are enabled as errors in `.editorconfig`; a handful are turned off there with inline rationale (e.g. MA0009/MA0023 — regexes use numbered capture groups; MA0104 — `StackFrame` shadows `System.Diagnostics.StackFrame`; MA0181 — necessary esprima cast). `tests/.editorconfig` relaxes test-only rules. Expect builds to fail on analyzer/style violations, not just compile errors. XML doc comments are required on public members (`GenerateDocumentationFile`).
+Warnings are errors (`TreatWarningsAsErrors`, `WarningLevel 999`, `AnalysisLevel preview-All`, code style enforced in build). The full AsyncFixer and Meziantou.Analyzer rule sets are enabled as errors in `.editorconfig`; a handful are turned off there with inline rationale (e.g. MA0009/MA0023 — regexes use numbered capture groups; MA0104 — `StackFrame` shadows `System.Diagnostics.StackFrame`; MA0181 — necessary Acornima cast). `tests/.editorconfig` relaxes test-only rules. Expect builds to fail on analyzer/style violations, not just compile errors. XML doc comments are required on public members (`GenerateDocumentationFile`).
 
 The library targets only `netstandard2.0`, so modern BCL APIs are filled in by **Meziantou.Polyfill** (not PolySharp). The set of generated polyfills is an explicit allow-list (`MeziantouPolyfill_IncludedPolyfills`) in `src/SourceMapTools/SourcemapTools.csproj` — when you use a newer API and the ns2.0 build fails with a missing type/member, add its `T:`/`M:` id there.
 
@@ -39,7 +39,7 @@ Two cooperating subsystems under `src/SourceMapTools/`, split by namespace (note
   - `GetMapOnlyStackTraceDeminifier` — source maps only, ES2015+ compatible, no JS file needed.
   - `GetMethodNameOnlyStackTraceDeminifier` — low memory; reads each map once, method names only, no original position.
 - Consumers implement `ISourceMapProvider` / `ISourceCodeProvider` to feed file/map contents by URL.
-- Pipeline: `StackTraceParser` parses the raw stack string → `StackFrame`s; `StackFrameDeminifier` maps each frame using the `SourceMap` plus a `FunctionMap`. The function map (which minified function spans which name) is built by walking the JS AST via **Esprima .NET** — see `FunctionMapGenerator`, `FunctionFinderVisitor`, `AstVisitorWithStack`. `SourceMapStore` / `FunctionMapStore` provide caching (`KeyValueCache`).
+- Pipeline: `StackTraceParser` parses the raw stack string → `StackFrame`s; `StackFrameDeminifier` maps each frame using the `SourceMap` plus a `FunctionMap`. The function map (which minified function spans which name) is built by walking the JS AST via **Acornima** (`Acornima.Parser` + `Acornima.AstVisitor`) — see `FunctionMapGenerator`, `FunctionFinderVisitor`, `AstVisitorWithStack`. `SourceMapStore` / `FunctionMapStore` provide caching (`KeyValueCache`).
 
 `Internal/` namespaces are implementation detail. A few types (`SourceMap`) are `class`/`virtual` purely so tests can mock them — comments in code flag this.
 

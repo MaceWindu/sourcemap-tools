@@ -1,6 +1,6 @@
 <Project>
 	<ItemGroup>
-		<PackageVersion Include="esprima" Version="3.0.6" />
+		<PackageVersion Include="Acornima" Version="1.6.2" />
 		<PackageVersion Include="System.Text.Json" Version="8.0.5" />
 
 		<PackageVersion Include="Meziantou.Polyfill" Version="1.0.150" />

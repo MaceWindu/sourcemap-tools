@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Esprima;
-using Esprima.Ast;
+using Acornima;
+using Acornima.Ast;
 using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
@@ -27,25 +27,25 @@ internal sealed class FunctionFinderVisitor(SourceMap sourceMap) : AstVisitorWit
 		return _functionMap;
 	}
 
-	protected override object VisitArrowFunctionExpression(ArrowFunctionExpression arrowFunctionExpression)
+	protected override object? VisitArrowFunctionExpression(ArrowFunctionExpression node)
 	{
-		base.VisitArrowFunctionExpression(arrowFunctionExpression);
-		VisitFunction(arrowFunctionExpression);
-		return arrowFunctionExpression;
+		base.VisitArrowFunctionExpression(node);
+		VisitFunction(node);
+		return node;
 	}
 
-	protected override object VisitFunctionExpression(FunctionExpression functionExpression)
+	protected override object? VisitFunctionExpression(FunctionExpression node)
 	{
-		base.VisitFunctionExpression(functionExpression);
-		VisitFunction(functionExpression);
-		return functionExpression;
+		base.VisitFunctionExpression(node);
+		VisitFunction(node);
+		return node;
 	}
 
-	protected override object VisitFunctionDeclaration(FunctionDeclaration functionDeclaration)
+	protected override object? VisitFunctionDeclaration(FunctionDeclaration node)
 	{
-		base.VisitFunctionDeclaration(functionDeclaration);
-		VisitFunction(functionDeclaration);
-		return functionDeclaration;
+		base.VisitFunctionDeclaration(node);
+		VisitFunction(node);
+		return node;
 	}
 
 	private void VisitFunction(IFunction function)
@@ -65,7 +65,7 @@ internal sealed class FunctionFinderVisitor(SourceMap sourceMap) : AstVisitorWit
 		}
 	}
 
-	// esprima use 1-based line counter
+	// Acornima uses 1-based line counter
 	// https://github.com/estree/estree/blob/master/es5.md#node-objects
 	private static SourcePosition GetSourcePosition(Position position) => new(position.Line - 1, position.Column);
 
