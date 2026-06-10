@@ -10,5 +10,5 @@ public interface IFunctionMapStore
 	/// <summary>
 	/// Internal API.
 	/// </summary>
-	IReadOnlyList<FunctionMapEntry>? GetFunctionMapForSourceCode(string? sourceCodeUrl);
+	public IReadOnlyList<FunctionMapEntry>? GetFunctionMapForSourceCode(string? sourceCodeUrl);
 }

@@ -10,5 +10,5 @@ public interface ISourceMapStore
 	/// <summary>
 	/// Internal API.
 	/// </summary>
-	SourceMap? GetSourceMapForUrl(string? sourceCodeUrl);
+	public SourceMap? GetSourceMapForUrl(string? sourceCodeUrl);
 }

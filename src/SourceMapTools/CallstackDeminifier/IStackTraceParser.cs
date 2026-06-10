@@ -21,7 +21,7 @@ public interface IStackTraceParser
 	/// <remarks>
 	/// This override drops the Message out parameter for backward compatibility.
 	/// </remarks>
-	IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString);
+	public IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString);
 
 	/// <summary>
 	/// Generates a list of StackFrame objects based on the input stack trace.
@@ -35,6 +35,6 @@ public interface IStackTraceParser
 	/// the result. Does not ever return null.
 	/// </returns>
 #pragma warning disable CA1021 // Avoid out parameters
-	IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message);
+	public IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message);
 #pragma warning restore CA1021 // Avoid out parameters
 }

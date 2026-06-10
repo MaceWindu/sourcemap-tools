@@ -15,5 +15,5 @@ public interface ISourceMapProvider
 	/// </summary>
 	/// <param name="correspondingCallStackFileUrl">The url from a callstack stackframe that caused us to invoke this method.</param>
 	/// <returns>Returns a StreamReader that can be used to obtain the contents of the source map.</returns>
-	Stream? GetSourceMapContentsForCallstackUrl(string correspondingCallStackFileUrl);
+	public Stream? GetSourceMapContentsForCallstackUrl(string correspondingCallStackFileUrl);
 }
