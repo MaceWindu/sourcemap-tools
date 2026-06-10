@@ -51,7 +51,7 @@ public class FunctionMapConsumerUnitTests
 		var sourcePosition = new SourcePosition(41, 2);
 		var functionMapEntry = new FunctionMapEntry(
 			[],
-DeminifiedMethodName: null,
+			DeminifiedMethodName: null,
 			new SourcePosition(40, 10),
 			new SourcePosition(50, 10));
 
@@ -75,13 +75,13 @@ DeminifiedMethodName: null,
 		var sourcePosition = new SourcePosition(31, 0);
 		var functionMapEntry = new FunctionMapEntry(
 			[],
-DeminifiedMethodName: null,
+			DeminifiedMethodName: null,
 			new SourcePosition(10, 10),
 			new SourcePosition(20, 30));
 
 		var functionMapEntry2 = new FunctionMapEntry(
 			[],
-DeminifiedMethodName: null,
+			DeminifiedMethodName: null,
 			new SourcePosition(30, 0),
 			new SourcePosition(40, 2));
 
@@ -106,13 +106,13 @@ DeminifiedMethodName: null,
 		var sourcePosition = new SourcePosition(10, 25);
 		var functionMapEntry = new FunctionMapEntry(
 			[],
-DeminifiedMethodName: null,
+			DeminifiedMethodName: null,
 			new SourcePosition(5, 10),
 			new SourcePosition(20, 30));
 
 		var functionMapEntry2 = new FunctionMapEntry(
 			[],
-DeminifiedMethodName: null,
+			DeminifiedMethodName: null,
 			new SourcePosition(9, 0),
 			new SourcePosition(15, 2));
 
