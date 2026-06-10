@@ -4,9 +4,7 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapToolkit.CallstackDeminifier;
 
-/// <summary>
-/// Contains stack trace details (both minified and deminified).
-/// </summary>
+/// <summary>Contains stack trace details (both minified and deminified).</summary>
 /// <param name="Message">Gets error message, associated with stack trace.</param>
 /// <param name="MinifiedStackFrames">Gets list of stack frames for minified stack.</param>
 /// <param name="DeminifiedStackFrameResults">Gets list of stack frames for de-minified stack.</param>
@@ -15,9 +13,7 @@ public sealed record DeminifyStackTraceResult(
 		IReadOnlyList<StackFrame> MinifiedStackFrames,
 		IReadOnlyList<StackFrameDeminificationResult> DeminifiedStackFrameResults)
 {
-	/// <summary>
-	/// Returns string that represents stack trace.
-	/// </summary>
+	/// <summary>Returns string that represents stack trace.</summary>
 	public override string ToString()
 	{
 		var sb = new StringBuilder();

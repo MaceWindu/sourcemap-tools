@@ -4,9 +4,7 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public interface IFunctionMapGenerator
 {
 	/// <summary>

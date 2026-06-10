@@ -4,32 +4,28 @@ using SourcemapTools.CallstackDeminifier.Internal;
 
 namespace SourcemapToolkit.CallstackDeminifier;
 
-/// <summary>
-/// Provides factory methods to create stack trace deminifier instance.
-/// </summary>
-public sealed class StackTraceDeminifierFactory
+/// <summary>Provides factory methods to create stack trace deminifier instance.</summary>
+public static class StackTraceDeminifierFactory
 {
 	private static void ValidateArguments(ISourceMapProvider sourceMapProvider, ISourceCodeProvider generatedCodeProvider, IStackTraceParser stackTraceParser)
 	{
-		if (sourceMapProvider == null)
+		if (sourceMapProvider is null)
 		{
 			throw new ArgumentNullException(nameof(sourceMapProvider));
 		}
 
-		if (generatedCodeProvider == null)
+		if (generatedCodeProvider is null)
 		{
 			throw new ArgumentNullException(nameof(generatedCodeProvider));
 		}
 
-		if (stackTraceParser == null)
+		if (stackTraceParser is null)
 		{
 			throw new ArgumentNullException(nameof(stackTraceParser));
 		}
 	}
 
-	/// <summary>
-	/// Creates a StackTraceDeminifier with full capabilities. StackTrace deminifiers created with this method will keep source maps cached, and thus use significantly more memory during runtime than the ones generated with GetMethodNameOnlyStackTraceDeminifier.
-	/// </summary>
+	/// <summary>Creates a StackTraceDeminifier with full capabilities. StackTrace deminifiers created with this method will keep source maps cached, and thus use significantly more memory during runtime than the ones generated with GetMethodNameOnlyStackTraceDeminifier.</summary>
 	/// <param name="sourceMapProvider">Consumers of the API should implement this interface, which provides the source map for a given JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	/// <param name="generatedCodeProvider">Consumers of the API should implement this interface, which provides the contents of a JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	public static StackTraceDeminifier GetStackTraceDeminifier(
@@ -37,9 +33,7 @@ public sealed class StackTraceDeminifierFactory
 		ISourceCodeProvider generatedCodeProvider)
 		=> GetStackTraceDeminifier(sourceMapProvider, generatedCodeProvider, new StackTraceParser());
 
-	/// <summary>
-	/// Creates a StackTraceDeminifier with full capabilities. StackTrace deminifiers created with this method will keep source maps cached, and thus use significantly more memory during runtime than the ones generated with GetMethodNameOnlyStackTraceDeminifier.
-	/// </summary>
+	/// <summary>Creates a StackTraceDeminifier with full capabilities. StackTrace deminifiers created with this method will keep source maps cached, and thus use significantly more memory during runtime than the ones generated with GetMethodNameOnlyStackTraceDeminifier.</summary>
 	/// <param name="sourceMapProvider">Consumers of the API should implement this interface, which provides the source map for a given JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	/// <param name="generatedCodeProvider">Consumers of the API should implement this interface, which provides the contents of a JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	/// <param name="stackTraceParser">Consumers of the API should implement this interface, which provides a parser for the stacktrace. Throws ArgumentNullException if the parameter is set to null.</param>
@@ -69,12 +63,12 @@ public sealed class StackTraceDeminifierFactory
 	/// <param name="stackTraceParser">Consumers of the API should implement this interface, which provides a parser for the stacktrace. Throws ArgumentNullException if the parameter is set to null.</param>
 	public static StackTraceDeminifier GetMapOnlyStackTraceDeminifier(ISourceMapProvider sourceMapProvider, IStackTraceParser stackTraceParser)
 	{
-		if (sourceMapProvider == null)
+		if (sourceMapProvider is null)
 		{
 			throw new ArgumentNullException(nameof(sourceMapProvider));
 		}
 
-		if (stackTraceParser == null)
+		if (stackTraceParser is null)
 		{
 			throw new ArgumentNullException(nameof(stackTraceParser));
 		}
@@ -85,16 +79,12 @@ public sealed class StackTraceDeminifierFactory
 		return new StackTraceDeminifier(stackFrameDeminifier, stackTraceParser);
 	}
 
-	/// <summary>
-	/// Creates a StackTraceDeminifier that only deminifies the method names. StackTrace deminifiers created with this method will use significantly less memory during runtime than the
-	/// </summary>
+	/// <summary>Creates a StackTraceDeminifier that only deminifies the method names. StackTrace deminifiers created with this method will use significantly less memory during runtime than the</summary>
 	/// <param name="sourceMapProvider">Consumers of the API should implement this interface, which provides the source map for a given JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	/// <param name="generatedCodeProvider">Consumers of the API should implement this interface, which provides the contents of a JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	public static StackTraceDeminifier GetMethodNameOnlyStackTraceDeminifier(ISourceMapProvider sourceMapProvider, ISourceCodeProvider generatedCodeProvider) => GetMethodNameOnlyStackTraceDeminifier(sourceMapProvider, generatedCodeProvider, new StackTraceParser());
 
-	/// <summary>
-	/// Creates a StackTraceDeminifier that only deminifies the method names. StackTrace deminifiers created with this method will use significantly less memory during runtime than the
-	/// </summary>
+	/// <summary>Creates a StackTraceDeminifier that only deminifies the method names. StackTrace deminifiers created with this method will use significantly less memory during runtime than the</summary>
 	/// <param name="sourceMapProvider">Consumers of the API should implement this interface, which provides the source map for a given JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	/// <param name="generatedCodeProvider">Consumers of the API should implement this interface, which provides the contents of a JavaScript file. Throws ArgumentNullException if the parameter is set to null.</param>
 	/// <param name="stackTraceParser">Consumers of the API should implement this interface, which provides a parser for the stacktrace. Throws ArgumentNullException if the parameter is set to null.</param>

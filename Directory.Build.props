@@ -54,6 +54,14 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>build; analyzers</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="AsyncFixer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Meziantou.Analyzer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>analyzers</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>

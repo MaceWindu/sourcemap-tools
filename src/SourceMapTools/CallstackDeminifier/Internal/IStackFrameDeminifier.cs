@@ -2,14 +2,10 @@
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public interface IStackFrameDeminifier
 {
-	/// <summary>
-	/// This method will deminify a single stack from from a minified stack trace.
-	/// </summary>
+	/// <summary>This method will deminify a single stack from from a minified stack trace.</summary>
 	/// <param name="stackFrame">Stack frame descriptor.</param>
 	/// <param name="callerSymbolName">Caller's symbol name.</param>
 	/// <param name="preferSourceMapsSymbols">if true, we will use exact sourcemap names directly for deobfuscation, without guessing the wrapper function name from source code.</param>

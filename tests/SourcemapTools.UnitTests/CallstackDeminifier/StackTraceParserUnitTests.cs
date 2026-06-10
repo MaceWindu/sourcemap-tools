@@ -9,11 +9,11 @@ public class StackTraceParserUnitTests
 	{
 		// Arrange
 		IStackTraceParser stackTraceParser = new StackTraceParser();
-		var browserStackTrace = @"TypeError: Cannot read property 'length' of undefined
-	at d (http://localhost:19220/crashcauser.min.js:1:75)
-	at c (http://localhost:19220/crashcauser.min.js:1:34)
-	at b (http://localhost:19220/crashcauser.min.js:1:14)
-	at HTMLButtonElement.<anonymous> (http://localhost:19220/crashcauser.min.js:1:332)";
+		var browserStackTrace = "TypeError: Cannot read property 'length' of undefined\r\n" +
+						  "\tat d (http://localhost:19220/crashcauser.min.js:1:75)\r\n" +
+						  "\tat c (http://localhost:19220/crashcauser.min.js:1:34)\r\n" +
+						  "\tat b (http://localhost:19220/crashcauser.min.js:1:14)\r\n" +
+						  "\tat HTMLButtonElement.<anonymous> (http://localhost:19220/crashcauser.min.js:1:332)";
 
 		// Act
 		var stackTrace = stackTraceParser.ParseStackTrace(browserStackTrace);

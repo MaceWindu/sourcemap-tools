@@ -27,7 +27,7 @@ public class SourceMapExtensionsUnitTests
 		// Arrange
 		var bindings = new List<BindingInformation>()
 			{
-				new(string.Empty, new SourcePosition(20, 15))
+				new(string.Empty, new SourcePosition(20, 15)),
 			};
 
 		var sourceMap = new SourceMapMock((_, _) => null);
@@ -45,7 +45,7 @@ public class SourceMapExtensionsUnitTests
 		// Arrange
 		var bindings = new List<BindingInformation>()
 			{
-				new(string.Empty, new SourcePosition(5, 8))
+				new(string.Empty, new SourcePosition(5, 8)),
 			};
 
 		var sourceMap = new SourceMapMock((x, def) => x is { Line: 5, Column: 8 } ? new(generatedSourcePosition: default, null, originalName: "foo", null) : def(x));
@@ -64,14 +64,14 @@ public class SourceMapExtensionsUnitTests
 		var bindings = new List<BindingInformation>
 			{
 				new(string.Empty, new SourcePosition(86, 52)),
-				new(string.Empty, new SourcePosition(88, 78))
+				new(string.Empty, new SourcePosition(88, 78)),
 			};
 
 		var sourceMap = new SourceMapMock((x, def)
 			=> x is { Line: 86, Column: 52 }
 				? null
 				: x is { Line: 88, Column: 78 }
-					? new MappingEntry(default, null, "baz", null)
+					? new MappingEntry(default, originalSourcePosition: null, "baz", originalFileName: null)
 					: def(x));
 
 		// Act
@@ -88,14 +88,14 @@ public class SourceMapExtensionsUnitTests
 		var bindings = new List<BindingInformation>
 			{
 				new(string.Empty, new SourcePosition(5, 5)),
-				new(string.Empty, new SourcePosition(20, 10))
+				new(string.Empty, new SourcePosition(20, 10)),
 			};
 
 		var sourceMap = new SourceMapMock((x, def)
 	=> x is { Line: 5, Column: 5 }
-		? new MappingEntry(generatedSourcePosition: default, null, originalName: "bar", null)
+		? new MappingEntry(generatedSourcePosition: default, originalSourcePosition: null, originalName: "bar", originalFileName: null)
 		: x is { Line: 20, Column: 10 }
-			? new MappingEntry(generatedSourcePosition: default, null, originalName: "baz", null)
+			? new MappingEntry(generatedSourcePosition: default, originalSourcePosition: null, originalName: "baz", originalFileName: null)
 			: def(x));
 
 		// Act

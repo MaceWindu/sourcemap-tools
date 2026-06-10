@@ -4,17 +4,13 @@ using SourcemapTools.SourcemapParser.Internal;
 
 namespace SourcemapToolkit.SourcemapParser;
 
-/// <summary>
-/// Source map parser.
-/// </summary>
+/// <summary>Source map parser.</summary>
 public static class SourceMapParser
 {
-	/// <summary>
-	/// Parses a stream representing a source map into a SourceMap object.
-	/// </summary>
+	/// <summary>Parses a stream representing a source map into a SourceMap object.</summary>
 	public static SourceMap? ParseSourceMap(Stream? sourceMapStream)
 	{
-		if (sourceMapStream == null)
+		if (sourceMapStream is null)
 		{
 			return null;
 		}
@@ -22,7 +18,7 @@ public static class SourceMapParser
 		using (sourceMapStream)
 		{
 			var result = JsonSerializer.Deserialize<SourceMap>(sourceMapStream);
-			if (result != null)
+			if (result is not null)
 			{
 				// Since SourceMap is immutable we need to allocate a new one and copy over all the information
 				var parsedMappings = MappingsListParser.ParseMappings(result.Mappings ?? string.Empty, result.Names ?? [], result.Sources ?? []);

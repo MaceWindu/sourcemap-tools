@@ -5,9 +5,7 @@ using SourcemapTools.CallstackDeminifier.Internal;
 
 namespace SourcemapToolkit.SourcemapParser;
 
-/// <summary>
-/// Source map object.
-/// </summary>
+/// <summary>Source map object.</summary>
 // :-/ unsealed just for test mocks to work
 public class SourceMap
 {
@@ -17,50 +15,34 @@ public class SourceMap
 	[JsonIgnore]
 	private static readonly Comparer<MappingEntry> _comparer = Comparer<MappingEntry>.Create((a, b) => a.GeneratedSourcePosition.CompareTo(b.GeneratedSourcePosition));
 
-	/// <summary>
-	/// The version of the source map specification being used.
-	/// </summary>
+	/// <summary>The version of the source map specification being used.</summary>
 	[JsonPropertyName("version")]
 	public int Version { get; set; }
 
-	/// <summary>
-	/// The name of the generated file to which this source map corresponds.
-	/// </summary>
+	/// <summary>The name of the generated file to which this source map corresponds.</summary>
 	[JsonPropertyName("file")]
 	public string? File { get; set; }
 
-	/// <summary>
-	/// The raw, unparsed mappings entry of the source map.
-	/// </summary>
+	/// <summary>The raw, unparsed mappings entry of the source map.</summary>
 	[JsonPropertyName("mappings")]
 	public string? Mappings { get; set; }
 
-	/// <summary>
-	/// The list of source files that were the inputs used to generate this output file.
-	/// </summary>
+	/// <summary>The list of source files that were the inputs used to generate this output file.</summary>
 	[JsonPropertyName("sources")]
 	public IReadOnlyList<string>? Sources { get; set; }
 
-	/// <summary>
-	/// A list of known original names for entries in this file.
-	/// </summary>
+	/// <summary>A list of known original names for entries in this file.</summary>
 	[JsonPropertyName("names")]
 	public IReadOnlyList<string>? Names { get; set; }
 
-	/// <summary>
-	/// Parsed version of the mappings string that is used for getting original names and source positions.
-	/// </summary>
+	/// <summary>Parsed version of the mappings string that is used for getting original names and source positions.</summary>
 	[JsonIgnore]
 	public IReadOnlyList<MappingEntry>? ParsedMappings { get; set; }
 
-	/// <summary>
-	/// A list of content source files.
-	/// </summary>
+	/// <summary>A list of content source files.</summary>
 	public IReadOnlyList<string>? SourcesContent { get; set; }
 
-	/// <summary>
-	/// Json deserialization constructor.
-	/// </summary>
+	/// <summary>Json deserialization constructor.</summary>
 	public SourceMap()
 	{
 	}
@@ -87,9 +69,7 @@ public class SourceMap
 		SourcesContent = sourcesContent;
 	}
 
-	/// <summary>
-	/// Creates copy fo source map.
-	/// </summary>
+	/// <summary>Creates copy fo source map.</summary>
 	/// <returns>Returns copy of current source map object.</returns>
 	public SourceMap Clone() => new(Version, File, Mappings, Sources, Names, ParsedMappings ?? [], SourcesContent);
 
@@ -104,14 +84,14 @@ public class SourceMap
 	/// </summary>
 	public SourceMap ApplySourceMap(SourceMap submap, string? sourceFile = null)
 	{
-		if (submap == null)
+		if (submap is null)
 		{
 			throw new ArgumentNullException(nameof(submap));
 		}
 
-		if (sourceFile == null)
+		if (sourceFile is null)
 		{
-			if (submap.File == null)
+			if (submap.File is null)
 			{
 				throw new InvalidOperationException($"{nameof(ApplySourceMap)} expects either the explicit source file to the map, or submap's 'file' property");
 			}
@@ -121,62 +101,70 @@ public class SourceMap
 
 		var sources = new HashSet<string>(StringComparer.Ordinal);
 		var names = new HashSet<string>(StringComparer.Ordinal);
-		IReadOnlyList<MappingEntry>? parsedMappings = null;
-
-		if (ParsedMappings != null && ParsedMappings.Count > 0)
-		{
-			var idx = 0;
-			var parsedMappingsArray = new MappingEntry[ParsedMappings.Count];
-
-			// transform mappings in this source map
-			foreach (var mappingEntry in ParsedMappings)
-			{
-				var newMappingEntry = mappingEntry;
-
-				if (mappingEntry.OriginalFileName == sourceFile && mappingEntry.OriginalSourcePosition != SourcePosition.NotFound)
-				{
-					var correspondingSubMapMappingEntry = submap.GetMappingEntryForGeneratedSourcePosition(mappingEntry.OriginalSourcePosition);
-
-					if (correspondingSubMapMappingEntry != null)
-					{
-						// Copy the mapping
-						newMappingEntry = new MappingEntry(
-							mappingEntry.GeneratedSourcePosition,
-							correspondingSubMapMappingEntry.Value.OriginalSourcePosition,
-							correspondingSubMapMappingEntry.Value.OriginalName ?? mappingEntry.OriginalName,
-							correspondingSubMapMappingEntry.Value.OriginalFileName ?? mappingEntry.OriginalFileName);
-					}
-				}
-
-				// Copy into "Sources" and "Names"
-				var originalFileName = newMappingEntry.OriginalFileName;
-				var originalName = newMappingEntry.OriginalName;
-
-				if (originalFileName != null)
-				{
-					sources.Add(originalFileName);
-				}
-
-				if (originalName != null)
-				{
-					names.Add(originalName);
-				}
-
-				parsedMappingsArray[idx] = newMappingEntry;
-				idx++;
-			}
-
-			parsedMappings = parsedMappingsArray;
-		}
+		var parsedMappings = RemapMappings(submap, sourceFile, sources, names);
 
 		return new SourceMap(
 			Version,
 			File,
-			null,
+			mappings: null,
 			[.. sources],
 			[.. names],
 			parsedMappings ?? [],
 			[]);
+	}
+
+	// transform mappings in this source map against the supplied submap
+	private IReadOnlyList<MappingEntry>? RemapMappings(SourceMap submap, string sourceFile, HashSet<string> sources, HashSet<string> names)
+	{
+		if (ParsedMappings is null || ParsedMappings.Count is 0)
+		{
+			return null;
+		}
+
+		var parsedMappingsArray = new MappingEntry[ParsedMappings.Count];
+		var idx = 0;
+
+		foreach (var mappingEntry in ParsedMappings)
+		{
+			var newMappingEntry = RemapEntry(mappingEntry, submap, sourceFile);
+
+			// Copy into "Sources" and "Names"
+			if (newMappingEntry.OriginalFileName is not null)
+			{
+				sources.Add(newMappingEntry.OriginalFileName);
+			}
+
+			if (newMappingEntry.OriginalName is not null)
+			{
+				names.Add(newMappingEntry.OriginalName);
+			}
+
+			parsedMappingsArray[idx] = newMappingEntry;
+			idx++;
+		}
+
+		return parsedMappingsArray;
+	}
+
+	// rewrite a single mapping entry through the supplied submap
+	private static MappingEntry RemapEntry(MappingEntry mappingEntry, SourceMap submap, string sourceFile)
+	{
+		if (string.Equals(mappingEntry.OriginalFileName, sourceFile, StringComparison.Ordinal) && mappingEntry.OriginalSourcePosition != SourcePosition.NotFound)
+		{
+			var correspondingSubMapMappingEntry = submap.GetMappingEntryForGeneratedSourcePosition(mappingEntry.OriginalSourcePosition);
+
+			if (correspondingSubMapMappingEntry != null)
+			{
+				// Copy the mapping
+				return new MappingEntry(
+					mappingEntry.GeneratedSourcePosition,
+					correspondingSubMapMappingEntry.Value.OriginalSourcePosition,
+					correspondingSubMapMappingEntry.Value.OriginalName ?? mappingEntry.OriginalName,
+					correspondingSubMapMappingEntry.Value.OriginalFileName ?? mappingEntry.OriginalFileName);
+			}
+		}
+
+		return mappingEntry;
 	}
 
 	/// <summary>
@@ -188,7 +176,7 @@ public class SourceMap
 	// :-/ virtual just for test mocks to work
 	public virtual MappingEntry? GetMappingEntryForGeneratedSourcePosition(SourcePosition generatedSourcePosition)
 	{
-		if (ParsedMappings == null)
+		if (ParsedMappings is null)
 		{
 			return null;
 		}

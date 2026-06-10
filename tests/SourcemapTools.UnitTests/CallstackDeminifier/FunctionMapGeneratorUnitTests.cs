@@ -17,7 +17,7 @@ public class FunctionMapGeneratorUnitTests
 		using var stream = UnitTestUtils.StreamFromString(sourceCode);
 
 		// Act
-		var functionMap = functionMapGenerator.GenerateFunctionMap(stream, null);
+		var functionMap = functionMapGenerator.GenerateFunctionMap(stream, sourceMap: null);
 
 		// Assert
 		Assert.That(functionMap, Is.Null);

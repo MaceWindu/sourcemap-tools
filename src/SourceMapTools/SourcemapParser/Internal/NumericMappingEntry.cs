@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.SourcemapParser.Internal;
@@ -14,6 +15,7 @@ namespace SourcemapTools.SourcemapParser.Internal;
 /// <param name="OriginalLineNumber">The zero-based line number in the source code that corresponds to this mapping segment.</param>
 /// <param name="OriginalColumnNumber">The zero-based line number in the source code that corresponds to this mapping segment.</param>
 /// <param name="OriginalNameIndex">The zero-based index into the names array that can be used to identify names associated with this object.</param>
+[StructLayout(LayoutKind.Auto)]
 public readonly record struct NumericMappingEntry(
 	int GeneratedLineNumber,
 	int GeneratedColumnNumber,
@@ -22,41 +24,38 @@ public readonly record struct NumericMappingEntry(
 	int? OriginalColumnNumber,
 	int? OriginalNameIndex)
 {
-	/// <summary>
-	/// Internal API.
-	/// </summary>
+	/// <summary>Internal API.</summary>
 	public MappingEntry ToMappingEntry(IReadOnlyList<string> names, IReadOnlyList<string> sources)
 	{
-		if (names == null)
+		if (names is null)
 		{
 			throw new ArgumentNullException(nameof(names));
 		}
-		if (sources == null)
+		if (sources is null)
 		{
 			throw new ArgumentNullException(nameof(sources));
 		}
 
-		var originalSourcePosition = OriginalColumnNumber.HasValue && OriginalLineNumber.HasValue
-			? new SourcePosition(OriginalLineNumber.Value, OriginalColumnNumber.Value)
+		var originalSourcePosition = OriginalColumnNumber is not null && OriginalLineNumber is not null ? new SourcePosition(OriginalLineNumber.Value, OriginalColumnNumber.Value)
 			: SourcePosition.NotFound;
 
 		string? originalName = null;
-		if (OriginalNameIndex.HasValue)
+		if (OriginalNameIndex is not null)
 		{
 			if (OriginalNameIndex.Value < 0 || OriginalNameIndex.Value >= names.Count)
 			{
-				throw new ArgumentOutOfRangeException($"Source map contains original name index (={OriginalNameIndex.Value}) that is outside the range of the provided names array[{names.Count}]");
+				throw new ArgumentOutOfRangeException(FormattableString.Invariant($"Source map contains original name index (={OriginalNameIndex.Value}) that is outside the range of the provided names array[{names.Count}]"));
 			}
 
 			originalName = names[OriginalNameIndex.Value];
 		}
 
 		string? originalFileName = null;
-		if (OriginalSourceFileIndex.HasValue)
+		if (OriginalSourceFileIndex is not null)
 		{
 			if (OriginalSourceFileIndex.Value < 0 || OriginalSourceFileIndex.Value >= sources.Count)
 			{
-				throw new ArgumentOutOfRangeException($"Source map contains original name index (={OriginalSourceFileIndex.Value}) that is outside the range of the provided names array[{sources.Count}]");
+				throw new ArgumentOutOfRangeException(FormattableString.Invariant($"Source map contains original name index (={OriginalSourceFileIndex.Value}) that is outside the range of the provided names array[{sources.Count}]"));
 			}
 
 			originalFileName = sources[OriginalSourceFileIndex.Value];

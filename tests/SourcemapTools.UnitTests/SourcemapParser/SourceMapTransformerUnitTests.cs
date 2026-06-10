@@ -2,9 +2,7 @@
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests;
 
-/// <summary>
-/// Summary description for SourceMapTransformerUnitTests
-/// </summary>
+/// <summary>Summary description for SourceMapTransformerUnitTests</summary>
 public class SourceMapTransformerUnitTests
 {
 
@@ -21,7 +19,7 @@ public class SourceMapTransformerUnitTests
 			File = "generated.js",
 			Sources = ["sourceOne.js"],
 			ParsedMappings = [mappingEntry],
-			SourcesContent = ["var a = b"]
+			SourcesContent = ["var a = b"],
 		};
 
 		// Act

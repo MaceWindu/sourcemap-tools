@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using SourcemapTools.CallstackDeminifier.Internal;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
@@ -11,7 +12,7 @@ public class KeyValueCacheUnitTests
 		// Arrange
 		static string? valueGetter(string x)
 		{
-			return x == "bar" ? "foo" : null;
+			return string.Equals(x, "bar", StringComparison.Ordinal) ? "foo" : null;
 		}
 
 		var keyValueCache = new KeyValueCache<string, string>(valueGetter);
@@ -30,7 +31,7 @@ public class KeyValueCacheUnitTests
 		var cnt = 0;
 		string? valueGetter(string x)
 		{
-			if (x == "bar")
+			if (string.Equals(x, "bar", StringComparison.Ordinal))
 			{
 				cnt++;
 				return "foo";
@@ -60,7 +61,7 @@ public class KeyValueCacheUnitTests
 		var cnt = 0;
 		string? valueGetter(string x)
 		{
-			if (x == "bar")
+			if (string.Equals(x, "bar", StringComparison.Ordinal))
 			{
 				cnt++;
 			}
@@ -89,7 +90,7 @@ public class KeyValueCacheUnitTests
 		string? returnValue = null;
 		string? valueGetter(string x)
 		{
-			if (x == "bar")
+			if (string.Equals(x, "bar", StringComparison.Ordinal))
 			{
 				cnt++;
 				return returnValue;

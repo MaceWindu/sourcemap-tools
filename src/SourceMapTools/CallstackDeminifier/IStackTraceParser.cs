@@ -2,9 +2,7 @@
 
 namespace SourcemapToolkit.CallstackDeminifier;
 
-/// <summary>
-/// Stack trace parser contract.
-/// </summary>
+/// <summary>Stack trace parser contract.</summary>
 public interface IStackTraceParser
 {
 	/// <summary>
@@ -18,9 +16,7 @@ public interface IStackTraceParser
 	/// Any parts of the stack trace that could not be parsed are excluded from
 	/// the result. Does not ever return null.
 	/// </returns>
-	/// <remarks>
-	/// This override drops the Message out parameter for backward compatibility.
-	/// </remarks>
+	/// <remarks>This override drops the Message out parameter for backward compatibility.</remarks>
 	public IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString);
 
 	/// <summary>

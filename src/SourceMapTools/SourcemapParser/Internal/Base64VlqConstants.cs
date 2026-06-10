@@ -18,9 +18,7 @@
 
 namespace SourcemapTools.SourcemapParser.Internal;
 
-/// <summary>
-/// Constants used in Base64 VLQ encode/decode.
-/// </summary>
+/// <summary>Constants used in Base64 VLQ encode/decode.</summary>
 internal static class Base64VlqConstants
 {
 	// A Base64 VLQ digit can represent 5 bits, so it is base-32.

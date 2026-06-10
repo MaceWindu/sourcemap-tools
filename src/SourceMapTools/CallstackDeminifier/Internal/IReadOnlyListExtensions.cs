@@ -3,17 +3,13 @@ using System.Collections.Generic;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public static class IReadOnlyListExtensions
 {
-	/// <summary>
-	/// Internal API.
-	/// </summary>
+	/// <summary>Internal API.</summary>
 	public static int IndexOf<T>(this IReadOnlyList<T> input, T value)
 	{
-		if (input == null)
+		if (input is null)
 		{
 			throw new ArgumentNullException(nameof(input));
 		}
@@ -30,16 +26,14 @@ public static class IReadOnlyListExtensions
 		return -1;
 	}
 
-	/// <summary>
-	/// Copied from: https://referencesource.microsoft.com/#mscorlib/system/collections/generic/arraysorthelper.cs,63a9955a91f2b37b.
-	/// </summary>
+	/// <summary>Copied from: https://referencesource.microsoft.com/#mscorlib/system/collections/generic/arraysorthelper.cs,63a9955a91f2b37b.</summary>
 	public static int BinarySearch<T>(this IReadOnlyList<T> input, T item, IComparer<T> comparer)
 	{
-		if (input == null)
+		if (input is null)
 		{
 			throw new ArgumentNullException(nameof(input));
 		}
-		if (comparer == null)
+		if (comparer is null)
 		{
 			throw new ArgumentNullException(nameof(comparer));
 		}
@@ -52,7 +46,7 @@ public static class IReadOnlyListExtensions
 			var i = lo + ((hi - lo) >> 1);
 			var order = comparer.Compare(input[i], item);
 
-			if (order == 0)
+			if (order is 0)
 			{
 				return i;
 			}

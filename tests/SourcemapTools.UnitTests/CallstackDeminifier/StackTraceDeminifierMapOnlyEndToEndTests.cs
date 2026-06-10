@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using SourcemapToolkit.SourcemapParser.UnitTests;
 
 namespace SourcemapToolkit.CallstackDeminifier.UnitTests;
@@ -11,9 +12,9 @@ public class StackTraceDeminifierMapOnlyEndToEndTests
 	private static StackTraceDeminifier GetStackTraceDeminifierWithDependencies()
 	{
 		var url = "http://localhost:11323/crashcauser.min.js";
-		var sourceMapProvider = new ISourceMapProviderMock(x => x == url ? UnitTestUtils.StreamFromString(SourceMapString) : null);
+		var sourceMapProvider = new ISourceMapProviderMock(x => string.Equals(x, url, StringComparison.Ordinal) ? UnitTestUtils.StreamFromString(SourceMapString) : null);
 
-		var sourceCodeProvider = new ISourceCodeProviderMock(x => x == url ? UnitTestUtils.StreamFromString(GeneratedCodeString) : null);
+		var sourceCodeProvider = new ISourceCodeProviderMock(x => string.Equals(x, url, StringComparison.Ordinal) ? UnitTestUtils.StreamFromString(GeneratedCodeString) : null);
 
 		return StackTraceDeminifierFactory.GetMapOnlyStackTraceDeminifier(sourceMapProvider);
 	}

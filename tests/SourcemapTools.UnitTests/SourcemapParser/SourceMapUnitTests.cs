@@ -25,7 +25,7 @@ public class SourceMapUnitTests
 		// Arrange
 		var parsedMappings = new List<MappingEntry>
 		{
-			new(generatedSourcePosition: new SourcePosition(0, 0))
+			new(generatedSourcePosition: new SourcePosition(0, 0)),
 		};
 
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
@@ -47,7 +47,7 @@ public class SourceMapUnitTests
 		var parsedMappings = new List<MappingEntry>
 		{
 			new(generatedSourcePosition: new SourcePosition(0, 0)),
-			matchingMappingEntry
+			matchingMappingEntry,
 		};
 
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
@@ -69,7 +69,7 @@ public class SourceMapUnitTests
 		var parsedMappings = new List<MappingEntry>
 		{
 			new(generatedSourcePosition: new SourcePosition(0, 0)),
-			matchingMappingEntry
+			matchingMappingEntry,
 		};
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 		var sourcePosition = new SourcePosition(10, 14);
@@ -90,7 +90,7 @@ public class SourceMapUnitTests
 		var parsedMappings = new List<MappingEntry>
 		{
 			new(generatedSourcePosition: new SourcePosition(0, 0)),
-			matchingMappingEntry
+			matchingMappingEntry,
 		};
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 		var sourcePosition = new SourcePosition(24, 0);

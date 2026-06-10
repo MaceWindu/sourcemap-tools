@@ -33,7 +33,7 @@ public class FunctionMapConsumerUnitTests
 				[],
 				null,
 				new SourcePosition(40, 10),
-				new SourcePosition(50, 10))
+				new SourcePosition(50, 10)),
 		};
 		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
@@ -51,13 +51,13 @@ public class FunctionMapConsumerUnitTests
 		var sourcePosition = new SourcePosition(41, 2);
 		var functionMapEntry = new FunctionMapEntry(
 			[],
-			null,
+DeminifiedMethodName: null,
 			new SourcePosition(40, 10),
 			new SourcePosition(50, 10));
 
 		var functionMap = new List<FunctionMapEntry>
 		{
-			functionMapEntry
+			functionMapEntry,
 		};
 		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 
@@ -75,13 +75,13 @@ public class FunctionMapConsumerUnitTests
 		var sourcePosition = new SourcePosition(31, 0);
 		var functionMapEntry = new FunctionMapEntry(
 			[],
-			null,
+DeminifiedMethodName: null,
 			new SourcePosition(10, 10),
 			new SourcePosition(20, 30));
 
 		var functionMapEntry2 = new FunctionMapEntry(
 			[],
-			null,
+DeminifiedMethodName: null,
 			new SourcePosition(30, 0),
 			new SourcePosition(40, 2));
 
@@ -106,20 +106,20 @@ public class FunctionMapConsumerUnitTests
 		var sourcePosition = new SourcePosition(10, 25);
 		var functionMapEntry = new FunctionMapEntry(
 			[],
-			null,
+DeminifiedMethodName: null,
 			new SourcePosition(5, 10),
 			new SourcePosition(20, 30));
 
 		var functionMapEntry2 = new FunctionMapEntry(
 			[],
-			null,
+DeminifiedMethodName: null,
 			new SourcePosition(9, 0),
 			new SourcePosition(15, 2));
 
 		var functionMap = new List<FunctionMapEntry>
 		{
 			functionMapEntry2,
-			functionMapEntry
+			functionMapEntry,
 		};
 		IFunctionMapConsumer functionMapConsumer = new FunctionMapConsumer();
 

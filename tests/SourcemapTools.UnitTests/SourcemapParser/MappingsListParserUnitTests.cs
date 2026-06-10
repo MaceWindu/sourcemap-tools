@@ -59,10 +59,10 @@ public class MappingsListParserUnitTests
 		}
 		using (Assert.EnterMultipleScope())
 		{
-			Assert.That(result.OriginalSourceFileIndex.HasValue, Is.False);
-			Assert.That(result.OriginalLineNumber.HasValue, Is.False);
-			Assert.That(result.OriginalColumnNumber.HasValue, Is.False);
-			Assert.That(result.OriginalNameIndex.HasValue, Is.False);
+			Assert.That(result.OriginalSourceFileIndex, Is.Null);
+			Assert.That(result.OriginalLineNumber, Is.Null);
+			Assert.That(result.OriginalColumnNumber, Is.Null);
+			Assert.That(result.OriginalNameIndex, Is.Null);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class MappingsListParserUnitTests
 			Assert.That(result.OriginalLineNumber, Is.EqualTo(2));
 			Assert.That(result.OriginalColumnNumber, Is.EqualTo(4));
 		}
-		Assert.That(result.OriginalNameIndex.HasValue, Is.False);
+		Assert.That(result.OriginalNameIndex, Is.Null);
 	}
 
 	[Test]

@@ -3,9 +3,7 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// This class is responsible for providing the source map that corresponds to a given JavaScript file.
-/// </summary>
+/// <summary>This class is responsible for providing the source map that corresponds to a given JavaScript file.</summary>
 internal sealed class SourceMapStore : ISourceMapStore
 {
 	private readonly ISourceMapProvider _sourceMapProvider;
@@ -23,5 +21,5 @@ internal sealed class SourceMapStore : ISourceMapStore
 	/// Once a source map is generated, the value is cached in memory for future usages.
 	/// </summary>
 	/// <param name="sourceCodeUrl">The URL of the file for which a function map is required.</param>
-	SourceMap? ISourceMapStore.GetSourceMapForUrl(string? sourceCodeUrl) => sourceCodeUrl == null ? null : _sourceMapCache.GetValue(sourceCodeUrl);
+	SourceMap? ISourceMapStore.GetSourceMapForUrl(string? sourceCodeUrl) => sourceCodeUrl is null ? null : _sourceMapCache.GetValue(sourceCodeUrl);
 }

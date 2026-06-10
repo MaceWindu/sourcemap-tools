@@ -13,6 +13,8 @@
 		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
 		<PackageVersion Include="DotNet.ReproducibleBuilds" Version="2.0.2" />
 
+		<PackageVersion Include="AsyncFixer" Version="2.1.0" />
+		<PackageVersion Include="Meziantou.Analyzer" Version="3.0.102" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0"  />
 		<PackageVersion Include="Lindhart.Analyser.MissingAwaitWarning" Version="3.2.0" />

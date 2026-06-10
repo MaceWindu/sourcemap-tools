@@ -22,7 +22,7 @@ public static class MappingsListParser
 	/// <returns></returns>
 	public static NumericMappingEntry ParseSingleMappingSegment(IReadOnlyList<int> segmentFields, MappingsParserState mappingsParserState)
 	{
-		if (segmentFields == null)
+		if (segmentFields is null)
 		{
 			throw new ArgumentNullException(nameof(segmentFields));
 		}
@@ -59,6 +59,11 @@ public static class MappingsListParser
 		 *     is represented.
 		 */
 
+		return BuildNumericMappingEntry(segmentFields, mappingsParserState, generatedLineNumber, generatedColumnNumber);
+	}
+
+	private static NumericMappingEntry BuildNumericMappingEntry(IReadOnlyList<int> segmentFields, MappingsParserState mappingsParserState, int generatedLineNumber, int generatedColumnNumber)
+	{
 		int? originalSourceFileIndex = null;
 		int? originalLineNumber = null;
 		int? originalColumnNumber = null;
@@ -90,7 +95,7 @@ public static class MappingsListParser
 	/// </summary>
 	public static IReadOnlyList<MappingEntry> ParseMappings(string mappingString, IReadOnlyList<string> names, IReadOnlyList<string> sources)
 	{
-		if (mappingString == null)
+		if (mappingString is null)
 		{
 			throw new ArgumentNullException(nameof(mappingString));
 		}
