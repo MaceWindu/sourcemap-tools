@@ -3,7 +3,7 @@
 		<PackageVersion Include="esprima" Version="3.0.5" />
 		<PackageVersion Include="System.Text.Json" Version="6.0.10" />
 
-		<PackageVersion Include="PolySharp" Version="1.14.1" />
+		<PackageVersion Include="Meziantou.Polyfill" Version="1.0.150" />
 
 		<PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
 		<PackageVersion Include="NUnit" Version="4.2.2" />

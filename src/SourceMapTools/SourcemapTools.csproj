@@ -4,6 +4,17 @@
 		<DocumentationFile>$(ArtifactsPath)/bin/$(MSBuildProjectName)/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
+	<PropertyGroup Label="Enabled Polyfills">
+		<!--https://github.com/meziantou/Meziantou.Polyfill?tab=readme-ov-file#supported-polyfills-->
+		<Polyfill></Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Diagnostics.CodeAnalysis</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Index</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Range</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Runtime.CompilerServices.IsExternalInit</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Runtime.CompilerServices.SkipLocalsInitAttribute</Polyfill>
+		<MeziantouPolyfill_IncludedPolyfills>$(Polyfill)</MeziantouPolyfill_IncludedPolyfills>
+	</PropertyGroup>
+
 	<PropertyGroup Label="Nuget">
 		<PackageId>SourceMapTools</PackageId>
 		<Title>SourceMap Tools</Title>
@@ -28,7 +39,7 @@
 		<PackageReference Include="esprima" />
 		<PackageReference Include="System.Text.Json" />
 
-		<PackageReference Include="PolySharp">
+		<PackageReference Include="Meziantou.Polyfill">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
