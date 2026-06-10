@@ -28,6 +28,11 @@ stages:
 
     steps:
 
+    - task: UseDotNet@2
+      inputs:
+        useGlobalJson: true
+      displayName: Install .NET SDK (from global.json)
+
 #########
 # BUILD #
 #########
@@ -45,7 +50,7 @@ stages:
 ###############
 # BUILD NUGET #
 ###############
-    - script: dotnet pack $(Build.SourcesDirectory)/src/SourceMapTools/SourcemapTools.csproj -c $(build_configuration) -property:Version=$(packageVersion) --no-build --output $(Build.SourcesDirectory)/.build/nuget
+    - script: dotnet pack $(Build.SourcesDirectory)/src/SourceMapTools/SourcemapTools.csproj -c $(build_configuration) -property:Version=$(packageVersion) -property:RepositoryBranch=$(Build.SourceBranchName) --no-build --output $(Build.SourcesDirectory)/.build/nuget
       displayName: Build nuget
       condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'release')))
 
@@ -68,7 +73,8 @@ stages:
 #################
 # PUBLISH NUGET #
 #################
-    - task: NuGetCommand@2
+    # master: push to the Azure Artifacts feed (DotNetCoreCLI@2 push handles internal-feed auth and invokes dotnet)
+    - task: DotNetCoreCLI@2
       inputs:
         command: 'push'
         packagesToPush: '$(Build.SourcesDirectory)/.build/nuget/SourceMapTools.*.nupkg'
@@ -77,11 +83,8 @@ stages:
       displayName: Publish to Azure Artifacts feed
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
 
-    - task: NuGetCommand@2
-      inputs:
-        command: 'push'
-        packagesToPush: '$(Build.SourcesDirectory)/.build/nuget/SourceMapTools.*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'nuget.org'
+    # release: push to nuget.org with `dotnet nuget push`.
+    # Requires a secret pipeline variable NUGET_API_KEY (nuget.org API key).
+    - script: dotnet nuget push "$(Build.SourcesDirectory)/.build/nuget/SourceMapTools.*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key "$(NUGET_API_KEY)" --skip-duplicate
       displayName: Publish to Nuget.org
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'release'))
