@@ -36,14 +36,12 @@ public static class Base64VlqDecoder
 	/// </summary>
 	private static int FromVlqSigned(int value)
 	{
-		var negate = (value & 1) == 1;
+		var negate = (value & 1) is 1;
 		value >>= 1;
 		return negate ? -value : value;
 	}
 
-	/// <summary>
-	/// Returns a list of integers corresponding to an input string that is Base64 VLQ encoded.
-	/// </summary>
+	/// <summary>Returns a list of integers corresponding to an input string that is Base64 VLQ encoded.</summary>
 	public static IReadOnlyList<int> Decode(string input)
 	{
 		var result = new List<int>();
@@ -69,15 +67,11 @@ public static class Base64VlqDecoder
 			return nextChar;
 		}
 
-		/// <summary>
-		/// Returns true when no more characters can be provided.
-		/// </summary>
+		/// <summary>Returns true when no more characters can be provided.</summary>
 		internal bool IsEmpty() => _currentIndex >= _backingString.Length;
 	}
 
-	/// <summary>
-	/// Reads characters from the Base64CharProvider until a complete integer value has been extracted.
-	/// </summary>
+	/// <summary>Reads characters from the Base64CharProvider until a complete integer value has been extracted.</summary>
 	private static int DecodeNextInteger(Base64CharProvider charProvider)
 	{
 		var result = 0;
@@ -87,7 +81,7 @@ public static class Base64VlqDecoder
 		{
 			var c = charProvider.ReadNextCharacter();
 			var digit = Base64Converter.FromBase64(c);
-			continuation = (digit & Base64VlqConstants.VlqContinuationBit) != 0;
+			continuation = (digit & Base64VlqConstants.VlqContinuationBit) is not 0;
 			digit &= Base64VlqConstants.VlqBaseMask;
 			result += digit << shift;
 			shift += Base64VlqConstants.VlqBaseShift;

@@ -1,16 +1,57 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<DocumentationFile>$(ArtifactsPath)/bin/$(MSBuildProjectName)/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
+	<PropertyGroup Label="Enabled Polyfills">
+		<!--https://github.com/meziantou/Meziantou.Polyfill?tab=readme-ov-file#supported-polyfills-->
+		<Polyfill></Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Diagnostics.CodeAnalysis</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Index</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Range</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Runtime.CompilerServices.IsExternalInit</Polyfill>
+		<Polyfill>$(Polyfill)|T:System.Runtime.CompilerServices.SkipLocalsInitAttribute</Polyfill>
+		<MeziantouPolyfill_IncludedPolyfills>$(Polyfill)</MeziantouPolyfill_IncludedPolyfills>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Nuget">
+		<PackageId>SourceMapTools</PackageId>
+		<Title>SourceMap Tools</Title>
+		<Description>A C# library that allows for the consumption of source maps and the deminification of JavaScript stack traces.</Description>
+		<PackageTags>sourcemap callstack stackframe deminify</PackageTags>
+		<Authors>MaceWindu@github.com</Authors>
+		<Copyright>Copyright © 2026</Copyright>
+		<PackageProjectUrl>https://github.com/MaceWindu/sourcemap-tools</PackageProjectUrl>
+		<PackageReleaseNotes>https://github.com/MaceWindu/sourcemap-tools/releases/tag/v$(Version)</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup Label="Nuget">
+		<None Include="../../LICENSE.txt" Pack="true" PackagePath="\" />
+		<None Include="../../README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="esprima" />
 		<PackageReference Include="System.Text.Json" />
 
-		<PackageReference Include="PolySharp" />
-		<PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" />
-		<PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" />
+		<PackageReference Include="Meziantou.Polyfill">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Lindhart.Analyser.MissingAwaitWarning">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+
+		<PackageReference Include="DotNet.ReproducibleBuilds">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 
 		<PackageReference Include="Microsoft.SourceLink.GitHub">
 			<PrivateAssets>all</PrivateAssets>
@@ -23,9 +64,9 @@
 		<AdditionalFiles Include="PublicAPI/PublicAPI.*.txt" />
 	</ItemGroup>
 
+	<!-- Ship debug symbols embedded in the assembly (no separate .pdb/.snupkg). -->
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<DebugType>portable</DebugType>
+		<DebugType>embedded</DebugType>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
 </Project>

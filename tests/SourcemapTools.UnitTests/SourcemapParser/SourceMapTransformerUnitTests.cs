@@ -2,9 +2,7 @@
 
 namespace SourcemapToolkit.SourcemapParser.UnitTests;
 
-/// <summary>
-/// Summary description for SourceMapTransformerUnitTests
-/// </summary>
+/// <summary>Summary description for SourceMapTransformerUnitTests</summary>
 public class SourceMapTransformerUnitTests
 {
 
@@ -21,7 +19,7 @@ public class SourceMapTransformerUnitTests
 			File = "generated.js",
 			Sources = ["sourceOne.js"],
 			ParsedMappings = [mappingEntry],
-			SourcesContent = ["var a = b"]
+			SourcesContent = ["var a = b"],
 		};
 
 		// Act
@@ -29,19 +27,19 @@ public class SourceMapTransformerUnitTests
 
 		// Assert
 		Assert.That(linesOnlyMap, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(linesOnlyMap.Sources?.Count, Is.EqualTo(1));
 			Assert.That(linesOnlyMap.SourcesContent?.Count, Is.EqualTo(1));
 			Assert.That(linesOnlyMap.ParsedMappings, Has.Count.EqualTo(1));
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line, Is.EqualTo(1));
-			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column, Is.EqualTo(0));
+			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column, Is.Zero);
 			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Line, Is.EqualTo(2));
-			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Column, Is.EqualTo(0));
-		});
+			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Column, Is.Zero);
+		}
 	}
 
 	[Test]
@@ -70,19 +68,19 @@ public class SourceMapTransformerUnitTests
 
 		// Assert
 		Assert.That(linesOnlyMap, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(linesOnlyMap.Sources?.Count, Is.EqualTo(1));
 			Assert.That(linesOnlyMap.SourcesContent?.Count, Is.EqualTo(1));
 			Assert.That(linesOnlyMap.ParsedMappings, Has.Count.EqualTo(1));
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line, Is.EqualTo(1));
-			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column, Is.EqualTo(0));
+			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column, Is.Zero);
 			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Line, Is.EqualTo(2));
-			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Column, Is.EqualTo(0));
-		});
+			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Column, Is.Zero);
+		}
 	}
 
 	[Test]
@@ -111,18 +109,18 @@ public class SourceMapTransformerUnitTests
 
 		// Assert
 		Assert.That(linesOnlyMap, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(linesOnlyMap.Sources?.Count, Is.EqualTo(1));
 			Assert.That(linesOnlyMap.SourcesContent?.Count, Is.EqualTo(1));
 			Assert.That(linesOnlyMap.ParsedMappings, Has.Count.EqualTo(1));
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Line, Is.EqualTo(1));
-			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column, Is.EqualTo(0));
+			Assert.That(linesOnlyMap.ParsedMappings[0].GeneratedSourcePosition.Column, Is.Zero);
 			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Line, Is.EqualTo(2));
-			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Column, Is.EqualTo(0));
-		});
+			Assert.That(linesOnlyMap.ParsedMappings[0].OriginalSourcePosition.Column, Is.Zero);
+		}
 	}
 }

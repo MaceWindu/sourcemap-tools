@@ -20,6 +20,7 @@
 
 		<GenerateAssemblyCompanyAttribute>False</GenerateAssemblyCompanyAttribute>
 		<GenerateAssemblyConfigurationAttribute>False</GenerateAssemblyConfigurationAttribute>
+		<GenerateAssemblyCopyrightAttribute>False</GenerateAssemblyCopyrightAttribute>
 		<GenerateAssemblyFileVersionAttribute>False</GenerateAssemblyFileVersionAttribute>
 		<GenerateAssemblyProductAttribute>False</GenerateAssemblyProductAttribute>
 		<GenerateAssemblyTitleAttribute>False</GenerateAssemblyTitleAttribute>
@@ -52,6 +53,14 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>build; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="AsyncFixer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Meziantou.Analyzer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 

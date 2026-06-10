@@ -3,9 +3,7 @@ using System.Collections.Concurrent;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public sealed class KeyValueCache<TKey, TValue>(Func<TKey, TValue?> valueGetter) where TValue : class
 {
 	private readonly ConcurrentDictionary<TKey, TValue?> _cache = new();
@@ -22,11 +20,11 @@ public sealed class KeyValueCache<TKey, TValue>(Func<TKey, TValue?> valueGetter)
 		{
 			value = _cache.GetOrAdd(key, _valueGetter);
 		}
-		else if (value == null)
+		else if (value is null)
 		{
 			// If the value stored in the cache is null, we should see if we can now get a
 			// non-null value from the value getter
-			_cache.TryUpdate(key, _valueGetter(key), null);
+			_cache.TryUpdate(key, _valueGetter(key), comparisonValue: null);
 			_cache.TryGetValue(key, out value);
 		}
 

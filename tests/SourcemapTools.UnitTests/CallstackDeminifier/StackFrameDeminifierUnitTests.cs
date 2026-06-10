@@ -24,19 +24,19 @@ public class StackFrameDeminifierUnitTests
 	public void DeminifyStackFrame_StackFrameNullProperties_DoesNotThrowException([Values] bool preferSourceMapsSymbols)
 	{
 		// Arrange
-		var stackFrame = new StackFrame(null);
+		var stackFrame = new StackFrame(methodName: null);
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies();
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.Null);
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -44,22 +44,22 @@ public class StackFrameDeminifierUnitTests
 	{
 		// Arrange
 		var filePath = "foo";
-		var stackFrame = new StackFrame(null) { FilePath = filePath };
+		var stackFrame = new StackFrame(methodName: null) { FilePath = filePath };
 		var functionMapStore = new IFunctionMapStoreMock(_ => null);
 
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore, useSimpleStackFrameDeminifier: true);
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoSourceCodeProvided));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.Null);
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -67,23 +67,23 @@ public class StackFrameDeminifierUnitTests
 	{
 		// Arrange
 		var filePath = "foo";
-		var stackFrame = new StackFrame(null) { FilePath = filePath };
-		var functionMapStore = new IFunctionMapStoreMock(x => x == filePath ? new List<FunctionMapEntry>() : null);
+		var stackFrame = new StackFrame(methodName: null) { FilePath = filePath };
+		var functionMapStore = new IFunctionMapStoreMock(x => string.Equals(x, filePath, System.StringComparison.Ordinal) ? new List<FunctionMapEntry>() : null);
 		var functionMapConsumer = new IFunctionMapConsumerMock((x, y) => null);
 
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore, functionMapConsumer: functionMapConsumer, useSimpleStackFrameDeminifier: true);
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoWrappingFunctionFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.Null);
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -92,22 +92,22 @@ public class StackFrameDeminifierUnitTests
 		// Arrange
 		var filePath = "foo";
 		var wrappingFunctionMapEntry = CreateFunctionMapEntry("DeminifiedFoo");
-		var stackFrame = new StackFrame(null) { FilePath = filePath };
-		var functionMapStore = new IFunctionMapStoreMock(x => x == filePath ? new List<FunctionMapEntry>() : null);
+		var stackFrame = new StackFrame(methodName: null) { FilePath = filePath };
+		var functionMapStore = new IFunctionMapStoreMock(x => string.Equals(x, filePath, System.StringComparison.Ordinal) ? new List<FunctionMapEntry>() : null);
 		var functionMapConsumer = new IFunctionMapConsumerMock((x, y) => wrappingFunctionMapEntry);
 
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore, functionMapConsumer: functionMapConsumer, useSimpleStackFrameDeminifier: true);
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.None));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 
@@ -117,22 +117,22 @@ public class StackFrameDeminifierUnitTests
 		// Arrange
 		var filePath = "foo";
 		var wrappingFunctionMapEntry = CreateFunctionMapEntry(deminifiedMethodName: "DeminifiedFoo");
-		var stackFrame = new StackFrame(null) { FilePath = filePath };
-		var functionMapStore = new IFunctionMapStoreMock(x => x == filePath ? new List<FunctionMapEntry>() : null);
+		var stackFrame = new StackFrame(methodName: null) { FilePath = filePath };
+		var functionMapStore = new IFunctionMapStoreMock(x => string.Equals(x, filePath, System.StringComparison.Ordinal) ? new List<FunctionMapEntry>() : null);
 		var functionMapConsumer = new IFunctionMapConsumerMock((x, y) => wrappingFunctionMapEntry);
 
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(functionMapStore: functionMapStore, functionMapConsumer: functionMapConsumer);
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoSourceMap));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 
@@ -142,23 +142,23 @@ public class StackFrameDeminifierUnitTests
 		// Arrange
 		var filePath = "foo";
 		var wrappingFunctionMapEntry = CreateFunctionMapEntry(deminifiedMethodName: "DeminifiedFoo");
-		var stackFrame = new StackFrame(null) { FilePath = filePath };
-		var functionMapStore = new IFunctionMapStoreMock(x => x == filePath ? new List<FunctionMapEntry>() : null);
+		var stackFrame = new StackFrame(methodName: null) { FilePath = filePath };
+		var functionMapStore = new IFunctionMapStoreMock(x => string.Equals(x, filePath, System.StringComparison.Ordinal) ? new List<FunctionMapEntry>() : null);
 		var functionMapConsumer = new IFunctionMapConsumerMock((x, y) => wrappingFunctionMapEntry);
 		var sourceMapStore = new ISourceMapStoreMock(_ => CreateSourceMap());
 
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(sourceMapStore: sourceMapStore, functionMapStore: functionMapStore, functionMapConsumer: functionMapConsumer);
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoMatchingMappingInSourceMap));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 
@@ -168,8 +168,8 @@ public class StackFrameDeminifierUnitTests
 		// Arrange
 		var filePath = "foo";
 		var wrappingFunctionMapEntry = CreateFunctionMapEntry(deminifiedMethodName: "DeminifiedFoo");
-		var stackFrame = new StackFrame(null) { FilePath = filePath };
-		var functionMapStore = new IFunctionMapStoreMock(x => x == filePath ? new List<FunctionMapEntry>() : null);
+		var stackFrame = new StackFrame(methodName: null) { FilePath = filePath };
+		var functionMapStore = new IFunctionMapStoreMock(x => string.Equals(x, filePath, System.StringComparison.Ordinal) ? new List<FunctionMapEntry>() : null);
 		var sourceMap = CreateSourceMap([]);
 		var sourceMapStore = new ISourceMapStoreMock(_ => sourceMap);
 
@@ -178,15 +178,15 @@ public class StackFrameDeminifierUnitTests
 		var stackFrameDeminifier = GetStackFrameDeminifierWithMockDependencies(sourceMapStore: sourceMapStore, functionMapStore: functionMapStore, functionMapConsumer: functionMapConsumer);
 
 		// Act
-		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
+		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName: null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoMatchingMappingInSourceMap));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 

@@ -21,17 +21,13 @@ using System.Text;
 
 namespace SourcemapTools.SourcemapParser.Internal;
 
-/// <summary>
-/// This class provides a mechanism for converting an integer to Base64 Variable-length quantity (VLQ).
-/// </summary>
+/// <summary>This class provides a mechanism for converting an integer to Base64 Variable-length quantity (VLQ).</summary>
 public static class Base64VlqEncoder
 {
-	/// <summary>
-	/// Internal API.
-	/// </summary>
+	/// <summary>Internal API.</summary>
 	public static void Encode(StringBuilder output, int value)
 	{
-		if (output == null)
+		if (output is null)
 		{
 			throw new ArgumentNullException(nameof(output));
 		}

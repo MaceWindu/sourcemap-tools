@@ -4,6 +4,12 @@ dotnet_diagnostic.CA1515.severity = none # CA1515: public API in tests
 dotnet_diagnostic.CA1707.severity = none # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1847.severity = none # CA1847: Use string.Contains(char)
 
+# Meziantou.Analyzer rules that are inappropriate for test code
+dotnet_diagnostic.MA0001.severity = none # MA0001: string.Replace(..., StringComparison) overload is unavailable on net462
+dotnet_diagnostic.MA0025.severity = none # MA0025: test doubles legitimately throw NotImplementedException
+dotnet_diagnostic.MA0048.severity = none # MA0048: test files often contain helper types
+dotnet_diagnostic.MA0101.severity = none # MA0101: multiline literals are common in test fixtures
+
 dotnet_public_api_analyzer.require_api_files = false
 dotnet_public_api_analyzer.require_api_files = false
 dotnet_diagnostic.RS0016.severity = none

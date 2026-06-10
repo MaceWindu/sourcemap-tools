@@ -115,7 +115,7 @@ The source map parser uses [System.Text.Json](https://www.nuget.org/packages/Sys
 
 The call stack deminifier use [Esprima .NET](https://www.nuget.org/packages/esprima) which is licensed under the [BSD 3-Clause License](https://github.com/sebastienros/esprima-dotnet/blob/dev/LICENSE.txt).
 
-The unit tests for this library leverage the functionality provided by [Moq](https://www.nuget.org/packages/Moq). Moq is Open Source and released under the [BSD 3-Clause License](https://github.com/moq/moq4/blob/main/License.txt).
+The unit tests for this library are written using [NUnit](https://www.nuget.org/packages/NUnit). NUnit is Open Source and released under the [MIT License](https://github.com/nunit/nunit/blob/master/LICENSE.txt).
 
 ## License
 

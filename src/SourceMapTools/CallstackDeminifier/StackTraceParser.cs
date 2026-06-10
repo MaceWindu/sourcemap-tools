@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 using SourcemapToolkit.SourcemapParser;
 using SourcemapTools.SourcemapParser.Internal;
@@ -27,9 +26,7 @@ public sealed class StackTraceParser : IStackTraceParser
 	/// Any parts of the stack trace that could not be parsed are excluded from
 	/// the result. Does not ever return null.
 	/// </returns>
-	/// <remarks>
-	/// This override drops the Message out parameter for backward compatibility.
-	/// </remarks>
+	/// <remarks>This override drops the Message out parameter for backward compatibility.</remarks>
 	IReadOnlyList<StackFrame> IStackTraceParser.ParseStackTrace(string stackTraceString) => ParseStackTrace(stackTraceString, out _);
 
 	/// <summary>
@@ -45,7 +42,7 @@ public sealed class StackTraceParser : IStackTraceParser
 	/// </returns>
 	public IReadOnlyList<StackFrame> ParseStackTrace(string stackTraceString, out string? message)
 	{
-		if (stackTraceString == null)
+		if (stackTraceString is null)
 		{
 			throw new ArgumentNullException(nameof(stackTraceString));
 		}
@@ -56,8 +53,8 @@ public sealed class StackTraceParser : IStackTraceParser
 
 		var startingIndex = 0;
 
-		var firstFrame = stackFrameStrings.First();
-		if (!firstFrame.StartsWith(" ") && TryExtractMethodNameFromFrame(firstFrame) == null)
+		var firstFrame = stackFrameStrings[0];
+		if (!firstFrame.StartsWith(" ", StringComparison.Ordinal) && TryExtractMethodNameFromFrame(firstFrame) is null)
 		{
 			message = firstFrame.Trim();
 			startingIndex = 1;
@@ -69,7 +66,7 @@ public sealed class StackTraceParser : IStackTraceParser
 		{
 			var parsedStackFrame = TryParseSingleStackFrame(stackFrameStrings[i]);
 
-			if (parsedStackFrame != null)
+			if (parsedStackFrame is not null)
 			{
 				stackTrace.Add(parsedStackFrame);
 			}
@@ -78,15 +75,13 @@ public sealed class StackTraceParser : IStackTraceParser
 		return stackTrace;
 	}
 
-	/// <summary>
-	/// Given a single stack frame, extract the method name.
-	/// </summary>
+	/// <summary>Given a single stack frame, extract the method name.</summary>
 	private static string? TryExtractMethodNameFromFrame(string frame)
 	{
 		string? methodName = null;
 
 		// Firefox has stackframes in the form: "c@http://localhost:19220/crashcauser.min.js:1:34"
-		var atSymbolIndex = frame.IndexOf("@http");
+		var atSymbolIndex = frame.IndexOf("@http", StringComparison.Ordinal);
 		if (atSymbolIndex != -1)
 		{
 			methodName = frame[..atSymbolIndex].TrimStart();
@@ -94,13 +89,13 @@ public sealed class StackTraceParser : IStackTraceParser
 		else
 		{
 			// Chrome and IE11 have stackframes in the form: " at d (http://chrisgocallstack.azurewebsites.net/crashcauser.min.js:1:75)"
-			var atStringIndex = frame.IndexOf("at ");
+			var atStringIndex = frame.IndexOf("at ", StringComparison.Ordinal);
 			if (atStringIndex != -1)
 			{
-				var httpIndex = frame.IndexOf(" (http", atStringIndex);
+				var httpIndex = frame.IndexOf(" (http", atStringIndex, StringComparison.Ordinal);
 				if (httpIndex == -1)
 				{
-					httpIndex = frame.IndexOf(" http", atStringIndex);
+					httpIndex = frame.IndexOf(" http", atStringIndex, StringComparison.Ordinal);
 					if (httpIndex != -1)
 					{
 						httpIndex++;        // append one char to include a blank space to be able to replace "at " correctly
@@ -113,7 +108,7 @@ public sealed class StackTraceParser : IStackTraceParser
 				}
 				else
 				{
-					var parenthesesIndex = frame.IndexOf(" (", atStringIndex);
+					var parenthesesIndex = frame.IndexOf(" (", atStringIndex, StringComparison.Ordinal);
 					if (parenthesesIndex != -1)
 					{
 						methodName = frame[atStringIndex..parenthesesIndex].Replace("at ", "").Trim();
@@ -130,12 +125,10 @@ public sealed class StackTraceParser : IStackTraceParser
 		return methodName;
 	}
 
-	/// <summary>
-	/// Parses a string representing a single stack frame into a StackFrame object.
-	/// </summary>
+	/// <summary>Parses a string representing a single stack frame into a StackFrame object.</summary>
 	public static StackFrame? TryParseSingleStackFrame(string frame)
 	{
-		if (frame == null)
+		if (frame is null)
 		{
 			throw new ArgumentNullException(nameof(frame));
 		}

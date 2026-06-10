@@ -14,5 +14,5 @@ public interface ISourceCodeProvider
 	/// </summary>
 	/// <param name="sourceCodeUrl">The url from a callstack stackframe that caused us to invoke this method.</param>
 	/// <returns>Returns a StreamReader that can be used to access the source code for the given URL.</returns>
-	Stream? GetSourceCode(string sourceCodeUrl);
+	public Stream? GetSourceCode(string sourceCodeUrl);
 }

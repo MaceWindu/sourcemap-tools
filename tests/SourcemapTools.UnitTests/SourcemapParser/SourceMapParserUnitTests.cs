@@ -30,24 +30,24 @@ public class SourceMapParserUnitTests
 
 		// Assert
 		Assert.That(output, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(output.Version, Is.EqualTo(3));
 			Assert.That(output.File, Is.EqualTo("CommonIntl"));
 			Assert.That(output.Mappings, Is.EqualTo("AACAA,aAAA,CAAc"));
 			Assert.That(output.Sources, Is.Not.Null);
-		});
+		}
 		Assert.That(output.Sources, Has.Count.EqualTo(1));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(output.Sources[0], Is.EqualTo("input/CommonIntl.js"));
 			Assert.That(output.Names, Is.Not.Null);
-		});
+		}
 		Assert.That(output.Names, Has.Count.EqualTo(2));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(output.Names[0], Is.EqualTo("CommonStrings"));
 			Assert.That(output.Names[1], Is.EqualTo("afrikaans"));
-		});
+		}
 	}
 }

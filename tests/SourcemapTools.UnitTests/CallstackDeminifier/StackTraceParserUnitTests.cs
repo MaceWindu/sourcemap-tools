@@ -9,11 +9,11 @@ public class StackTraceParserUnitTests
 	{
 		// Arrange
 		IStackTraceParser stackTraceParser = new StackTraceParser();
-		var browserStackTrace = @"TypeError: Cannot read property 'length' of undefined
-	at d (http://localhost:19220/crashcauser.min.js:1:75)
-	at c (http://localhost:19220/crashcauser.min.js:1:34)
-	at b (http://localhost:19220/crashcauser.min.js:1:14)
-	at HTMLButtonElement.<anonymous> (http://localhost:19220/crashcauser.min.js:1:332)";
+		var browserStackTrace = "TypeError: Cannot read property 'length' of undefined\r\n" +
+						  "\tat d (http://localhost:19220/crashcauser.min.js:1:75)\r\n" +
+						  "\tat c (http://localhost:19220/crashcauser.min.js:1:34)\r\n" +
+						  "\tat b (http://localhost:19220/crashcauser.min.js:1:14)\r\n" +
+						  "\tat HTMLButtonElement.<anonymous> (http://localhost:19220/crashcauser.min.js:1:332)";
 
 		// Act
 		var stackTrace = stackTraceParser.ParseStackTrace(browserStackTrace);
@@ -79,17 +79,17 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.Null);
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
-			Assert.That(result.SourcePosition.Line, Is.EqualTo(0));
+			Assert.That(result.SourcePosition.Line, Is.Zero);
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(33));
-		});
+		}
 	}
 
 	[Test]
@@ -102,14 +102,14 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("webpack-internal:///./Static/jsx/InitialStep/InitialStepForm.js"));
 			Assert.That(result.MethodName, Is.EqualTo("eval"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(167 - 1));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(14 - 1));
-		});
+		}
 	}
 
 	[Test]
@@ -122,14 +122,14 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.EqualTo("c"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(7));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(2));
-		});
+		}
 	}
 
 	[Test]
@@ -142,14 +142,14 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.EqualTo("c"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(7));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(2));
-		});
+		}
 	}
 
 	[Test]
@@ -162,17 +162,17 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.Null);
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(9));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(12));
-		});
+		}
 	}
 
 	[Test]
@@ -185,14 +185,14 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/o/app_scripts/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.EqualTo("c"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(8));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(4));
-		});
+		}
 	}
 
 	[Test]
@@ -205,14 +205,14 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.EqualTo("c"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(3));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(51));
-		});
+		}
 	}
 
 	[Test]
@@ -225,14 +225,14 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.EqualTo("c"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(2));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(16));
-		});
+		}
 	}
 
 	[Test]
@@ -245,13 +245,13 @@ window.onload/<@http://localhost:19220/crashcauser.min.js:1:332";
 		var result = StackTraceParser.TryParseSingleStackFrame(frame);
 
 		Assert.That(result, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.FilePath, Is.EqualTo("http://localhost:19220/crashcauser.min.js"));
 			Assert.That(result.MethodName, Is.EqualTo("Anonymous function"));
 			Assert.That(result.SourcePosition.Line, Is.EqualTo(4));
 			Assert.That(result.SourcePosition.Column, Is.EqualTo(24));
-		});
+		}
 	}
 }

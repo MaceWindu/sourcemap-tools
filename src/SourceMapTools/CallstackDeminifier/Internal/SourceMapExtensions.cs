@@ -4,21 +4,17 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public static class SourceMapExtensions
 {
-	/// <summary>
-	/// Gets the original name corresponding to a function based on the information provided in the source map.
-	/// </summary>
+	/// <summary>Gets the original name corresponding to a function based on the information provided in the source map.</summary>
 	public static string? GetDeminifiedMethodName(this SourceMap sourceMap, IReadOnlyList<BindingInformation> bindings)
 	{
-		if (sourceMap == null)
+		if (sourceMap is null)
 		{
 			throw new ArgumentNullException(nameof(sourceMap));
 		}
-		if (bindings == null)
+		if (bindings is null)
 		{
 			throw new ArgumentNullException(nameof(bindings));
 		}
@@ -30,7 +26,7 @@ public static class SourceMapExtensions
 			foreach (var binding in bindings)
 			{
 				var entry = sourceMap.GetMappingEntryForGeneratedSourcePosition(binding.SourcePosition);
-				if (entry != null && entry.Value.OriginalName != null)
+				if (entry != null && entry.Value.OriginalName is not null)
 				{
 					entryNames.Add(entry.Value.OriginalName);
 				}
@@ -39,13 +35,13 @@ public static class SourceMapExtensions
 			// // The object name already contains the method name, so do not append it
 			if (entryNames.Count > 1
 				&& entryNames[^2].Length > entryNames[^1].Length
-				&& entryNames[^2].EndsWith(entryNames[^1])
+				&& entryNames[^2].EndsWith(entryNames[^1], StringComparison.Ordinal)
 				&& entryNames[^2][entryNames[^2].Length - 1 - entryNames[^1].Length] == '.')
 			{
 				entryNames.RemoveAt(entryNames.Count - 1);
 			}
 
-			if (entryNames.Count > 2 && entryNames[^2] == "prototype")
+			if (entryNames.Count > 2 && string.Equals(entryNames[^2], "prototype", StringComparison.Ordinal))
 			{
 				entryNames.RemoveAt(entryNames.Count - 2);
 			}

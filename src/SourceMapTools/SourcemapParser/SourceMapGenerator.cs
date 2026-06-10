@@ -8,14 +8,10 @@ using SourcemapTools.SourcemapParser.Internal;
 
 namespace SourcemapToolkit.SourcemapParser;
 
-/// <summary>
-/// Provides utility methods for source map serialization.
-/// </summary>
+/// <summary>Provides utility methods for source map serialization.</summary>
 public static class SourceMapGenerator
 {
-	/// <summary>
-	/// Convenience wrapper around SerializeMapping, but returns a base 64 encoded string instead.
-	/// </summary>
+	/// <summary>Convenience wrapper around SerializeMapping, but returns a base 64 encoded string instead.</summary>
 	public static string GenerateSourceMapInlineComment(SourceMap sourceMap, JsonSerializerOptions? jsonSerializerSettings = null)
 	{
 		var mappings = SerializeMapping(sourceMap, jsonSerializerSettings);
@@ -25,12 +21,10 @@ public static class SourceMapGenerator
 		return @"//# sourceMappingURL=data:application/json;base64," + encoded;
 	}
 
-	/// <summary>
-	/// Serialize SourceMap object to json string with given serialize settings.
-	/// </summary>
+	/// <summary>Serialize SourceMap object to json string with given serialize settings.</summary>
 	public static string SerializeMapping(SourceMap sourceMap, JsonSerializerOptions? jsonSerializerSettings = null)
 	{
-		if (sourceMap == null)
+		if (sourceMap is null)
 		{
 			throw new ArgumentNullException(nameof(sourceMap));
 		}
@@ -64,27 +58,25 @@ public static class SourceMapGenerator
 			jsonSerializerSettings ?? new JsonSerializerOptions
 			{
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
 			});
 	}
 
-	/// <summary>
-	/// Convert each mapping entry to VLQ encoded segments.
-	/// </summary>
+	/// <summary>Convert each mapping entry to VLQ encoded segments.</summary>
 	public static void SerializeMappingEntry(MappingEntry entry, MappingGenerateState state, StringBuilder output)
 	{
-		if (state == null)
+		if (state is null)
 		{
 			throw new ArgumentNullException(nameof(state));
 		}
-		if (output == null)
+		if (output is null)
 		{
 			throw new ArgumentNullException(nameof(output));
 		}
 
 		if (state.LastGeneratedPosition.Line > entry.GeneratedSourcePosition.Line)
 		{
-			throw new InvalidOperationException($"Invalid sourcemap detected. Please check the line {entry.GeneratedSourcePosition.Line}");
+			throw new InvalidOperationException(FormattableString.Invariant($"Invalid sourcemap detected. Please check the line {entry.GeneratedSourcePosition.Line}"));
 		}
 
 		// Each line of generated code is separated using semicolons
@@ -127,10 +119,15 @@ public static class SourceMapGenerator
 		 *     is represented.
 		 */
 
+		EncodeSegmentFields(entry, state, output);
+	}
+
+	private static void EncodeSegmentFields(MappingEntry entry, MappingGenerateState state, StringBuilder output)
+	{
 		Base64VlqEncoder.Encode(output, entry.GeneratedSourcePosition.Column - state.LastGeneratedPosition.Column);
 		state.UpdateLastGeneratedPositionColumn(entry.GeneratedSourcePosition.Column);
 
-		if (entry.OriginalFileName != null)
+		if (entry.OriginalFileName is not null)
 		{
 			var sourceIndex = state.Sources.IndexOf(entry.OriginalFileName);
 			if (sourceIndex < 0)
@@ -147,7 +144,7 @@ public static class SourceMapGenerator
 
 			state.LastOriginalPosition = entry.OriginalSourcePosition;
 
-			if (entry.OriginalName != null)
+			if (entry.OriginalName is not null)
 			{
 				var nameIndex = state.Names.IndexOf(entry.OriginalName);
 				if (nameIndex < 0)

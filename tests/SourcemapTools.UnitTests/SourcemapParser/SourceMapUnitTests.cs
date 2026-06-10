@@ -25,7 +25,7 @@ public class SourceMapUnitTests
 		// Arrange
 		var parsedMappings = new List<MappingEntry>
 		{
-			new(generatedSourcePosition: new SourcePosition(0, 0))
+			new(generatedSourcePosition: new SourcePosition(0, 0)),
 		};
 
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
@@ -47,7 +47,7 @@ public class SourceMapUnitTests
 		var parsedMappings = new List<MappingEntry>
 		{
 			new(generatedSourcePosition: new SourcePosition(0, 0)),
-			matchingMappingEntry
+			matchingMappingEntry,
 		};
 
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
@@ -69,7 +69,7 @@ public class SourceMapUnitTests
 		var parsedMappings = new List<MappingEntry>
 		{
 			new(generatedSourcePosition: new SourcePosition(0, 0)),
-			matchingMappingEntry
+			matchingMappingEntry,
 		};
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 		var sourcePosition = new SourcePosition(10, 14);
@@ -90,7 +90,7 @@ public class SourceMapUnitTests
 		var parsedMappings = new List<MappingEntry>
 		{
 			new(generatedSourcePosition: new SourcePosition(0, 0)),
-			matchingMappingEntry
+			matchingMappingEntry,
 		};
 		var sourceMap = CreateSourceMap(parsedMappings: parsedMappings);
 		var sourcePosition = new SourcePosition(24, 0);
@@ -216,14 +216,14 @@ public class SourceMapUnitTests
 
 		// Assert
 		Assert.That(combinedMap, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(combinedMap.ParsedMappings, Has.Count.EqualTo(1));
 			Assert.That(combinedMap.Sources?.Count, Is.EqualTo(1));
-		});
+		}
 		var rootMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2);
 		Assert.That(rootMapping, Is.Not.Null);
-		Assert.That(rootMapping.Value.OriginalSourcePosition.CompareTo(childMapping.OriginalSourcePosition), Is.EqualTo(0));
+		Assert.That(rootMapping.Value.OriginalSourcePosition.CompareTo(childMapping.OriginalSourcePosition), Is.Zero);
 	}
 
 	[Test]
@@ -260,17 +260,17 @@ public class SourceMapUnitTests
 
 		// Assert
 		Assert.That(combinedMap, Is.Not.Null);
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(combinedMap.ParsedMappings, Has.Count.EqualTo(2));
 			Assert.That(combinedMap.Sources, Has.Count.EqualTo(2));
-		});
+		}
 		var firstCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated3);
 		Assert.That(firstCombinedMapping, Is.Not.Null);
 		Assert.That(firstCombinedMapping.Value.IsValueEqual(mapping2), Is.True);
 		var secondCombinedMapping = combinedMap.GetMappingEntryForGeneratedSourcePosition(generated2);
 		Assert.That(secondCombinedMapping, Is.Not.Null);
-		Assert.That(secondCombinedMapping.Value.OriginalSourcePosition.CompareTo(childMapping.OriginalSourcePosition), Is.EqualTo(0));
+		Assert.That(secondCombinedMapping.Value.OriginalSourcePosition.CompareTo(childMapping.OriginalSourcePosition), Is.Zero);
 	}
 
 	[Test]
@@ -313,7 +313,7 @@ public class SourceMapUnitTests
 		Assert.That(secondCombinedMap, Is.Not.Null);
 		var rootMapping = secondCombinedMap.GetMappingEntryForGeneratedSourcePosition(generated3);
 		Assert.That(rootMapping, Is.Not.Null);
-		Assert.That(rootMapping.Value.OriginalSourcePosition.CompareTo(mapLevel2.OriginalSourcePosition), Is.EqualTo(0));
+		Assert.That(rootMapping.Value.OriginalSourcePosition.CompareTo(mapLevel2.OriginalSourcePosition), Is.Zero);
 	}
 
 	private static SourceMap CreateSourceMap(

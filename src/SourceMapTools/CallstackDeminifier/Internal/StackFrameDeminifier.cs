@@ -13,18 +13,14 @@ public sealed class StackFrameDeminifier(ISourceMapStore sourceMapStore) : IStac
 	private readonly ISourceMapStore _sourceMapStore = sourceMapStore;
 	private readonly IStackFrameDeminifier? _methodNameDeminifier;
 
-	/// <summary>
-	/// Internal API.
-	/// </summary>
+	/// <summary>Internal API.</summary>
 	public StackFrameDeminifier(ISourceMapStore sourceMapStore, IFunctionMapStore functionMapStore, IFunctionMapConsumer functionMapConsumer)
 		: this(sourceMapStore)
 	{
 		_methodNameDeminifier = new MethodNameStackFrameDeminifier(functionMapStore, functionMapConsumer);
 	}
 
-	/// <summary>
-	/// This method will deminify a single stack from from a minified stack trace.
-	/// </summary>
+	/// <summary>This method will deminify a single stack from from a minified stack trace.</summary>
 	/// <returns>Returns a StackFrameDeminificationResult that contains a stack trace that has been translated to the original source code. The DeminificationError Property indicates if the StackFrame could not be deminified. DeminifiedStackFrame will not be null, but any properties of DeminifiedStackFrame could be null if the value could not be extracted. </returns>
 	StackFrameDeminificationResult IStackFrameDeminifier.DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName, bool preferSourceMapsSymbols)
 	{
@@ -32,26 +28,26 @@ public sealed class StackFrameDeminifier(ISourceMapStore sourceMapStore) : IStac
 		var generatedSourcePosition = stackFrame.SourcePosition;
 
 		StackFrameDeminificationResult? result = null;
-		if (_methodNameDeminifier != null)
+		if (_methodNameDeminifier is not null)
 		{
-			result = _methodNameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName, false);
+			result = _methodNameDeminifier.DeminifyStackFrame(stackFrame, callerSymbolName, preferSourceMapsSymbols: false);
 		}
 
-		if (result == null || result.DeminificationError == DeminificationError.NoSourceCodeProvided)
+		if (result is null || result.DeminificationError is DeminificationError.NoSourceCodeProvided)
 		{
 			result = new StackFrameDeminificationResult(
 				DeminificationError.None,
 				new StackFrame(callerSymbolName));
 		}
 
-		if (result.DeminificationError == DeminificationError.None)
+		if (result.DeminificationError is DeminificationError.None)
 		{
 			var generatedSourcePositionMappingEntry =
 				sourceMap?.GetMappingEntryForGeneratedSourcePosition(generatedSourcePosition);
 
 			if (generatedSourcePositionMappingEntry == null)
 			{
-				result.DeminificationError = sourceMap == null ? DeminificationError.NoSourceMap : DeminificationError.NoMatchingMappingInSourceMap;
+				result.DeminificationError = sourceMap is null ? DeminificationError.NoSourceMap : DeminificationError.NoMatchingMappingInSourceMap;
 			}
 			else
 			{

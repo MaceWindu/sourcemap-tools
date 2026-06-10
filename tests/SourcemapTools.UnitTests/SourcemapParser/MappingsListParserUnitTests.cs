@@ -51,19 +51,19 @@ public class MappingsListParserUnitTests
 		// Act
 		var result = MappingsListParser.ParseSingleMappingSegment(segmentFields, mappingsParserState);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
-			Assert.That(result.GeneratedLineNumber, Is.EqualTo(0));
+			Assert.That(result.GeneratedLineNumber, Is.Zero);
 			Assert.That(result.GeneratedColumnNumber, Is.EqualTo(16));
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
-			Assert.That(result.OriginalSourceFileIndex.HasValue, Is.False);
-			Assert.That(result.OriginalLineNumber.HasValue, Is.False);
-			Assert.That(result.OriginalColumnNumber.HasValue, Is.False);
-			Assert.That(result.OriginalNameIndex.HasValue, Is.False);
-		});
+			Assert.That(result.OriginalSourceFileIndex, Is.Null);
+			Assert.That(result.OriginalLineNumber, Is.Null);
+			Assert.That(result.OriginalColumnNumber, Is.Null);
+			Assert.That(result.OriginalNameIndex, Is.Null);
+		}
 	}
 
 	[Test]
@@ -76,16 +76,16 @@ public class MappingsListParserUnitTests
 		// Act
 		var result = MappingsListParser.ParseSingleMappingSegment(segmentFields, mappingsParserState);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
-			Assert.That(result.GeneratedLineNumber, Is.EqualTo(0));
+			Assert.That(result.GeneratedLineNumber, Is.Zero);
 			Assert.That(result.GeneratedColumnNumber, Is.EqualTo(1));
 			Assert.That(result.OriginalSourceFileIndex, Is.EqualTo(1));
 			Assert.That(result.OriginalLineNumber, Is.EqualTo(2));
 			Assert.That(result.OriginalColumnNumber, Is.EqualTo(4));
-		});
-		Assert.That(result.OriginalNameIndex.HasValue, Is.False);
+		}
+		Assert.That(result.OriginalNameIndex, Is.Null);
 	}
 
 	[Test]
@@ -98,16 +98,16 @@ public class MappingsListParserUnitTests
 		// Act
 		var result = MappingsListParser.ParseSingleMappingSegment(segmentFields, mappingsParserState);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
-			Assert.That(result.GeneratedLineNumber, Is.EqualTo(0));
+			Assert.That(result.GeneratedLineNumber, Is.Zero);
 			Assert.That(result.GeneratedColumnNumber, Is.EqualTo(1));
 			Assert.That(result.OriginalSourceFileIndex, Is.EqualTo(3));
 			Assert.That(result.OriginalLineNumber, Is.EqualTo(6));
 			Assert.That(result.OriginalColumnNumber, Is.EqualTo(10));
 			Assert.That(result.OriginalNameIndex, Is.EqualTo(15));
-		});
+		}
 	}
 
 	[Test]
@@ -125,16 +125,16 @@ public class MappingsListParserUnitTests
 		// Act
 		var result = MappingsListParser.ParseSingleMappingSegment(segmentFields, mappingsParserState);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
-			Assert.That(result.GeneratedLineNumber, Is.EqualTo(0));
+			Assert.That(result.GeneratedLineNumber, Is.Zero);
 			Assert.That(result.GeneratedColumnNumber, Is.EqualTo(7));
 			Assert.That(result.OriginalSourceFileIndex, Is.EqualTo(9));
 			Assert.That(result.OriginalLineNumber, Is.EqualTo(11));
 			Assert.That(result.OriginalColumnNumber, Is.EqualTo(13));
 			Assert.That(result.OriginalNameIndex, Is.EqualTo(15));
-		});
+		}
 	}
 
 	[Test]
@@ -150,11 +150,11 @@ public class MappingsListParserUnitTests
 
 		// Assert
 		Assert.That(mappingsList, Has.Count.EqualTo(2));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
-			Assert.That(mappingsList[0].GeneratedSourcePosition.Line, Is.EqualTo(0));
-			Assert.That(mappingsList[1].GeneratedSourcePosition.Line, Is.EqualTo(0));
-		});
+			Assert.That(mappingsList[0].GeneratedSourcePosition.Line, Is.Zero);
+			Assert.That(mappingsList[1].GeneratedSourcePosition.Line, Is.Zero);
+		}
 	}
 
 	[Test]
@@ -170,11 +170,11 @@ public class MappingsListParserUnitTests
 
 		// Assert
 		Assert.That(mappingsList, Has.Count.EqualTo(2));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
-			Assert.That(mappingsList[0].GeneratedSourcePosition.Line, Is.EqualTo(0));
+			Assert.That(mappingsList[0].GeneratedSourcePosition.Line, Is.Zero);
 			Assert.That(mappingsList[1].GeneratedSourcePosition.Line, Is.EqualTo(1));
-		});
+		}
 	}
 
 	[Test]
@@ -190,10 +190,10 @@ public class MappingsListParserUnitTests
 
 		// Assert
 		Assert.That(mappingsList, Has.Count.EqualTo(2));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
-			Assert.That(mappingsList[0].GeneratedSourcePosition.Line, Is.EqualTo(0));
+			Assert.That(mappingsList[0].GeneratedSourcePosition.Line, Is.Zero);
 			Assert.That(mappingsList[1].GeneratedSourcePosition.Line, Is.EqualTo(2));
-		});
+		}
 	}
 }
