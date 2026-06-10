@@ -25,7 +25,7 @@ internal sealed class SourceMapMock : SourceMap
 	}
 
 	public override MappingEntry? GetMappingEntryForGeneratedSourcePosition(SourcePosition generatedSourcePosition)
-		=> _getMappingEntryForGeneratedSourcePosition != null
+		=> _getMappingEntryForGeneratedSourcePosition is not null
 			? _getMappingEntryForGeneratedSourcePosition(generatedSourcePosition, base.GetMappingEntryForGeneratedSourcePosition)
 			: base.GetMappingEntryForGeneratedSourcePosition(generatedSourcePosition);
 }

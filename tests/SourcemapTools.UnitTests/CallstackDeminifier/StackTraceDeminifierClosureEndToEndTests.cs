@@ -11,8 +11,8 @@ public class StackTraceDeminifierClosureEndToEndTests
 	private static StackTraceDeminifier GetStackTraceDeminifierWithDependencies()
 	{
 		const string url = "http://localhost:11323/closurecrashcauser.minified.js";
-		var sourceMapProvider = new ISourceMapProviderMock(x => x == url ? UnitTestUtils.StreamFromString(SourceMapString) : null);
-		var sourceCodeProvider = new ISourceCodeProviderMock(x => x == url ? UnitTestUtils.StreamFromString(GeneratedCodeString) : null);
+		var sourceMapProvider = new ISourceMapProviderMock(x => string.Equals(x, url, System.StringComparison.Ordinal) ? UnitTestUtils.StreamFromString(SourceMapString) : null);
+		var sourceCodeProvider = new ISourceCodeProviderMock(x => string.Equals(x, url, System.StringComparison.Ordinal) ? UnitTestUtils.StreamFromString(GeneratedCodeString) : null);
 
 		return StackTraceDeminifierFactory.GetStackTraceDeminifier(sourceMapProvider, sourceCodeProvider);
 	}
@@ -20,14 +20,14 @@ public class StackTraceDeminifierClosureEndToEndTests
 	private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results, bool preferSourceMapsSymbols)
 	{
 		Assert.That(results.DeminifiedStackFrameResults, Has.Count.EqualTo(4));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminificationError, Is.EqualTo(DeminificationError.None));
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? "propertyMethodLevel2 => length" : "mynamespace.objectWithMethods.propertyMethodLevel2"));
 			Assert.That(results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? "prototypeMethodLevel1" : "mynamespace.objectWithMethods.prototypeMethodLevel1"));
 			Assert.That(results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName, Is.EqualTo("GlobalFunction"));
 			Assert.That(results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? null : "window.onload"));
-		});
+		}
 	}
 
 	[Test]
@@ -35,16 +35,16 @@ public class StackTraceDeminifierClosureEndToEndTests
 	{
 		if (preferSourceMapsSymbols)
 		{
-			Assert.Inconclusive($"preferSourceMapsSymbols doesn't work well with test inputs");
+			Assert.Inconclusive("preferSourceMapsSymbols doesn't work well with test inputs");
 		}
 
 		// Arrange
 		var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
-		var callstack = @"TypeError: Cannot read property 'length' of undefined
-	at Function.a.a (http://localhost:11323/closurecrashcauser.minified.js:1:99)
-	at a.b (http://localhost:11323/closurecrashcauser.minified.js:1:63)
-	at c (http://localhost:11323/closurecrashcauser.minified.js:1:135)
-	at HTMLButtonElement.<anonymous> (http://localhost:11323/closurecrashcauser.minified.js:1:504)";
+		var callstack = "TypeError: Cannot read property 'length' of undefined\r\n" +
+				  "\tat Function.a.a (http://localhost:11323/closurecrashcauser.minified.js:1:99)\r\n" +
+				  "\tat a.b (http://localhost:11323/closurecrashcauser.minified.js:1:63)\r\n" +
+				  "\tat c (http://localhost:11323/closurecrashcauser.minified.js:1:135)\r\n" +
+				  "\tat HTMLButtonElement.<anonymous> (http://localhost:11323/closurecrashcauser.minified.js:1:504)";
 
 		// Act
 		var results = stackTraceDeminifier.DeminifyStackTrace(callstack, preferSourceMapsSymbols);
@@ -58,15 +58,15 @@ public class StackTraceDeminifierClosureEndToEndTests
 	{
 		if (preferSourceMapsSymbols)
 		{
-			Assert.Inconclusive($"preferSourceMapsSymbols doesn't work well with test inputs");
+			Assert.Inconclusive("preferSourceMapsSymbols doesn't work well with test inputs");
 		}
 
 		// Arrange
 		var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
-		var callstack = @"a.a@http://localhost:11323/closurecrashcauser.minified.js:1:91
-a.prototype.b@http://localhost:11323/closurecrashcauser.minified.js:1:61
-c@http://localhost:11323/closurecrashcauser.minified.js:1:128
-window.onload/<@http://localhost:11323/closurecrashcauser.minified.js:1:504";
+		var callstack = "a.a@http://localhost:11323/closurecrashcauser.minified.js:1:91\r\n" +
+				  "a.prototype.b@http://localhost:11323/closurecrashcauser.minified.js:1:61\r\n" +
+				  "c@http://localhost:11323/closurecrashcauser.minified.js:1:128\r\n" +
+				  "window.onload/<@http://localhost:11323/closurecrashcauser.minified.js:1:504";
 
 		// Act
 		var results = stackTraceDeminifier.DeminifyStackTrace(callstack, preferSourceMapsSymbols);
@@ -80,16 +80,16 @@ window.onload/<@http://localhost:11323/closurecrashcauser.minified.js:1:504";
 	{
 		if (preferSourceMapsSymbols)
 		{
-			Assert.Inconclusive($"preferSourceMapsSymbols doesn't work well with test inputs");
+			Assert.Inconclusive("preferSourceMapsSymbols doesn't work well with test inputs");
 		}
 
 		// Arrange
 		var stackTraceDeminifier = GetStackTraceDeminifierWithDependencies();
-		var callstack = @"TypeError: Unable to get property 'length' of undefined or null reference
-   at a.a (http://localhost:11323/closurecrashcauser.minified.js:1:91)
-   at a.prototype.b (http://localhost:11323/closurecrashcauser.minified.js:1:54)
-   at c (http://localhost:11323/closurecrashcauser.minified.js:1:121)
-   at Anonymous function (http://localhost:11323/closurecrashcauser.minified.js:1:492)";
+		var callstack = "TypeError: Unable to get property 'length' of undefined or null reference\r\n" +
+				  "   at a.a (http://localhost:11323/closurecrashcauser.minified.js:1:91)\r\n" +
+				  "   at a.prototype.b (http://localhost:11323/closurecrashcauser.minified.js:1:54)\r\n" +
+				  "   at c (http://localhost:11323/closurecrashcauser.minified.js:1:121)\r\n" +
+				  "   at Anonymous function (http://localhost:11323/closurecrashcauser.minified.js:1:492)";
 
 		// Act
 		var results = stackTraceDeminifier.DeminifyStackTrace(callstack, preferSourceMapsSymbols);

@@ -5,9 +5,7 @@ using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public sealed class FunctionMapGenerator : IFunctionMapGenerator
 {
 	/// <summary>
@@ -16,7 +14,7 @@ public sealed class FunctionMapGenerator : IFunctionMapGenerator
 	/// </summary>
 	IReadOnlyList<FunctionMapEntry>? IFunctionMapGenerator.GenerateFunctionMap(Stream? sourceCodeStream, SourceMap? sourceMap)
 	{
-		if (sourceCodeStream == null || sourceMap == null)
+		if (sourceCodeStream is null || sourceMap is null)
 		{
 			return null;
 		}
@@ -38,9 +36,7 @@ public sealed class FunctionMapGenerator : IFunctionMapGenerator
 		return result;
 	}
 
-	/// <summary>
-	/// Iterates over all the code in the JavaScript file to get a list of all the functions declared in that file.
-	/// </summary>
+	/// <summary>Iterates over all the code in the JavaScript file to get a list of all the functions declared in that file.</summary>
 	public static IReadOnlyList<FunctionMapEntry> ParseSourceCode(Stream sourceCodeStream, SourceMap sourceMap)
 	{
 		string sourceCode;
@@ -53,7 +49,7 @@ public sealed class FunctionMapGenerator : IFunctionMapGenerator
 		var jsParser = new JavaScriptParser(new ParserOptions()
 		{
 			AllowReturnOutsideFunction = true,
-			RegExpParseMode = RegExpParseMode.Skip
+			RegExpParseMode = RegExpParseMode.Skip,
 		});
 
 		var script = jsParser.ParseScript(sourceCode);

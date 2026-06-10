@@ -64,11 +64,11 @@ public class IReadOnlyListExtensionsUnitTests
 		// Act & Assert
 		for (var i = minFillIndexInclusive - 1; i <= maxFillIndexInclusive + 1; i++)
 		{
-			Assert.Multiple(() =>
+			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(IReadOnlyListExtensions.BinarySearch(list, i, comparer), Is.EqualTo(list.BinarySearch(i, comparer)));
 				Assert.That(IReadOnlyListExtensions.BinarySearch(list, i + 1, comparer), Is.EqualTo(list.BinarySearch(i + 1, comparer)));
-			});
+			}
 		}
 	}
 
@@ -91,11 +91,11 @@ public class IReadOnlyListExtensionsUnitTests
 		// Act & Assert
 		for (var i = minFillIndexInclusive - 1; i <= maxFillIndexInclusive + 1; i++)
 		{
-			Assert.Multiple(() =>
+			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(IReadOnlyListExtensions.BinarySearch(list, i, comparer), Is.EqualTo(list.BinarySearch(i, comparer)));
 				Assert.That(IReadOnlyListExtensions.BinarySearch(list, i + 1, comparer), Is.EqualTo(list.BinarySearch(i + 1, comparer)));
-			});
+			}
 		}
 	}
 }

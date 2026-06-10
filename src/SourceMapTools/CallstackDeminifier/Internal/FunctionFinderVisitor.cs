@@ -69,67 +69,16 @@ internal sealed class FunctionFinderVisitor(SourceMap sourceMap) : AstVisitorWit
 	// https://github.com/estree/estree/blob/master/es5.md#node-objects
 	private static SourcePosition GetSourcePosition(Position position) => new(position.Line - 1, position.Column);
 
-	/// <summary>
-	/// Gets the name and location information related to the function name binding for a function-like nodes.
-	/// </summary>
+	/// <summary>Gets the name and location information related to the function name binding for a function-like nodes.</summary>
 	private IEnumerable<BindingInformation> GetBindings(Node node, int parentIndex)
 	{
 		var parent = TryGetParentAt(parentIndex);
 
-		if (parent != null)
+		if (parent is not null)
 		{
-			// walk another branch of compound expression
-			if (parent is MemberExpression memberExpression)
+			foreach (var parentBinding in GetParentBindings(node, parent, parentIndex))
 			{
-				if (node == memberExpression.Object)
-				{
-					foreach (var parentBinding in GetBindings(parent, parentIndex + 1))
-					{
-						yield return parentBinding;
-					}
-				}
-			}
-			else if (parent is AssignmentPattern assignmentPattern)
-			{
-				if (node == assignmentPattern.Right)
-				{
-					foreach (var parentBinding in GetBindings(assignmentPattern.Left, parentIndex + 1))
-					{
-						yield return parentBinding;
-					}
-				}
-			}
-			else if (parent is AssignmentExpression assignment)
-			{
-				if (node == assignment.Right)
-				{
-					foreach (var parentBinding in GetBindings(assignment.Left, parentIndex + 1))
-					{
-						yield return parentBinding;
-					}
-				}
-			}
-			else if (parent is BinaryExpression binary)
-			{
-				if (node == binary.Right)
-				{
-					foreach (var parentBinding in GetBindings(binary.Left, parentIndex + 1))
-					{
-						yield return parentBinding;
-					}
-				}
-			}
-			// stop parent analysis on statement level
-			else if (parent is Statement)
-			{
-			}
-			// other non-statement (e.g. expression) nodes: climb-up
-			else
-			{
-				foreach (var parentBinding in GetBindings(parent, parentIndex + 1))
-				{
-					yield return parentBinding;
-				}
+				yield return parentBinding;
 			}
 		}
 
@@ -140,82 +89,99 @@ internal sealed class FunctionFinderVisitor(SourceMap sourceMap) : AstVisitorWit
 		}
 	}
 
-	private static IEnumerable<BindingInformation> GetBindingFromNode(Node node)
+	/// <summary>Climbs up a compound expression to collect bindings contributed by the parent node.</summary>
+	private IEnumerable<BindingInformation> GetParentBindings(Node node, Node parent, int parentIndex)
 	{
-		// try to extract name from function-like node
-		if (node is IFunction currentFunction)
+		// walk another branch of compound expression
+		if (parent is MemberExpression memberExpression)
 		{
-			if (currentFunction.Id != null)
+			if (node == memberExpression.Object)
 			{
-				foreach (var binding in GetBindingFromNode(currentFunction.Id))
+				foreach (var parentBinding in GetBindings(parent, parentIndex + 1))
 				{
-					yield return binding;
+					yield return parentBinding;
 				}
 			}
 		}
-		// extract class name from class expression
-		else if (node is ClassExpression classExpression)
+		else if (parent is AssignmentPattern assignmentPattern)
 		{
-			if (classExpression.Id != null)
+			if (node == assignmentPattern.Right)
 			{
-				foreach (var binding in GetBindingFromNode(classExpression.Id))
+				foreach (var parentBinding in GetBindings(assignmentPattern.Left, parentIndex + 1))
 				{
-					yield return binding;
+					yield return parentBinding;
 				}
 			}
 		}
-		// extract variable name from variable declaration
-		else if (node is VariableDeclarator variableDeclarator)
+		else if (parent is AssignmentExpression assignment)
 		{
-			foreach (var binding in GetBindingFromNode(variableDeclarator.Id))
+			if (node == assignment.Right)
 			{
-				yield return binding;
+				foreach (var parentBinding in GetBindings(assignment.Left, parentIndex + 1))
+				{
+					yield return parentBinding;
+				}
 			}
 		}
-		// extract object+member names from member expression
-		else if (node is MemberExpression member)
+		else if (parent is BinaryExpression binary)
 		{
-			foreach (var binding in GetBindingFromNode(member.Object))
+			if (node == binary.Right)
 			{
-				yield return binding;
-			}
-
-			foreach (var binding in GetBindingFromNode(member.Property))
-			{
-				yield return binding;
+				foreach (var parentBinding in GetBindings(binary.Left, parentIndex + 1))
+				{
+					yield return parentBinding;
+				}
 			}
 		}
-		// extract class method name
-		else if (node is MethodDefinition method)
+		// stop parent analysis on statement level
+		else if (parent is Statement)
 		{
-			foreach (var binding in GetBindingFromNode(method.Key))
+		}
+		// other non-statement (e.g. expression) nodes: climb-up
+		else
+		{
+			foreach (var parentBinding in GetBindings(parent, parentIndex + 1))
 			{
-				yield return binding;
+				yield return parentBinding;
 			}
 		}
-		// extract class property name
-		else if (node is Property property)
-		{
-			foreach (var binding in GetBindingFromNode(property.Key))
-			{
-				yield return binding;
-			}
-		}
-		// extract identifier name (target branch for all named objects)
-		else if (node is Identifier identifier)
-		{
-			if (identifier.Name != null)
-			{
-				yield return new BindingInformation(identifier.Name, GetSourcePosition(identifier.Location.Start));
-			}
-		}
-		// extract identifier name for literal-named members
-		// e.g. obj['some-literal-name']
-		else if (node is Literal literal)
-		{
-			yield return new BindingInformation(literal.Raw, GetSourcePosition(literal.Location.Start));
-		}
-
-		yield break;
 	}
+
+	private static IEnumerable<BindingInformation> GetBindingFromNode(Node node) => node switch
+	{
+		// function-like node: extract name from its identifier
+		IFunction currentFunction => currentFunction.Id is not null ? GetBindingFromNode(currentFunction.Id) : [],
+		// class expression: extract class name
+		ClassExpression classExpression => classExpression.Id is not null ? GetBindingFromNode(classExpression.Id) : [],
+		// variable declaration: extract variable name
+		VariableDeclarator variableDeclarator => GetBindingFromNode(variableDeclarator.Id),
+		// member expression: extract object+member names
+		MemberExpression member => GetMemberBindings(member),
+		// class method/property: extract its name
+		MethodDefinition method => GetBindingFromNode(method.Key),
+		Property property => GetBindingFromNode(property.Key),
+		// identifier name (target branch for all named objects)
+		Identifier identifier => GetIdentifierBinding(identifier),
+		// literal-named members, e.g. obj['some-literal-name']
+		Literal literal => [new BindingInformation(literal.Raw, GetSourcePosition(literal.Location.Start))],
+		_ => [],
+	};
+
+	private static IEnumerable<BindingInformation> GetMemberBindings(MemberExpression member)
+	{
+		foreach (var binding in GetBindingFromNode(member.Object))
+		{
+			yield return binding;
+		}
+
+		foreach (var binding in GetBindingFromNode(member.Property))
+		{
+			yield return binding;
+		}
+	}
+
+	private static IEnumerable<BindingInformation> GetIdentifierBinding(Identifier identifier)
+		=> identifier.Name is not null
+			? [new BindingInformation(identifier.Name, GetSourcePosition(identifier.Location.Start))]
+			: [];
 }

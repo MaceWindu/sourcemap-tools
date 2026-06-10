@@ -2,9 +2,7 @@
 
 namespace SourcemapTools.SourcemapParser.Internal;
 
-/// <summary>
-/// Internal API.
-/// </summary>
+/// <summary>Internal API.</summary>
 public static class StringExtensions
 {
 	/// <summary>
@@ -14,7 +12,7 @@ public static class StringExtensions
 	/// </summary>
 	public static string[] SplitFast(this string input, char delimiter)
 	{
-		if (input == null)
+		if (input is null)
 		{
 			throw new ArgumentNullException(nameof(input));
 		}

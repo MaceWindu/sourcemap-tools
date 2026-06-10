@@ -3,21 +3,17 @@ using SourcemapToolkit.CallstackDeminifier;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-/// <summary>
-/// This class only deminifies the method name in a stack frame. It does not depend on having a source map available during runtime.
-/// </summary>
+/// <summary>This class only deminifies the method name in a stack frame. It does not depend on having a source map available during runtime.</summary>
 public sealed class MethodNameStackFrameDeminifier(IFunctionMapStore functionMapStore, IFunctionMapConsumer functionMapConsumer)
 	: IStackFrameDeminifier
 {
 	private readonly IFunctionMapConsumer _functionMapConsumer = functionMapConsumer;
 	private readonly IFunctionMapStore _functionMapStore = functionMapStore;
 
-	/// <summary>
-	/// This method will deminify the method name of a single stack from from a minified stack trace.
-	/// </summary>
+	/// <summary>This method will deminify the method name of a single stack from from a minified stack trace.</summary>
 	StackFrameDeminificationResult IStackFrameDeminifier.DeminifyStackFrame(StackFrame stackFrame, string? callerSymbolName, bool preferSourceMapsSymbols)
 	{
-		if (stackFrame == null)
+		if (stackFrame is null)
 		{
 			throw new ArgumentNullException(nameof(stackFrame));
 		}
@@ -30,7 +26,7 @@ public sealed class MethodNameStackFrameDeminifier(IFunctionMapStore functionMap
 		// the generated code and then using the source map to find the name and
 		// and original source location.
 		var functionMap = _functionMapStore.GetFunctionMapForSourceCode(stackFrame.FilePath);
-		if (functionMap != null)
+		if (functionMap is not null)
 		{
 			wrappingFunction = _functionMapConsumer.GetWrappingFunctionForSourceLocation(stackFrame.SourcePosition, functionMap);
 

@@ -53,7 +53,6 @@ SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier
 SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier.DeminifyStackTrace(string! stackTraceString, bool preferSourceMapsSymbols) -> SourcemapToolkit.CallstackDeminifier.DeminifyStackTraceResult!
 SourcemapToolkit.CallstackDeminifier.StackTraceDeminifier.StackTraceDeminifier(SourcemapTools.CallstackDeminifier.Internal.IStackFrameDeminifier! stackFrameDeminifier, SourcemapToolkit.CallstackDeminifier.IStackTraceParser! stackTraceParser) -> void
 SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory
-SourcemapToolkit.CallstackDeminifier.StackTraceDeminifierFactory.StackTraceDeminifierFactory() -> void
 SourcemapToolkit.CallstackDeminifier.StackTraceParser
 SourcemapToolkit.CallstackDeminifier.StackTraceParser.ParseStackTrace(string! stackTraceString, out string? message) -> System.Collections.Generic.IReadOnlyList<SourcemapToolkit.CallstackDeminifier.StackFrame!>!
 SourcemapToolkit.CallstackDeminifier.StackTraceParser.StackTraceParser() -> void

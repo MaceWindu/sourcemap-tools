@@ -13,9 +13,7 @@ public sealed class StackTraceDeminifier(IStackFrameDeminifier stackFrameDeminif
 	private readonly IStackFrameDeminifier _stackFrameDeminifier = stackFrameDeminifier;
 	private readonly IStackTraceParser _stackTraceParser = stackTraceParser;
 
-	/// <summary>
-	/// Parses and deminifies a string containing a minified stack trace.
-	/// </summary>
+	/// <summary>Parses and deminifies a string containing a minified stack trace.</summary>
 	/// <param name="stackTraceString">stack trace as string, to deobfuscate.</param>
 	/// <param name="preferSourceMapsSymbols">if true, we will use exact sourcemap names for deobfuscation, without guessing the wrapper function name from source code.</param>
 	/// <returns>Stack trace deminification result.</returns>
@@ -45,9 +43,9 @@ public sealed class StackTraceDeminifier(IStackFrameDeminifier stackFrameDeminif
 			for (var i = 0; i < deminifiedFrames.Count - 1; i++)
 			{
 				var parentMethodName = deminifiedFrames[i + 1].DeminifiedStackFrame.MethodName;
-				if (i == 0 && deminifiedFrames[i].DeminifiedStackFrame.MethodName != null)
+				if (i is 0 && deminifiedFrames[i].DeminifiedStackFrame.MethodName is not null)
 				{
-					parentMethodName += parentMethodName == null ? "=> " : " => ";
+					parentMethodName += parentMethodName is null ? "=> " : " => ";
 					parentMethodName += deminifiedFrames[i].DeminifiedStackFrame.MethodName;
 				}
 				deminifiedFrames[i].DeminifiedStackFrame.MethodName = parentMethodName;

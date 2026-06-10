@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace SourcemapToolkit.SourcemapParser;
 
-/// <summary>
-/// Helper to compress source map by removing entries, mapped to same line.
-/// </summary>
+/// <summary>Helper to compress source map by removing entries, mapped to same line.</summary>
 public static class SourceMapTransformer
 {
 	/// <summary>
@@ -16,14 +14,14 @@ public static class SourceMapTransformer
 	/// </summary>
 	public static SourceMap Flatten(SourceMap sourceMap)
 	{
-		if (sourceMap == null)
+		if (sourceMap is null)
 		{
 			throw new ArgumentNullException(nameof(sourceMap));
 		}
 
 		IReadOnlyList<MappingEntry>? mappingEntries = null;
 
-		if (sourceMap.ParsedMappings != null && sourceMap.ParsedMappings.Count > 0)
+		if (sourceMap.ParsedMappings is not null && sourceMap.ParsedMappings.Count > 0)
 		{
 			var visitedLines = new HashSet<int>();
 			var parsedMappings = new List<MappingEntry>(sourceMap.ParsedMappings.Count); // assume each line will not have been visited before

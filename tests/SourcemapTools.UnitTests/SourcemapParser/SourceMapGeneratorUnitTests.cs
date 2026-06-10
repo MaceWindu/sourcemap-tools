@@ -37,7 +37,7 @@ public class SourceMapGeneratorUnitTests
 		var entry = new MappingEntry(
 			new SourcePosition(0, 10),
 			new SourcePosition(0, 1),
-			null, null);
+			originalName: null, originalFileName: null);
 
 		// Act
 		var result = new StringBuilder();
@@ -53,13 +53,13 @@ public class SourceMapGeneratorUnitTests
 		// Arrange
 		var state = new MappingGenerateState(["Name"], ["Source"])
 		{
-			IsFirstSegment = false
+			IsFirstSegment = false,
 		};
 
 		var entry = new MappingEntry(
 			new SourcePosition(0, 10),
 			new SourcePosition(0, 5),
-			null,
+			originalName: null,
 			state.Sources[0]);
 
 		// Act
