@@ -33,6 +33,20 @@ stages:
         useGlobalJson: true
       displayName: Install .NET SDK (from global.json)
 
+    # global.json installs the .NET 10 SDK (and runtime); the test project also
+    # targets net8.0/net9.0, so install those runtimes to execute every leg.
+    - task: UseDotNet@2
+      inputs:
+        packageType: runtime
+        version: '8.0.x'
+      displayName: Install .NET 8 runtime
+
+    - task: UseDotNet@2
+      inputs:
+        packageType: runtime
+        version: '9.0.x'
+      displayName: Install .NET 9 runtime
+
 #########
 # BUILD #
 #########
