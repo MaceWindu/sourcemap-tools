@@ -20,6 +20,7 @@
 
 		<GenerateAssemblyCompanyAttribute>False</GenerateAssemblyCompanyAttribute>
 		<GenerateAssemblyConfigurationAttribute>False</GenerateAssemblyConfigurationAttribute>
+		<GenerateAssemblyCopyrightAttribute>False</GenerateAssemblyCopyrightAttribute>
 		<GenerateAssemblyFileVersionAttribute>False</GenerateAssemblyFileVersionAttribute>
 		<GenerateAssemblyProductAttribute>False</GenerateAssemblyProductAttribute>
 		<GenerateAssemblyTitleAttribute>False</GenerateAssemblyTitleAttribute>

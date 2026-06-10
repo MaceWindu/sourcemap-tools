@@ -1,10 +1,8 @@
 variables:
   - name: solution
-    value: SourcemapTools.sln
+    value: SourcemapTools.slnx
   - name: build_configuration
     value: Release
-  - name: assemblyVersion
-    value: 3.2.1
   - name: packageVersion
     value: 3.2.1
   - name: nugetDevVersion
@@ -33,48 +31,23 @@ stages:
 #########
 # BUILD #
 #########
-    - task: PowerShell@2
-      inputs:
-        filePath: '$(Build.SourcesDirectory)/ci/SetVersion.ps1'
-        workingDirectory: '$(Build.SourcesDirectory)'
-        arguments: -path $(Build.SourcesDirectory)/Directory.Build.props -version $(assemblyVersion)
-      displayName: Update assembly version
+    - powershell: echo "##vso[task.setvariable variable=packageVersion]$(nugetDevVersion)-rc.$(Build.BuildId)"
+      condition: eq(variables['Build.SourceBranchName'], 'master')
+      displayName: Update nuget version
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
         projects: '$(solution)'
-        arguments: '-property:ContinuousIntegrationBuild=true --configuration $(build_configuration)'
+        arguments: '-property:ContinuousIntegrationBuild=true -property:Version=$(packageVersion) --configuration $(build_configuration)'
       displayName: Build Solution
 
 ###############
 # BUILD NUGET #
 ###############
-    - powershell: echo "##vso[task.setvariable variable=packageVersion]$(nugetDevVersion)-rc.$(Build.BuildId)"
-      condition: eq(variables['Build.SourceBranchName'], 'master')
-      displayName: Update nuget version
-
-    - task: PowerShell@2
-      inputs:
-        filePath: '$(Build.SourcesDirectory)/ci/BuildNuspecs.ps1'
-        workingDirectory: '$(Build.SourcesDirectory)'
-        arguments: -path $(Build.SourcesDirectory)/ci/SourceMapTools.nuspec -version $(packageVersion) -branch $(Build.SourceBranchName)
-      displayName: Update nuspecs
-      condition: or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'release'))
-
-    - task: CmdLine@2
-      inputs:
-        script: nuget.exe Pack $(Build.SourcesDirectory)/ci/SourceMapTools.nuspec -OutputDirectory $(Build.SourcesDirectory)/.build/nuget
-        workingDirectory: $(Build.SourcesDirectory)/ci
-      displayName: Build nuget for Azure Artifacts
-      condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
-
-    - task: CmdLine@2
-      inputs:
-        script: nuget.exe Pack $(Build.SourcesDirectory)/ci/SourceMapTools.nuspec -OutputDirectory $(Build.SourcesDirectory)/.build/nuget -Symbols -SymbolPackageFormat snupkg
-        workingDirectory: $(Build.SourcesDirectory)/ci
-      displayName: Build nuget for Nuget.org
-      condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'release'))
+    - script: dotnet pack $(Build.SourcesDirectory)/src/SourceMapTools/SourcemapTools.csproj -c $(build_configuration) -property:Version=$(packageVersion) --no-build --output $(Build.SourcesDirectory)/.build/nuget
+      displayName: Build nuget
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'release')))
 
 ########
 # TEST #
@@ -112,4 +85,3 @@ stages:
         publishFeedCredentials: 'nuget.org'
       displayName: Publish to Nuget.org
       condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'release'))
-

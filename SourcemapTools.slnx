@@ -1,9 +1,6 @@
 <Solution>
   <Folder Name="/ci/">
-    <File Path="ci/BuildNuspecs.ps1" />
     <File Path="ci/default.yml" />
-    <File Path="ci/SetVersion.ps1" />
-    <File Path="ci/SourceMapTools.nuspec" />
   </Folder>
   <Folder Name="/root/">
     <File Path=".editorconfig" />
