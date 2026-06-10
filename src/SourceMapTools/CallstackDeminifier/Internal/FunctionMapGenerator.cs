@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Esprima;
+using Acornima;
 using SourcemapToolkit.SourcemapParser;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
@@ -46,10 +46,12 @@ public sealed class FunctionMapGenerator : IFunctionMapGenerator
 			sourceCode = sr.ReadToEnd();
 		}
 
-		var jsParser = new JavaScriptParser(new ParserOptions()
+		var jsParser = new Parser(new ParserOptions()
 		{
 			AllowReturnOutsideFunction = true,
+#pragma warning disable CS0618 // RegExpParseMode is obsolete; Skip avoids parsing regex literals in minified code
 			RegExpParseMode = RegExpParseMode.Skip,
+#pragma warning restore CS0618
 		});
 
 		var script = jsParser.ParseScript(sourceCode);

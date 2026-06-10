@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Esprima.Ast;
-using Esprima.Utils;
+using Acornima;
+using Acornima.Ast;
 
 namespace SourcemapTools.CallstackDeminifier.Internal;
 
-// extension of esprima visitor with following additions:
+// extension of Acornima visitor with following additions:
 // - provides access to parent nodes stack (AncestorNodes extension enumerates whole AST tree on each call)
 internal abstract class AstVisitorWithStack : AstVisitor
 {
@@ -16,7 +16,7 @@ internal abstract class AstVisitorWithStack : AstVisitor
 	/// <returns>Returns parent node at specified position or null for out-of-range index.</returns>
 	protected Node? TryGetParentAt(int offset) => _parentStack.Count < offset + 1 ? null : _parentStack[_parentStack.Count - 1 - offset];
 
-	public override object Visit(Node node)
+	public override object? Visit(Node node)
 	{
 		_parentStack.Add(node);
 		base.Visit(node);

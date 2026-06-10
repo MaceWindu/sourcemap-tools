@@ -113,7 +113,7 @@ The source map parsing implementation and the relevant comments were based on th
 
 The source map parser uses [System.Text.Json](https://www.nuget.org/packages/System.Text.Json) which is licensed under the [MIT License](https://github.com/dotnet/runtime/blob/master/LICENSE.TXT).
 
-The call stack deminifier use [Esprima .NET](https://www.nuget.org/packages/esprima) which is licensed under the [BSD 3-Clause License](https://github.com/sebastienros/esprima-dotnet/blob/dev/LICENSE.txt).
+The call stack deminifier uses [Acornima](https://www.nuget.org/packages/Acornima) which is licensed under the [BSD 2-Clause License](https://github.com/adams85/acornima/blob/master/LICENSE.txt).
 
 The unit tests for this library are written using [NUnit](https://www.nuget.org/packages/NUnit). NUnit is Open Source and released under the [MIT License](https://github.com/nunit/nunit/blob/master/LICENSE.txt).
 
