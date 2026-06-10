@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="esprima" />
+		<PackageReference Include="Acornima" />
 		<PackageReference Include="System.Text.Json" />
 
 		<PackageReference Include="Meziantou.Polyfill">

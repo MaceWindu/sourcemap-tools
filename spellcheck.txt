@@ -6,7 +6,7 @@ callstacks
 deminifying
 Deminification
 Deminified
-Esprima
+Acornima
 deminifier
 Json
 Unported
