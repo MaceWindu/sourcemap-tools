@@ -17,18 +17,18 @@ public class NumericMappingEntryUnitTests
 		// Act
 		var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(mappingEntry.GeneratedSourcePosition.Column, Is.EqualTo(12));
 			Assert.That(mappingEntry.GeneratedSourcePosition.Line, Is.EqualTo(13));
 			Assert.That(mappingEntry.OriginalSourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(mappingEntry.OriginalFileName, Is.Null);
 			Assert.That(mappingEntry.OriginalName, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -42,19 +42,19 @@ public class NumericMappingEntryUnitTests
 		// Act
 		var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(mappingEntry.GeneratedSourcePosition.Column, Is.EqualTo(2));
 			Assert.That(mappingEntry.GeneratedSourcePosition.Line, Is.EqualTo(3));
 			Assert.That(mappingEntry.OriginalSourcePosition.Column, Is.EqualTo(16));
 			Assert.That(mappingEntry.OriginalSourcePosition.Line, Is.EqualTo(23));
-		});
-		Assert.Multiple(() =>
+		}
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(mappingEntry.OriginalFileName, Is.Null);
 			Assert.That(mappingEntry.OriginalName, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -68,7 +68,7 @@ public class NumericMappingEntryUnitTests
 		// Act
 		var mappingEntry = numericMappingEntry.ToMappingEntry(names, sources);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(mappingEntry.GeneratedSourcePosition.Column, Is.EqualTo(8));
@@ -76,6 +76,6 @@ public class NumericMappingEntryUnitTests
 			Assert.That(mappingEntry.OriginalSourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(mappingEntry.OriginalFileName, Is.EqualTo("three"));
 			Assert.That(mappingEntry.OriginalName, Is.EqualTo("bar"));
-		});
+		}
 	}
 }

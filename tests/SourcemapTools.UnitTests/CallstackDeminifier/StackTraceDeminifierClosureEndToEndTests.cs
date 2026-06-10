@@ -20,14 +20,14 @@ public class StackTraceDeminifierClosureEndToEndTests
 	private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results, bool preferSourceMapsSymbols)
 	{
 		Assert.That(results.DeminifiedStackFrameResults, Has.Count.EqualTo(4));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminificationError, Is.EqualTo(DeminificationError.None));
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? "propertyMethodLevel2 => length" : "mynamespace.objectWithMethods.propertyMethodLevel2"));
 			Assert.That(results.DeminifiedStackFrameResults[1].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? "prototypeMethodLevel1" : "mynamespace.objectWithMethods.prototypeMethodLevel1"));
 			Assert.That(results.DeminifiedStackFrameResults[2].DeminifiedStackFrame.MethodName, Is.EqualTo("GlobalFunction"));
 			Assert.That(results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? null : "window.onload"));
-		});
+		}
 	}
 
 	[Test]

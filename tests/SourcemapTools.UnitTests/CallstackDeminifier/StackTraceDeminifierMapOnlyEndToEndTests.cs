@@ -21,7 +21,7 @@ public class StackTraceDeminifierMapOnlyEndToEndTests
 	private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results)
 	{
 		Assert.That(results.DeminifiedStackFrameResults, Has.Count.EqualTo(6));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminificationError, Is.EqualTo(DeminificationError.None));
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.SourcePosition.Line, Is.EqualTo(16));
@@ -30,7 +30,7 @@ public class StackTraceDeminifierMapOnlyEndToEndTests
 			Assert.That(results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName, Is.EqualTo("level1"));
 			Assert.That(results.DeminifiedStackFrameResults[4].DeminifiedStackFrame.MethodName, Is.EqualTo("causeCrash"));
 			Assert.That(results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.SourcePosition.Line, Is.EqualTo(32));
-		});
+		}
 	}
 
 	[Test]

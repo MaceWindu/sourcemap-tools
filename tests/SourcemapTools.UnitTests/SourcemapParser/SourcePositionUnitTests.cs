@@ -15,7 +15,7 @@ public class SourcePositionUnitTests
 		var result = x.CompareTo(y);
 
 		// Assert
-		Assert.That(result, Is.EqualTo(0));
+		Assert.That(result, Is.Zero);
 	}
 
 	[Test]

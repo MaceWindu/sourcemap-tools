@@ -20,7 +20,7 @@ public class StackTraceDeminifierEndToEndTests
 	private static void ValidateDeminifyStackTraceResults(DeminifyStackTraceResult results, bool preferSourceMapsSymbols, string? topSymbolOverride = null)
 	{
 		Assert.That(results.DeminifiedStackFrameResults, Has.Count.EqualTo(6));
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminificationError, Is.EqualTo(DeminificationError.None));
 			Assert.That(results.DeminifiedStackFrameResults[0].DeminifiedStackFrame.MethodName, Is.EqualTo(topSymbolOverride ?? (preferSourceMapsSymbols ? "=> console" : "level3")));
@@ -29,7 +29,7 @@ public class StackTraceDeminifierEndToEndTests
 			Assert.That(results.DeminifiedStackFrameResults[3].DeminifiedStackFrame.MethodName, Is.EqualTo("level1"));
 			Assert.That(results.DeminifiedStackFrameResults[4].DeminifiedStackFrame.MethodName, Is.EqualTo("causeCrash"));
 			Assert.That(results.DeminifiedStackFrameResults[5].DeminifiedStackFrame.MethodName, Is.EqualTo(preferSourceMapsSymbols ? null : "window.onload"));
-		});
+		}
 	}
 
 	[Test]

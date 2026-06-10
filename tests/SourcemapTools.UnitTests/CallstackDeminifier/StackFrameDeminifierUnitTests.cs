@@ -30,13 +30,13 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.Null);
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -52,14 +52,14 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoSourceCodeProvided));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.Null);
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -76,14 +76,14 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoWrappingFunctionFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.Null);
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
-		});
+		}
 	}
 
 	[Test]
@@ -101,13 +101,13 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.None));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 
@@ -126,13 +126,13 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoSourceMap));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 
@@ -152,13 +152,13 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoMatchingMappingInSourceMap));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 
@@ -180,13 +180,13 @@ public class StackFrameDeminifierUnitTests
 		// Act
 		var stackFrameDeminification = stackFrameDeminifier.DeminifyStackFrame(stackFrame, null, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(stackFrameDeminification.DeminificationError, Is.EqualTo(DeminificationError.NoMatchingMappingInSourceMap));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.MethodName, Is.EqualTo(wrappingFunctionMapEntry.DeminifiedMethodName));
 			Assert.That(stackFrameDeminification.DeminifiedStackFrame.SourcePosition, Is.EqualTo(SourcePosition.NotFound));
-		});
+		}
 		Assert.That(stackFrameDeminification.DeminifiedStackFrame.FilePath, Is.Null);
 	}
 

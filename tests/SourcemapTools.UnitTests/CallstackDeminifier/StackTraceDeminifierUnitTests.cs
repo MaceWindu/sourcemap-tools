@@ -41,12 +41,12 @@ public class StackTraceDeminifierUnitTests
 		// Act
 		var result = stackTraceDeminifier.DeminifyStackTrace(stackTraceString, preferSourceMapsSymbols);
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result.DeminifiedStackFrameResults, Has.Count.EqualTo(1));
 			Assert.That(result.MinifiedStackFrames[0], Is.EqualTo(minifiedStackFrames[0]));
 			Assert.That(result.DeminifiedStackFrameResults[0], Is.EqualTo(stackFrameDeminification));
-		});
+		}
 	}
 }

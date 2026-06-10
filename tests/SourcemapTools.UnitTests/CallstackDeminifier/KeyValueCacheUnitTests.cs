@@ -45,12 +45,12 @@ public class KeyValueCacheUnitTests
 		// Act
 		var result = keyValueCache.GetValue("bar");
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result, Is.EqualTo("foo"));
 			Assert.That(cnt, Is.EqualTo(1));
-		});
+		}
 	}
 
 	[Test]
@@ -73,12 +73,12 @@ public class KeyValueCacheUnitTests
 		// Act
 		var result = keyValueCache.GetValue("bar");
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result, Is.Null);
 			Assert.That(cnt, Is.EqualTo(2));
-		});
+		}
 	}
 
 	[Test]
@@ -107,11 +107,11 @@ public class KeyValueCacheUnitTests
 		// Act
 		var result = keyValueCache.GetValue("bar");
 
-		Assert.Multiple(() =>
+		using (Assert.EnterMultipleScope())
 		{
 			// Assert
 			Assert.That(result, Is.EqualTo("foo"));
 			Assert.That(cnt, Is.EqualTo(2));
-		});
+		}
 	}
 }
