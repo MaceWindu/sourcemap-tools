@@ -52,7 +52,7 @@ stages:
 ########
 # TEST #
 ########
-    - script: dotnet test $(Build.SourcesDirectory)/$(solution) -c $(build_configuration) -l trx
+    - script: dotnet test $(Build.SourcesDirectory)/$(solution) -c $(build_configuration) --report-trx
       displayName: 'Run Tests'
       condition: succeededOrFailed()
 
